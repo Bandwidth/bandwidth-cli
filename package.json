@@ -1,0 +1,23 @@
+{
+  "name": "bw-cli",
+  "version": "0.0.1",
+  "description": "A CLI to help developers new to Bandwidth to get set up and order phone numbers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bandwidth/band-cli.git"
+  },
+  "author": "Bryan Wu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bandwidth/band-cli/issues"
+  },
+  "homepage": "https://github.com/Bandwidth/band-cli#readme",
+  "dependencies": {
+    "commander": "^5.1.0",
+    "inquirer": "^7.1.0"
+  }
+}
