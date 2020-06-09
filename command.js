@@ -1,11 +1,10 @@
 const { Command } = require('commander');
 const program = new Command();
 
-const description = 'A CLI to help developers new to Bandwidth to get ' +
-  'set up and order phone numbers.'
+const description = 'A descriptive description to describe something which is worth describing with a description.';
 program
   .version('0.0.1')
-  .description(description)
+  .description(description);
 
 
 program.parse(process.argv);
