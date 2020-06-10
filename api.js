@@ -32,7 +32,22 @@ class Api {
 
   createSite = () => {
     const bodyObj = {
-      string:'string'
+      Site: [{
+        Name: 'Raleigh',
+        Description: "Test description site",
+        CustomerName: "Bandwidth CLI testing",
+        Address: {
+          HouseNumber: "1600",
+          StreetName: "PENNSYLVANIA",
+          StreetSuffix: 'AVE',
+          PostDirectional: "NW",
+          City: 'Washington',
+          StateCode: 'DC',
+          Zip: 20006,
+          Country: 'US',
+          AddressType: 'Billing'
+        },
+      }]
     }
     const config = {
       headers: {
