@@ -1,7 +1,8 @@
 const axios = require('axios');
 const xmlToJs = require('fast-xml-parser');
-const jsToXml = xmlToJs.j2xParser;
+const jsToXml = new xmlToJs.j2xParser();
 const IRIS_BASE_URL = 'https://dashboard.bandwidth.com/api/';
+const TEST_URL = 'https://webhook.site/f503b77a-0bde-49f9-a49b-878d64c992de';
 const accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 class Api {
   constructor() {
@@ -13,9 +14,9 @@ class Api {
   /*SUBACCOUNTS = SITES*/
 
   /**
-  * Makes a request to the api to give a list of sites associated with the
-  * accountID.
-  */
+   * Makes a request to the api to give a list of sites associated with the
+   * accountID.
+   */
   listSites = () => {
     axios({
       method: "GET",
@@ -30,6 +31,10 @@ class Api {
     }).catch(console.log)
   }
 
+  /**
+   * Accesses the iris api to create a site/subaccount.
+   * @return the response. TODO: change to an object of the site or something.
+   */
   createSite = () => {
     const bodyObj = {
       Site: [{
@@ -59,7 +64,6 @@ class Api {
       }
     };
     const url = IRIS_BASE_URL + `accounts/${accountId}/sites`;
-    //const url = 'https://webhook.site/f503b77a-0bde-49f9-a49b-878d64c992de';
     const data = new jsToXml().parse(bodyObj)
     axios.post(url, data, config)
     .then(res => {
@@ -82,9 +86,45 @@ class Api {
         password: process.env.BANDWIDTH_API_PASSWORD
       }
     }).then(res => {
-      const xml = xmlParser.parse(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
+      const xml = xmlToJs.parse(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
       console.log(xml);
     }).catch(console.log)
+  }
+
+  /**
+   * Accesses the iris api to create an application.
+   * @return the response.
+   */
+  createMessageApplication = () => {
+    const bodyObj = {
+      Application: [{
+        Service: 'Messaging-V2',
+        AppName: 'Application Name',
+        MsgCallbackUrl: 'https://example.com',
+        CallbackCreds: {
+          UserId: 'testId',
+          Password: 'testPass'
+        }
+      }],
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/xml'
+      },
+      auth: {
+        username: process.env.BANDWIDTH_API_USER,
+        password: process.env.BANDWIDTH_API_PASSWORD
+      }
+    };
+    const url = IRIS_BASE_URL + `accounts/${accountId}/applications`;
+    console.log(url)
+    const data = jsToXml.parse(bodyObj)
+    axios.post(url, data, config)
+    .then(res => {
+      const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+      console.log(res)
+      console.log(jsRes);
+    }).catch(a => console.log(a))
   }
 
   //listApplications();
