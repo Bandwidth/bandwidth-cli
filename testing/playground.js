@@ -2,4 +2,4 @@
 const { Api } = require('../api');
 console.log(Api);
 const api = new Api();
-api.listApplications();
+api.createVoiceApplication();

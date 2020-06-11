@@ -92,13 +92,13 @@ class Api {
   }
 
   /**
-   * Accesses the iris api to create an application.
+   * Accesses the iris api to create an application for messaging in particular.
    * @return the response.
    */
   createMessageApplication = () => {
     const bodyObj = {
       Application: [{
-        Service: 'Messaging-V2',
+        ServiceType: 'Messaging-V2',
         AppName: 'Application Name',
         MsgCallbackUrl: 'https://example.com',
         CallbackCreds: {
@@ -127,7 +127,44 @@ class Api {
     }).catch(a => console.log(a))
   }
 
-  //listApplications();
+  /**
+   * Accesses the iris api to create an application for messaging in particular.
+   * @return the response.
+   */
+  createVoiceApplication = () => {
+    const bodyObj = {
+      Application: [{
+        ServiceType: 'Voice-V2',
+        AppName: 'Voice Application Name',
+        CallInitiatedCallbackUrl: 'https://example.com',
+        CallInitiatedMethod: 'GET',
+        CallStatusCallbackUrl: 'https://example.com',
+        CallStatusMethod: 'GET',
+        CallbackCreds: {
+          UserId: 'testId',
+          Password: 'testPass'
+        }
+      }],
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/xml'
+      },
+      auth: {
+        username: process.env.BANDWIDTH_API_USER,
+        password: process.env.BANDWIDTH_API_PASSWORD
+      }
+    };
+    const url = IRIS_BASE_URL + `accounts/${accountId}/applications`;
+    console.log(url)
+    const data = jsToXml.parse(bodyObj)
+    axios.post(url, data, config)
+    .then(res => {
+      const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+      console.log(res)
+      console.log(jsRes);
+    }).catch(a => console.log(a))
+  }
 }
 
 module.exports.Api = Api;
