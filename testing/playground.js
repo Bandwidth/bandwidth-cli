@@ -2,5 +2,6 @@
 
 
 
-const { listSippeers } = require('../api-utils');
-listSippeers(35593);
+const { createSippeer, listSippeers } = require('../api-utils');
+//listSippeers(35593)
+createSippeer(35593);

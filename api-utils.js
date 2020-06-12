@@ -1,7 +1,6 @@
 const axios = require('axios');
-const parser = require('fast-xml-parser');
-const xmlToJs = parser.parse;
-const jsToXml = (new parser.j2xParser()).parse;
+const xmlToJs = require('fast-xml-parser');
+const jsToXml = new xmlToJs.j2xParser();
 const IRIS_BASE_URL = 'https://dashboard.bandwidth.com/api/';
 const TEST_URL = 'https://webhook.site/f503b77a-0bde-49f9-a49b-878d64c992de';
 const ACCOUNT_ID = process.env.BANDWIDTH_ACCOUNT_ID;
@@ -30,8 +29,8 @@ module.exports.listSites = () => {
     url: IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`,
     auth: auth
   }).then(res => {
-    const xml = xmlToJs(res.data);
-    console.log(xml.SitesResponse.Sites.Site);
+    const jsRes = xmlToJs.parse(res.data);
+    console.log(jsRes.SitesResponse.Sites.Site);
   }).catch(console.log)
 }
 
@@ -40,7 +39,7 @@ module.exports.listSites = () => {
  * @return the response. TODO: change to an object of the site or something.
  */
 module.exports.createSite = () => {
-  const bodyObj = {
+  const data = {
     Site: [{
       Name: 'Raleigh',
       Description: "Test description site",
@@ -59,10 +58,10 @@ module.exports.createSite = () => {
     }]
   }
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
-  const data = jsToXml(bodyObj)
-  axios.post(url, data, config)
+  const xmlData = jsToXml.parse(data)
+  axios.post(url, xmlData, config)
   .then(res => {
-    const jsRes = xmlToJs(res.data);
+    const jsRes = xmlToJs.parse(res.data);
     console.log(jsRes);
   }).catch(a => console.log(a.response.data))
 }
@@ -78,16 +77,52 @@ module.exports.createSite = () => {
 module.exports.listSippeers = (siteId) => {
   const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
   axios.get(url, config).then(res => {
-    const js = xmlToJs(res.data).TNSipPeersResponse.SipPeers;
+    const js = xmlToJs.parse(res.data).TNSipPeersResponse.SipPeers;
     console.log(js);
   }).catch(err => console.log(err))
 }
 
 module.exports.createSippeer = (siteId) => {
   const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
-  const data = {}
-  const xmlData = jsToXml(data)
-  axios.post(url, config, xmlData);
+  const data = {
+    SipPeer: {
+      PeerName: 'name2',
+      Description: 'description',
+      IsDefaultPeer: false,
+      //FinalDestinationUri: 'uri',
+      VoiceHosts: {
+        host: {
+          HostName: '10.10.10.1',
+        }
+      },
+      /*TerminationHosts: {
+        TerminationHost: {
+          HostName: '2.1.1.9',
+          port: 60,
+          CustomerTrafficAllowed: 'DOMESTIC'
+        }
+      },*/ //So this isn't allowed in the new API, but still in the example. Hmm.
+      Address: {
+        HouseNumber: "1600",
+        StreetName: "PENNSYLVANIA",
+        StreetSuffix: 'AVE',
+        PostDirectional: "NW",
+        City: 'Washington',
+        StateCode: 'DC',
+        Zip: 20006,
+        Country: 'US',
+        AddressType: 'Billing'
+      },
+      //PremiseTrunks: 'PremiseTrunks',
+      //CallingName: ''
+    }
+  };
+  const xmlData = jsToXml.parse(data);
+  axios.post(url, xmlData, config)
+  .then(res => {
+    const jsRes = xmlToJs.parse(res.data);
+  })
+  .catch(err => console.log(err))
 }
 
 /*APPLICATIONS*/
@@ -100,7 +135,7 @@ module.exports.listApplications = () => {
       password: process.env.BANDWIDTH_API_PASSWORD
     }
   }).then(res => {
-    const js = xmlToJs(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
+    const js = xmlToJs.parse(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
     console.log(js);
   }).catch(console.log)
 }
@@ -132,10 +167,10 @@ module.exports.createMessageApplication = () => {
   };
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
-  const data = jsToXml(bodyObj)
+  const data = jsToXml.parse(bodyObj)
   axios.post(url, data, config)
   .then(res => {
-    const jsRes = xmlToJs(res.data).ApplicationProvisioningResponse.Application;
+    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
     console.log(res)
     console.log(jsRes);
   }).catch(a => console.log(a))
@@ -162,10 +197,10 @@ module.exports.createVoiceApplication = () => {
   }
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
-  const data = jsToXml(bodyObj)
+  const data = jsToXml.parse(bodyObj)
   axios.post(url, data, config)
   .then(res => {
-    const jsRes = xmlToJs(res.data).ApplicationProvisioningResponse.Application;
+    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
     console.log(res)
     console.log(jsRes);
   }).catch(a => console.log(a))
