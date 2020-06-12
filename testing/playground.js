@@ -2,6 +2,6 @@
 
 
 
-const { createSippeer, listSippeers } = require('../api-utils');
+const { createSippeer, listSippeers, geocode } = require('../api-utils');
 //listSippeers(35593)
-createSippeer(35593);
+geocode('904 E Anson St', 'Marshalltown', 'IA', '50158');

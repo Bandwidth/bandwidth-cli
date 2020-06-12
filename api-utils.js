@@ -18,6 +18,27 @@ const config = {
 };
 
 
+module.exports.geocode = (addressLine1, city, state, zip) => {
+  const url =  IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/geocodeRequest`
+  const data = {RequestAddress: {
+    AddressLine1: addressLine1,
+    City: city,
+    StateCode: state,
+    Zip: zip
+  }}
+  const xmlData = jsToXml.parse(data);
+  axios.post(url, xmlData, config).then(res => {
+    console.log(res.data)
+    console.log(xmlToJs.parse(res.data).GeocodeRequestResponse.GeocodedAddress)
+  }).catch(err => {
+    if (err.response.status === 409) {
+      console.log(xmlToJs.parse(err.response.data).GeocodeRequestResponse.GeocodedAddress)
+    } else {
+      console.log(err.response);
+    }
+  })
+
+}
 
 /**
  * Makes a request to the api to give a list of sites associated with the
