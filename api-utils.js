@@ -85,14 +85,18 @@ module.exports.createSite = (addressObj) => {
   }).catch(a => console.log(a.response.data))
 }
 
-
+/**
+ * Deletes the site associated with a particular siteId.
+ * @param siteId the id of the site that is being investigated.
+ */
 module.exports.deleteSite = (siteId) => {
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites/${siteId}`;
   axios.delete(url, config)
   .then(res => {
     console.log(res);
-  }).catch(a => console.log(a.response.data))
+  }).catch(a => console.log(xmlToJs.parse(a.response.data).SiteResponse.ResponseStatus.Description))
 }
+
 /*LOCATIONS = SIPPEER*/
 
 /**
@@ -147,8 +151,21 @@ module.exports.createSippeer = (siteId) => {
   axios.post(url, xmlData, config)
   .then(res => {
     const jsRes = xmlToJs.parse(res.data);
+    console.log(jsRes)
   })
   .catch(err => console.log(err))
+}
+
+/**
+ * Deletes the site associated with a particular siteId.
+ * @param siteId the id of the site that is being investigated.
+ */
+module.exports.deleteSippeer = (siteId, sippeerId) => {
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers/${sippeerId}`;
+  axios.delete(url, config)
+  .then(res => {
+    console.log(res);
+  }).catch(err => console.log(err.response.data))
 }
 
 /*APPLICATIONS*/

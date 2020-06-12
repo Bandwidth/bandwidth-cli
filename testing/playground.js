@@ -2,6 +2,7 @@
 
 
 
-const { createSippeer, listSippeers, geocode, createSite, deleteSite } = require('../api-utils');
+const { createSippeer, listSippeers, geocode, createSite, deleteSite, deleteSippeer } = require('../api-utils');
 //listSippeers(35593)
-deleteSite(21611);
+//createSippeer(8416)
+deleteSippeer(8416, 621845);
