@@ -62,9 +62,9 @@ module.exports.listSites = () => {
 
 /**
  * Accesses the iris api to create a site/subaccount.
- * @return the response. TODO: change to an object of the site or something.
+ * @return a promise which resolves to the object representing the created site.
  */
-module.exports.createSite = (addressObj) => {
+module.exports.createSite = async (addressObj) => {
   const data = {
     Site: [{
       Name: 'Raleigh',
@@ -78,11 +78,12 @@ module.exports.createSite = (addressObj) => {
   }
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
   const xmlData = jsToXml.parse(data)
-  axios.post(url, xmlData, config)
-  .then(res => {
-    const jsRes = xmlToJs.parse(res.data);
-    console.log(jsRes);
-  }).catch(a => console.log(a.response.data))
+  return await axios.post(url, xmlData, config).then(res => {
+    res => {
+      const jsRes = xmlToJs.parse(res.data);
+      return jsRes;
+    }
+  }
 }
 
 /**
@@ -112,7 +113,11 @@ module.exports.listSippeers = (siteId) => {
   }).catch(err => console.log(err))
 }
 
-module.exports.createSippeer = (siteId) => {
+/**
+ * Creates a sipper under the given siteId.
+ * @return the js object representing the created site.
+ */
+module.exports.createSippeer = async (siteId) => {
   const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
   const data = {
     SipPeer: {
@@ -148,12 +153,11 @@ module.exports.createSippeer = (siteId) => {
     }
   };
   const xmlData = jsToXml.parse(data);
-  axios.post(url, xmlData, config)
-  .then(res => {
-    const jsRes = xmlToJs.parse(res.data);
-    console.log(jsRes)
-  })
-  .catch(err => console.log(err))
+  return await axios.post(url, xmlData, config)
+    .then(res => {
+      const jsRes = xmlToJs.parse(res.data);
+      return jsRes;
+    })
 }
 
 /**
@@ -187,7 +191,7 @@ module.exports.listApplications = () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-module.exports.createMessageApplication = () => {
+module.exports.createMessageApplication = async () => {
   const bodyObj = {
     Application: [{
       ServiceType: 'Messaging-V2',
@@ -211,12 +215,10 @@ module.exports.createMessageApplication = () => {
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
   const data = jsToXml.parse(bodyObj)
-  axios.post(url, data, config)
-  .then(res => {
-    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
-    console.log(res)
-    console.log(jsRes);
-  }).catch(a => console.log(a))
+  return await axios.post(url, data, config)
+    .then(res => {
+      return xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    })
 }
 
 /**
@@ -241,12 +243,10 @@ module.exports.createVoiceApplication = () => {
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
   const data = jsToXml.parse(bodyObj)
-  axios.post(url, data, config)
-  .then(res => {
-    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
-    console.log(res)
-    console.log(jsRes);
-  }).catch(a => console.log(a))
+  return await axios.post(url, data, config)
+    .then(res => {
+      return xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    })
 }
 
 /**
