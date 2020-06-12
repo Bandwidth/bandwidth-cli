@@ -20,7 +20,7 @@ const config = {
 /**
  * Given geocode information, attempts to apply geocoding to it through a
  * Bandwidth api.
- @return a promise which resolves to the geocode
+ * @return a promise which resolves to the geocode
  */
 module.exports.geocode = async (addressLine1, city, state, zip) => {
   const url =  IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/geocodeRequest`
@@ -62,28 +62,30 @@ module.exports.listSites = () => {
 
 /**
  * Accesses the iris api to create a site/subaccount.
+ * @param config an object of configurations for the site being created
  * @return a promise which resolves to the object representing the created site.
  */
-module.exports.createSite = async (addressObj) => {
+module.exports.createSite = async (options) => {
+  if (! (options.name && options.address)) {
+    throw new Error('A name and address are required for a site.')
+  }
   const data = {
     Site: [{
-      Name: 'Raleigh',
-      Description: "Test description site",
-      CustomerName: "Bandwidth CLI testing",
+      Name: options.name,
+      Description: options.description,
+      CustomerName: options.customerName,
       Address: {
-        ...addressObj,
-        AddressType: 'billing'
+        ...options.address,
+        AddressType: options.addressType,
       }
     }]
   }
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
   const xmlData = jsToXml.parse(data)
   return await axios.post(url, xmlData, config).then(res => {
-    res => {
-      const jsRes = xmlToJs.parse(res.data);
-      return jsRes;
-    }
-  }
+    const jsRes = xmlToJs.parse(res.data);
+    return jsRes.SiteResponse.Site;
+  })
 }
 
 /**
@@ -225,7 +227,7 @@ module.exports.createMessageApplication = async () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-module.exports.createVoiceApplication = () => {
+module.exports.createVoiceApplication = async () => {
   const bodyObj = {
     Application: [{
       ServiceType: 'Voice-V2',

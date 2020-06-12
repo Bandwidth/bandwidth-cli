@@ -3,7 +3,8 @@
 
 
 const { deleteApplication, createSippeer, listSippeers, geocode, createSite, deleteSite, deleteSippeer } = require('../api-utils');
-//listSippeers(35593)
-//createSippeer(8416)
-//deleteSippeer(8416, 621845);
-deleteApplication('9ce7c64d-47e5-4c89-a262-6ceb72324b32');
+geocode('900 Main Campus dr', 'Raleigh', 'NC', '27606').then(address => createSite({
+  name: "testname",
+  address: address,
+  addressType: "Billing",
+})).then((asdf) => console.log(asdf)).catch(console.log)
