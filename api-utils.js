@@ -1,36 +1,36 @@
 const axios = require('axios');
-const xmlToJs = require('fast-xml-parser');
-const jsToXml = new xmlToJs.j2xParser();
+const parser = require('fast-xml-parser');
+const xmlToJs = parser.parse;
+const jsToXml = (new parser.j2xParser()).parse;
 const IRIS_BASE_URL = 'https://dashboard.bandwidth.com/api/';
 const TEST_URL = 'https://webhook.site/f503b77a-0bde-49f9-a49b-878d64c992de';
 const ACCOUNT_ID = process.env.BANDWIDTH_ACCOUNT_ID;
 const API_USER = process.env.BANDWIDTH_API_USER;
 const API_PASSWORD = process.env.BANDWIDTH_API_PASSWORD;
 const auth = {
-  username: this.API_USER,
-  password: this.API_PASSWORD
+  username: API_USER,
+  password: API_PASSWORD
 };
 const config = {
   headers: {
     'Content-Type': 'application/xml'
   },
-  auth: this.auth
+  auth: auth
 };
 
 
-console.log(exports)
 
 /**
  * Makes a request to the api to give a list of sites associated with the
  * accountID.
  */
-listSites = () => {
+module.exports.listSites = () => {
   axios({
     method: "GET",
-    url: IRIS_BASE_URL + `accounts/${accountId}/sites`,
-    auth: this.auth
+    url: IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`,
+    auth: auth
   }).then(res => {
-    const xml = xmlToJs.parse(res.data);
+    const xml = xmlToJs(res.data);
     console.log(xml.SitesResponse.Sites.Site);
   }).catch(console.log)
 }
@@ -39,7 +39,7 @@ listSites = () => {
  * Accesses the iris api to create a site/subaccount.
  * @return the response. TODO: change to an object of the site or something.
  */
-createSite = () => {
+module.exports.createSite = () => {
   const bodyObj = {
     Site: [{
       Name: 'Raleigh',
@@ -58,11 +58,11 @@ createSite = () => {
       },
     }]
   }
-  const url = IRIS_BASE_URL + `accounts/${accountId}/sites`;
-  const data = new jsToXml().parse(bodyObj)
-  axios.post(url, data, this.config)
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
+  const data = jsToXml(bodyObj)
+  axios.post(url, data, config)
   .then(res => {
-    const jsRes = xmlToJs.parse(res.data);
+    const jsRes = xmlToJs(res.data);
     console.log(jsRes);
   }).catch(a => console.log(a.response.data))
 }
@@ -75,23 +75,33 @@ createSite = () => {
  * the specific site id.
  * @param siteId the id of the site that is being investigated.
  */
-listSippeers = (siteId) => {
-  const url = IRIS_BASE_URL +  `accounts/${accountId}/sites/${siteId}/sippeers`
-  axios.get(url, this.config).then(res => console.log (res)).catch(err => console.log(err))
+module.exports.listSippeers = (siteId) => {
+  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
+  axios.get(url, config).then(res => {
+    const js = xmlToJs(res.data).TNSipPeersResponse.SipPeers;
+    console.log(js);
+  }).catch(err => console.log(err))
+}
+
+module.exports.createSippeer = (siteId) => {
+  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
+  const data = {}
+  const xmlData = jsToXml(data)
+  axios.post(url, config, xmlData);
 }
 
 /*APPLICATIONS*/
-listApplications = () => {
+module.exports.listApplications = () => {
   axios({
     method: "GET",
-    url: IRIS_BASE_URL + `accounts/${accountId}/applications`,
+    url: IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`,
     auth: {
       username: process.env.BANDWIDTH_API_USER,
       password: process.env.BANDWIDTH_API_PASSWORD
     }
   }).then(res => {
-    const xml = xmlToJs.parse(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
-    console.log(xml);
+    const js = xmlToJs(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
+    console.log(js);
   }).catch(console.log)
 }
 
@@ -99,7 +109,7 @@ listApplications = () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-createMessageApplication = () => {
+module.exports.createMessageApplication = () => {
   const bodyObj = {
     Application: [{
       ServiceType: 'Messaging-V2',
@@ -120,12 +130,12 @@ createMessageApplication = () => {
       password: process.env.BANDWIDTH_API_PASSWORD
     }
   };
-  const url = IRIS_BASE_URL + `accounts/${accountId}/applications`;
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
-  const data = jsToXml.parse(bodyObj)
+  const data = jsToXml(bodyObj)
   axios.post(url, data, config)
   .then(res => {
-    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    const jsRes = xmlToJs(res.data).ApplicationProvisioningResponse.Application;
     console.log(res)
     console.log(jsRes);
   }).catch(a => console.log(a))
@@ -135,7 +145,7 @@ createMessageApplication = () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-createVoiceApplication = () => {
+module.exports.createVoiceApplication = () => {
   const bodyObj = {
     Application: [{
       ServiceType: 'Voice-V2',
@@ -150,15 +160,13 @@ createVoiceApplication = () => {
       }
     }],
   }
-  const url = IRIS_BASE_URL + `accounts/${accountId}/applications`;
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
-  const data = jsToXml.parse(bodyObj)
-  axios.post(url, data, this.config)
+  const data = jsToXml(bodyObj)
+  axios.post(url, data, config)
   .then(res => {
-    const jsRes = xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    const jsRes = xmlToJs(res.data).ApplicationProvisioningResponse.Application;
     console.log(res)
     console.log(jsRes);
   }).catch(a => console.log(a))
 }
-
-module.exports.Api = Api;

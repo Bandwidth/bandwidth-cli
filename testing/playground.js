@@ -2,10 +2,5 @@
 
 
 
-/*const { Api } = require('../api-utils');
-console.log(Api);
-const api = new Api();
-api.listSippeers(35593);
-*/
-
-console.log(module.exports)
+const { listSippeers } = require('../api-utils');
+listSippeers(35593);
