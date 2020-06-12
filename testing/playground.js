@@ -1,5 +1,5 @@
-//A Free-for-all playground to run code without changing things.
-const { Api } = require('../api');
+//A Free-for-all playground to run code without changing things, hopefully.
+const { Api } = require('../api-utils');
 console.log(Api);
 const api = new Api();
-api.createVoiceApplication();
+api.listSippeers(35593);
