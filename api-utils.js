@@ -17,8 +17,12 @@ const config = {
   auth: auth
 };
 
-
-module.exports.geocode = (addressLine1, city, state, zip) => {
+/**
+ * Given geocode information, attempts to apply geocoding to it through a
+ * Bandwidth api.
+ @return a promise which resolves to the geocode
+ */
+module.exports.geocode = async (addressLine1, city, state, zip) => {
   const url =  IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/geocodeRequest`
   const data = {RequestAddress: {
     AddressLine1: addressLine1,
@@ -27,16 +31,17 @@ module.exports.geocode = (addressLine1, city, state, zip) => {
     Zip: zip
   }}
   const xmlData = jsToXml.parse(data);
-  axios.post(url, xmlData, config).then(res => {
-    console.log(res.data)
-    console.log(xmlToJs.parse(res.data).GeocodeRequestResponse.GeocodedAddress)
-  }).catch(err => {
+  try {
+    return await axios.post(url, xmlData, config).then(res => {
+      return xmlToJs.parse(res.data).GeocodeRequestResponse.GeocodedAddress
+    })
+  } catch (err) {
     if (err.response.status === 409) {
-      console.log(xmlToJs.parse(err.response.data).GeocodeRequestResponse.GeocodedAddress)
+      return xmlToJs.parse(err.response.data).GeocodeRequestResponse.GeocodedAddress
     } else {
-      console.log(err.response);
+      throw err;
     }
-  })
+  }
 
 }
 
@@ -59,23 +64,16 @@ module.exports.listSites = () => {
  * Accesses the iris api to create a site/subaccount.
  * @return the response. TODO: change to an object of the site or something.
  */
-module.exports.createSite = () => {
+module.exports.createSite = (addressObj) => {
   const data = {
     Site: [{
       Name: 'Raleigh',
       Description: "Test description site",
       CustomerName: "Bandwidth CLI testing",
       Address: {
-        HouseNumber: "1600",
-        StreetName: "PENNSYLVANIA",
-        StreetSuffix: 'AVE',
-        PostDirectional: "NW",
-        City: 'Washington',
-        StateCode: 'DC',
-        Zip: 20006,
-        Country: 'US',
-        AddressType: 'Billing'
-      },
+        ...addressObj,
+        AddressType: 'billing'
+      }
     }]
   }
   const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
