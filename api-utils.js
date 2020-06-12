@@ -86,6 +86,13 @@ module.exports.createSite = (addressObj) => {
 }
 
 
+module.exports.deleteSite = (siteId) => {
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites/${siteId}`;
+  axios.delete(url, config)
+  .then(res => {
+    console.log(res);
+  }).catch(a => console.log(a.response.data))
+}
 /*LOCATIONS = SIPPEER*/
 
 /**

@@ -2,6 +2,6 @@
 
 
 
-const { createSippeer, listSippeers, geocode, createSite } = require('../api-utils');
+const { createSippeer, listSippeers, geocode, createSite, deleteSite } = require('../api-utils');
 //listSippeers(35593)
-geocode('904 E Anson Str', 'Marshalltown', 'IA', '50158').then(geo => createSite(geo))
+deleteSite(21611);
