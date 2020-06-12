@@ -248,3 +248,17 @@ module.exports.createVoiceApplication = () => {
     console.log(jsRes);
   }).catch(a => console.log(a))
 }
+
+/**
+ * Deletes the site associated with a particular siteId.
+ * @param appId the id of the application that is being deleted.
+ */
+module.exports.deleteApplication = (appId) => {
+  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications/${appId}`;
+  axios.delete(url, config)
+  .then(res => {
+    if (res.status === 200) {
+      console.log(`successfully deleted application ${appId}`)
+    }
+  }).catch(err => console.log(xmlToJs.parse(err.response.data).ApplicationProvisioningResponse.ResponseStatus.Description))
+}
