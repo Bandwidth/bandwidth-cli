@@ -85,6 +85,8 @@ module.exports.createSite = async (options) => {
   return await axios.post(url, xmlData, config).then(res => {
     const jsRes = xmlToJs.parse(res.data);
     return jsRes.SiteResponse.Site;
+  }).catch(err => {
+    throw new Error(xmlToJs.parse(err.response.data));
   })
 }
 
@@ -117,21 +119,26 @@ module.exports.listSippeers = (siteId) => {
 
 /**
  * Creates a sipper under the given siteId.
+ * @param siteId the siteId that the sippeer is under
+ * @param options the configuration to create a sippeer under
  * @return the js object representing the created site.
  */
-module.exports.createSippeer = async (siteId) => {
-  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
+module.exports.createSippeer = async (options) => {
+  if (!('siteId' in options)) {
+    throw Error('siteId is required to create a sippeer.')
+  }
+  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${options.siteId}/sippeers`
   const data = {
     SipPeer: {
-      PeerName: 'name2',
-      Description: 'description',
-      IsDefaultPeer: false,
-      //FinalDestinationUri: 'uri',
-      VoiceHosts: {
+      PeerName: options.peerName || options.name,
+      Description: options.description,
+      IsDefaultPeer: options.isDefaultPeer || options.isDefault,
+      FinalDestinationUri: options.finalDestinationUri || options.uri ,
+      /* VoiceHosts: {
         host: {
           HostName: '10.10.10.1',
         }
-      },
+      }, */
       /*TerminationHosts: {
         TerminationHost: {
           HostName: '2.1.1.9',
@@ -140,15 +147,8 @@ module.exports.createSippeer = async (siteId) => {
         }
       },*/ //So this isn't allowed in the new API, but still in the example. Hmm.
       Address: {
-        HouseNumber: "1600",
-        StreetName: "PENNSYLVANIA",
-        StreetSuffix: 'AVE',
-        PostDirectional: "NW",
-        City: 'Washington',
-        StateCode: 'DC',
-        Zip: 20006,
-        Country: 'US',
-        AddressType: 'Billing'
+        ...options.address,
+        AddressType: options.addressType
       },
       //PremiseTrunks: 'PremiseTrunks',
       //CallingName: ''
@@ -157,8 +157,14 @@ module.exports.createSippeer = async (siteId) => {
   const xmlData = jsToXml.parse(data);
   return await axios.post(url, xmlData, config)
     .then(res => {
-      const jsRes = xmlToJs.parse(res.data);
-      return jsRes;
+      if (res.status === 201) {
+        return data.SipPeer;
+      }
+      throw new Error('internal error')
+      //const jsRes = xmlToJs.parse(res.data);
+      //return jsRes;
+    }).catch(err => {
+      throw new Error(xmlToJs.parse(err.response.data).SipPeerResponse.ResponseStatus.Description);
     })
 }
 
