@@ -82,10 +82,8 @@ module.exports.createSite = async (options) => {
       }
     }]
   }
-  console.log(data)
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites`;
-  const xmlData = jsToXml.parse(data)
-  console.log('\n\n', xmlData);
+  const xmlData = jsToXml.parse(data) //undefined params are not parsed into XML.
   return await axios.post(url, xmlData, config).then(res => {
     const jsRes = xmlToJs.parse(res.data);
     return jsRes.SiteResponse.Site;
