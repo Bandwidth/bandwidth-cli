@@ -57,6 +57,7 @@ module.exports.listSites = () => {
     auth: auth
   }).then(res => {
     const jsRes = xmlToJs.parse(res.data);
+    //the XML has multiple <Site> in <Sites>. This gets parsed into {Sites: {site: [etc]}}, so site is the array of sites.
     console.log(jsRes.SitesResponse.Sites.Site);
   }).catch(console.log)
 }
@@ -120,12 +121,11 @@ module.exports.listSippeers = (siteId) => {
 
 /**
  * Creates a sipper under the given siteId.
- * @param siteId the siteId that the sippeer is under
- * @param options the configuration to create a sippeer under
+ * @param options the configuration to create a sippeer under. Must include a siteId
  * @return the js object representing the created site.
  */
 module.exports.createSippeer = async (options) => {
-  if (!('siteId' in options)) {
+  if (!(options.siteId)) {
     throw Error('siteId is required to create a sippeer.')
   }
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites/${options.siteId}/sippeers`
