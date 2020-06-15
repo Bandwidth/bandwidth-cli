@@ -68,8 +68,8 @@ module.exports.listSites = () => {
  * @return a promise which resolves to the object representing the created site.
  */
 module.exports.createSite = async (options) => {
-  if (! (options.name && options.address)) {
-    throw new Error('A name and address are required for a site.')
+  if (! (options.name && options.address && options.addressType)) {
+    throw new Error('A name, address, and addressType are required for a site.')
   }
   const data = {
     Site: [{
@@ -82,8 +82,10 @@ module.exports.createSite = async (options) => {
       }
     }]
   }
+  console.log(data)
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites`;
   const xmlData = jsToXml.parse(data)
+  console.log('\n\n', xmlData);
   return await axios.post(url, xmlData, config).then(res => {
     const jsRes = xmlToJs.parse(res.data);
     return jsRes.SiteResponse.Site;

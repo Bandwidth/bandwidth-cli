@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Bandwidth/band-cli#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "commander": "^5.1.0",
     "fast-xml-parser": "^3.17.4",
     "inquirer": "^7.1.0"
