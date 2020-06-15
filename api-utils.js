@@ -1,7 +1,7 @@
 const axios = require('axios');
 const xmlToJs = require('fast-xml-parser');
 const jsToXml = new xmlToJs.j2xParser();
-const IRIS_BASE_URL = 'https://dashboard.bandwidth.com/api/';
+const IRIS_BASE_URL = 'https://dashboard.bandwidth.com/api';
 const TEST_URL = 'https://webhook.site/f503b77a-0bde-49f9-a49b-878d64c992de';
 const ACCOUNT_ID = process.env.BANDWIDTH_ACCOUNT_ID;
 const API_USER = process.env.BANDWIDTH_API_USER;
@@ -23,7 +23,7 @@ const config = {
  * @return a promise which resolves to the geocode
  */
 module.exports.geocode = async (addressLine1, city, state, zip) => {
-  const url =  IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/geocodeRequest`
+  const url =  IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/geocodeRequest`
   const data = {RequestAddress: {
     AddressLine1: addressLine1,
     City: city,
@@ -37,6 +37,7 @@ module.exports.geocode = async (addressLine1, city, state, zip) => {
     })
   } catch (err) {
     if (err.response.status === 409) {
+      //when the geocode finds an address, but it's not a perfect match (eg a misspelling.)
       return xmlToJs.parse(err.response.data).GeocodeRequestResponse.GeocodedAddress
     } else {
       throw err;
@@ -52,7 +53,7 @@ module.exports.geocode = async (addressLine1, city, state, zip) => {
 module.exports.listSites = () => {
   axios({
     method: "GET",
-    url: IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`,
+    url: IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites`,
     auth: auth
   }).then(res => {
     const jsRes = xmlToJs.parse(res.data);
@@ -80,7 +81,7 @@ module.exports.createSite = async (options) => {
       }
     }]
   }
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites`;
   const xmlData = jsToXml.parse(data)
   return await axios.post(url, xmlData, config).then(res => {
     const jsRes = xmlToJs.parse(res.data);
@@ -95,7 +96,7 @@ module.exports.createSite = async (options) => {
  * @param siteId the id of the site that is being investigated.
  */
 module.exports.deleteSite = (siteId) => {
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites/${siteId}`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites/${siteId}`;
   axios.delete(url, config)
   .then(res => {
     console.log(res);
@@ -110,7 +111,7 @@ module.exports.deleteSite = (siteId) => {
  * @param siteId the id of the site that is being investigated.
  */
 module.exports.listSippeers = (siteId) => {
-  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
+  const url = IRIS_BASE_URL +  `/accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers`
   axios.get(url, config).then(res => {
     const js = xmlToJs.parse(res.data).TNSipPeersResponse.SipPeers;
     console.log(js);
@@ -127,7 +128,7 @@ module.exports.createSippeer = async (options) => {
   if (!('siteId' in options)) {
     throw Error('siteId is required to create a sippeer.')
   }
-  const url = IRIS_BASE_URL +  `accounts/${ACCOUNT_ID}/sites/${options.siteId}/sippeers`
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites/${options.siteId}/sippeers`
   const data = {
     SipPeer: {
       PeerName: options.peerName || options.name,
@@ -173,7 +174,7 @@ module.exports.createSippeer = async (options) => {
  * @param siteId the id of the site that is being investigated.
  */
 module.exports.deleteSippeer = (siteId, sippeerId) => {
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers/${sippeerId}`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/sites/${siteId}/sippeers/${sippeerId}`;
   axios.delete(url, config)
   .then(res => {
     console.log(res);
@@ -184,7 +185,7 @@ module.exports.deleteSippeer = (siteId, sippeerId) => {
 module.exports.listApplications = () => {
   axios({
     method: "GET",
-    url: IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`,
+    url: IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`,
     auth: {
       username: process.env.BANDWIDTH_API_USER,
       password: process.env.BANDWIDTH_API_PASSWORD
@@ -220,7 +221,7 @@ module.exports.createMessageApplication = async () => {
       password: process.env.BANDWIDTH_API_PASSWORD
     }
   };
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
   const data = jsToXml.parse(bodyObj)
   return await axios.post(url, data, config)
@@ -248,7 +249,7 @@ module.exports.createVoiceApplication = async () => {
       }
     }],
   }
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
   const data = jsToXml.parse(bodyObj)
   return await axios.post(url, data, config)
@@ -262,7 +263,7 @@ module.exports.createVoiceApplication = async () => {
  * @param appId the id of the application that is being deleted.
  */
 module.exports.deleteApplication = (appId) => {
-  const url = IRIS_BASE_URL + `accounts/${ACCOUNT_ID}/applications/${appId}`;
+  const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications/${appId}`;
   axios.delete(url, config)
   .then(res => {
     if (res.status === 200) {
