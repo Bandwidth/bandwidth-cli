@@ -200,17 +200,17 @@ module.exports.listApplications = () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-module.exports.createMessageApplication = async () => {
-  const bodyObj = {
-    Application: [{
+module.exports.createMessageApplication = async (options) => {
+  const data = {
+    Application: {
       ServiceType: 'Messaging-V2',
-      AppName: 'Application Name',
-      MsgCallbackUrl: 'https://example.com',
-      CallbackCreds: {
-        UserId: 'testId',
-        Password: 'testPass'
-      }
-    }],
+      AppName: options.name || options.appName,
+      MsgCallbackUrl: options.msgCallbackUrl || options.callbackUrl,
+      CallbackCreds: (options.callbackUserId || options.userId || options.callbackPasswrod || options.password)?{
+        UserId: options.callbackUserId || options.userId,
+        Password: options.callbackPasswrod || options.password
+      }:options.callbackCreds,
+    },
   }
   const config = {
     headers: {
@@ -222,11 +222,12 @@ module.exports.createMessageApplication = async () => {
     }
   };
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`;
-  console.log(url)
-  const data = jsToXml.parse(bodyObj)
-  return await axios.post(url, data, config)
+  const xmlData = jsToXml.parse(data)
+  return await axios.post(url, xmlData, config)
     .then(res => {
       return xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    }).catch(err => {
+      throw new Error(xmlToJs.parse(err.response.data).ApplicationProvisioningResponse.ResponseStatus.Description)
     })
 }
 
@@ -234,27 +235,29 @@ module.exports.createMessageApplication = async () => {
  * Accesses the iris api to create an application for messaging in particular.
  * @return the response.
  */
-module.exports.createVoiceApplication = async () => {
-  const bodyObj = {
-    Application: [{
+module.exports.createVoiceApplication = async (options) => {
+  const data = {
+    Application: {
       ServiceType: 'Voice-V2',
-      AppName: 'Voice Application Name',
-      CallInitiatedCallbackUrl: 'https://example.com',
-      CallInitiatedMethod: 'GET',
-      CallStatusCallbackUrl: 'https://example.com',
-      CallStatusMethod: 'GET',
-      CallbackCreds: {
-        UserId: 'testId',
-        Password: 'testPass'
-      }
-    }],
+      AppName: options.name || options.appName,
+      CallInitiatedCallbackUrl: options.callInitiatedCallbackUrl,
+      CallInitiatedMethod: options.callInitiatedMethod,
+      CallStatusCallbackUrl: options.callStatusCallbackUrl,
+      CallStatusMethod: options.callStatusMethod,
+      CallbackCreds: (options.callbackUserId || options.userId || options.callbackPasswrod || options.password)?{
+        UserId: options.callbackUserId || options.userId,
+        Password: options.callbackPasswrod || options.password
+      }:options.callbackCreds,
+    },
   }
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`;
   console.log(url)
-  const data = jsToXml.parse(bodyObj)
-  return await axios.post(url, data, config)
+  const xmlData = jsToXml.parse(data)
+  return await axios.post(url, xmlData, config)
     .then(res => {
       return xmlToJs.parse(res.data).ApplicationProvisioningResponse.Application;
+    }).catch(err => {
+      throw new Error(xmlToJs.parse(err.response.data).ApplicationProvisioningResponse.ResponseStatus.Description)
     })
 }
 
