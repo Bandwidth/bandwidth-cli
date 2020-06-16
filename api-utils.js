@@ -267,7 +267,7 @@ module.exports.createVoiceApplication = async (options) => {
  */
 module.exports.deleteApplication = (appId) => {
   const url = IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications/${appId}`;
-  axios.delete(url, config)
+  axios.delete(url, config);
   .then(res => {
     if (res.status === 200) {
       console.log(`successfully deleted application ${appId}`)
