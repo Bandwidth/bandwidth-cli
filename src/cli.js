@@ -78,14 +78,14 @@ const createAppCmd = createCmd.command('app <name>')
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
-  .action((name, cmdObj) => {
+  .action(async (name, cmdObj) => {
     const options = cmdObj.opts();
   })
 
 const createSippeerCmd = createCmd.command('sipper <name>')
   .alias('p')
   .alias('sip')
-  .action((name, cmdObj) => {
+  .action(async (name, cmdObj) => {
     const options = cmdObj.opts();
   })
 
