@@ -25,9 +25,7 @@ const createAppCmd = createCmd.command('app <name>')
       case 'v':
       case 'voice':
         {
-          utils.createVoiceApplication({
-            name: name
-          })
+          console.log('creating a voice app')
         }
         break;
       case 'm':
@@ -41,7 +39,18 @@ const createAppCmd = createCmd.command('app <name>')
     }
   })
 
+  const createSiteCmd = createCmd.command('site <name>')
+    .alias('s')
+    .action((name, cmdObj) => {
+      const options = cmdObj.opts();
+    })
 
+  const createSippeerCmd = createCmd.command('sipper <name>')
+    .alias('s')
+    .alias('sip')
+    .action((name, cmdObj) => {
+      const options = cmdObj.opts();
+    })
 
 
 /**************************'LIST' COMMAND**************************/
