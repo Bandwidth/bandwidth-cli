@@ -1,9 +1,22 @@
 const { Command } = require('commander');
-const utils = require('./api-utils')
+const utils = require('./api-utils');
 var numbers = require("@bandwidth/numbers");
+const inquirer = require('inquirer');
 numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
 numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
+
+const Bandwidth = require("node-bandwidth");
+
+const client = new Bandwidth({
+	userId    : process.env.BANDWIDTH_ACCOUNT_ID,
+	apiToken  : process.env.BANDWIDTH_API_USER,
+	apiSecret : process.env.BANDWIDTH_API_PASSWORD
+}); //TODO: actually use the SDK. For now, the API utils function just seems to make a lot more sense.
+
+
+
+
 module.exports.program = program = new Command();
 
 const description = 'A descriptive description to describe something worth describing with a description.';
@@ -19,13 +32,24 @@ const createCmd = program.command('create')
 const createAppCmd = createCmd.command('app <name>')
   .alias('a')
   .requiredOption('-t, --type <type>', 'An application must be a voice(v) or messaging(m) application')
-  .action((name, cmdObj) => {
+  .action(async (name, cmdObj) => {
     const options = cmdObj.opts();
     switch (options.type) {
       case 'v':
       case 'voice':
         {
-          console.log('creating a voice app')
+          const voiceAppPrompts = [
+            {
+              type: 'input',
+              name: 'callInitiatedCallbackUrl',
+              message: "Please enter a callInitiatedCallbackUrl" //this is the only mandatory field so far.
+            }
+          ]
+          const answers = await inquirer.prompt(voiceAppPrompts);
+          console.log(await utils.createVoiceApplication({
+            name: name,
+            callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
+          }))
         }
         break;
       case 'm':
@@ -70,7 +94,7 @@ const listSiteCmd = listCmd.command('site')
   .action(async () => {
     try {
       const sitesList = await numbers.Site.listAsync()
-      console.log(sitesList)
+      console.log(sitesList) //FIXME probably make a table here.
     } catch {
       console.log('an error has occured')
     }

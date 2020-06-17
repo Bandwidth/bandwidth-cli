@@ -25,6 +25,7 @@
     "axios": "^0.19.2",
     "commander": "^5.1.0",
     "fast-xml-parser": "^3.17.4",
-    "inquirer": "^7.1.0"
+    "inquirer": "^7.1.0",
+    "node-bandwidth": "^3.0.3"
   }
 }
