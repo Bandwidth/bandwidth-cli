@@ -46,16 +46,29 @@ const createAppCmd = createCmd.command('app <name>')
             }
           ]
           const answers = await inquirer.prompt(voiceAppPrompts);
-          console.log(await utils.createVoiceApplication({
+          const createdApp = await utils.createVoiceApplication({
             name: name,
             callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-          }))
+          })
+          console.log(createdApp)
         }
         break;
       case 'm':
       case 'messaging':
         {
-          console.log('creating messaging app')
+          const messageAppPrompts = [
+            {//consider delcaring this elsewhere??? Seems like clutter.
+              type: 'input',
+              name: 'msgCallbackUrl',
+              message: "Please enter a message callbackUrl"
+            }
+          ]
+          const answers = await inquirer.prompt(messageAppPrompts);
+          const createdApp = await utils.createMessageApplication({
+            name: name,
+            msgCallbackUrl: answers.msgCallbackUrl
+          })
+          console.log(createdApp)
         }
         break;
       default:
