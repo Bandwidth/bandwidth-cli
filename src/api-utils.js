@@ -182,8 +182,8 @@ module.exports.deleteSippeer = (siteId, sippeerId) => {
 }
 
 /*APPLICATIONS*/
-module.exports.listApplications = () => {
-  axios({
+module.exports.listApplications = async () => {
+  await axios({
     method: "GET",
     url: IRIS_BASE_URL + `/accounts/${ACCOUNT_ID}/applications`,
     auth: {
@@ -192,7 +192,6 @@ module.exports.listApplications = () => {
     }
   }).then(res => {
     const js = xmlToJs.parse(res.data).ApplicationProvisioningResponse.ApplicationList.Application;
-    console.log(js);
   }).catch(console.log)
 }
 

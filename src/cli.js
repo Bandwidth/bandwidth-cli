@@ -114,6 +114,7 @@ const createSippeerCmd = createCmd.command('sipper <name>')
   .alias('sip')
   .action(async (name, cmdObj) => {
     const options = cmdObj.opts();
+
   })
 
 
@@ -125,9 +126,10 @@ const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
   .action(async () => {
-
-    //list things
+    const appList = await utils.listApplications();
+    console.log(appList)
   })
+
 const listSiteCmd = listCmd.command('site')
   .alias('s')
   .alias('sites')
@@ -140,13 +142,22 @@ const listSiteCmd = listCmd.command('site')
     }
     //list things
   })
-const listSippeerCmd = listCmd.command('sippeer')
+const listSippeerCmd = listCmd.command('sippeer <site-id>')
   .alias('p')
   .alias('sippeers')
-  .action(async () => {
-    //list things
+  .action(async (siteId, cmdObj) => {
+    const sippeerList = await numbers.SipPeer.listAsync(siteId)
+    console.log(sippeerList)
   })
 
 /**************************'DELETE' COMMAND**************************/
 
-const deleteCmd = program.command('delete');
+const deleteCmd = program.command('delete')
+  .alias('d')
+  .alias('del')
+
+const deleteAppCmd = deleteCmd.command('delete <app-id>')
+  .alias('a')
+  .action(async (appId) => {
+    utils.deleteApplication(appId)
+  })
