@@ -78,8 +78,35 @@ const createAppCmd = createCmd.command('app <name>')
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
+  .requiredOption('-t, --addressType <type>', 'A site must be a billing(b) or service(s) application')
   .action(async (name, cmdObj) => {
     const options = cmdObj.opts();
+    let addressType;
+    if (options.addressType === 's') {addressType = 'service'}
+    if (options.addressType === 'b') {addressType = 'billing'}
+    if (addressType !== 'service' && addressType !== 'billing') {
+      throw Error('addressType must be either service(s) or billing(b)')
+    }
+    const sitePrompts = [
+      {
+        type: 'input',
+        name: 'addressLine1',
+        message: "Sites require an address. Please enter address line 1"
+      },
+      {
+        type: 'input',
+        name: 'addressLine2',
+        message: "Please enter the city, state, and ZIP, each seperated by a comma and a space"
+      }
+    ]
+    const answers = await inquirer.prompt(sitePrompts);
+    const address = await utils.geocode(answers.addressLine1, ...answers.addressLine2.split(', '))
+    const createdSite = await utils.createSite({
+      name: name,
+      addressType: addressType,
+      address: address
+    })
+    console.log(createdSite)
   })
 
 const createSippeerCmd = createCmd.command('sipper <name>')
