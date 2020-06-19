@@ -6,15 +6,6 @@ numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
 numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
 
-const Bandwidth = require("node-bandwidth");
-
-const client = new Bandwidth({
-	userId    : process.env.BANDWIDTH_ACCOUNT_ID,
-	apiToken  : process.env.BANDWIDTH_API_USER,
-	apiSecret : process.env.BANDWIDTH_API_PASSWORD
-}); //TODO: actually use the SDK. For now, the API utils function just seems to make a lot more sense.
-
-
 
 
 module.exports.program = program = new Command();
@@ -109,7 +100,7 @@ const createSiteCmd = createCmd.command('site <name>')
     console.log(createdSite)
   })
 
-const createSippeerCmd = createCmd.command('sipper <name>')
+const createSipPeerCmd = createCmd.command('sipper <name>')
   .alias('p')
   .alias('sip')
   .action(async (name, cmdObj) => {
@@ -142,12 +133,12 @@ const listSiteCmd = listCmd.command('site')
     }
     //list things
   })
-const listSippeerCmd = listCmd.command('sippeer <site-id>')
+const listSipPeerCmd = listCmd.command('sippeer <site-id>')
   .alias('p')
   .alias('sippeers')
   .action(async (siteId, cmdObj) => {
-    const sippeerList = await numbers.SipPeer.listAsync(siteId)
-    console.log(sippeerList)
+    const sipPeerList = await numbers.SipPeer.listAsync(siteId)
+    console.log(sipPeerList)
   })
 
 /**************************'DELETE' COMMAND**************************/
@@ -156,8 +147,17 @@ const deleteCmd = program.command('delete')
   .alias('d')
   .alias('del')
 
-const deleteAppCmd = deleteCmd.command('delete <app-id>')
+const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
+  .alias('applicatiion')
   .action(async (appId) => {
     utils.deleteApplication(appId)
+  })
+
+const deleteSiteCmd = deleteCmd.command('site <site-id>')
+  .alias('s')
+  .action(async (siteId) => {
+    const site = await numbers.Site.getAsync(siteId);
+    const res = await site.deleteAsync()
+    console.log(res)
   })

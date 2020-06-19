@@ -2,7 +2,7 @@
   "name": "bw-cli",
   "version": "0.0.1",
   "description": "A CLI to help developers new to Bandwidth to get set up and order phone numbers.",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "play": "cd testing&&node playground.js"
@@ -25,7 +25,6 @@
     "axios": "^0.19.2",
     "commander": "^5.1.0",
     "fast-xml-parser": "^3.17.4",
-    "inquirer": "^7.1.0",
-    "node-bandwidth": "^3.0.3"
+    "inquirer": "^7.1.0"
   }
 }
