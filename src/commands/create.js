@@ -45,7 +45,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
       }
       break;
     default:
-      console.log('type must be either voice(v) or messaging(m)')
+      console.log('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
   }
 }
 
@@ -83,5 +83,11 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
-
+  const siteId = options.siteId;
+  const createdPeer = await numbers.SipPeer.createAsync({
+    peerName: name,
+    isDefaultPeer: options.default,
+    siteId: siteId,
+  }).catch(console.log)
+  console.log(createdPeer)
 }

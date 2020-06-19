@@ -18,7 +18,7 @@ module.exports.listSiteAction = async () => {
   //list things
 }
 
-module.exports.createSipPeerAction = async (siteId, cmdObj) => {
+module.exports.listSipPeerAction = async (siteId, cmdObj) => {
   const sipPeerList = await numbers.SipPeer.listAsync(siteId)
   console.log(sipPeerList)
 }

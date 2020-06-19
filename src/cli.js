@@ -37,7 +37,9 @@ const createSiteCmd = createCmd.command('site <name>')
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
-  .action(createActions.createSipPeerAction)
+	.requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
+	.option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
+	.action(createActions.createSipPeerAction)
 
 
 /**************************'LIST' COMMAND**************************/
