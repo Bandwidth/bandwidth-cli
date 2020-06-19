@@ -36,8 +36,9 @@ module.exports.createAppAction = async (name, cmdObj) => {
           }
         ]
         const answers = await inquirer.prompt(messageAppPrompts);
-        const createdApp = await utils.createMessageApplication({
-          name: name,
+        console.log(numbers.Application)
+        const createdApp = await numbers.Application.createMessagingApplicationAsync({
+          appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
         })
         console.log(createdApp)
@@ -70,11 +71,13 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   ]
   const answers = await inquirer.prompt(sitePrompts);
   const address = await utils.geocode(answers.addressLine1, ...answers.addressLine2.split(', '))
-  const createdSite = await utils.createSite({
+  const createdSite = await numbers.Site.createAsync({
     name: name,
-    addressType: addressType,
-    address: address
-  })
+    address: {
+      ...address,
+      addressType: addressType,
+    }
+  }).catch(console.log)
   console.log(createdSite)
 }
 

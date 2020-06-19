@@ -4,7 +4,7 @@ const numbers = require("@bandwidth/numbers");
 
 
 module.exports.deleteAppAction = async (appId) => {
-  utils.deleteApplication(appId)
+  numbers.Application.delete(appId)
 }
 
 module.exports.deleteSiteAction = async (siteId) => {
@@ -13,6 +13,8 @@ module.exports.deleteSiteAction = async (siteId) => {
   console.log(res)
 }
 
-module.exports.deleteSipPeerAction = async (siteId, cmdObj) => {
-
+module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
+  const siteId = cmdObj.opts().siteId;
+  const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId);
+  sipPeer.delete();
 }

@@ -79,7 +79,8 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .alias('s')
   .action(deleteActions.deleteSiteAction)
 
-const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>') //FIXME
+const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
 	.alias('p')
 	.alias('peer')
+	.requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
 	.action(deleteActions.deleteSipPeerAction);
