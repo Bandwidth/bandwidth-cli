@@ -22,6 +22,7 @@ program
 
 const createCmd = program.command('create')
   .alias('c')
+	.description('Create an organizational category for phone numbers, such as sip peers/locations, sites/sub-accounts, and applications.')
 
 const createAppCmd = createCmd.command('app <name>')
   .alias('a')
@@ -33,16 +34,19 @@ const createSiteCmd = createCmd.command('site <name>')
   .requiredOption('-t, --addressType <type>', 'A site must be a billing(b) or service(s) application')
   .action(createActions.createSiteAction)
 
-const createSipPeerCmd = createCmd.command('sipper <name>')
+const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
-  .alias('sip')
+  .alias('peer')
   .action(createActions.createSipPeerAction)
 
 
 /**************************'LIST' COMMAND**************************/
 
 const listCmd = program.command('list')
-  .alias('l');
+  .alias('l')
+	.description('List the sip peers, sites, and applications associated with your account.');
+
+
 const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
@@ -56,6 +60,7 @@ const listSiteCmd = listCmd.command('site')
 const listSipPeerCmd = listCmd.command('sippeer <site-id>')
   .alias('p')
   .alias('sippeers')
+	.alias('peer')
   .action(listActions.listSipPeerAction);
 
 /**************************'DELETE' COMMAND**************************/
@@ -63,6 +68,7 @@ const listSipPeerCmd = listCmd.command('sippeer <site-id>')
 const deleteCmd = program.command('delete')
   .alias('d')
   .alias('del')
+	.description('Delete a site, location, or sip peer.');
 
 const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
