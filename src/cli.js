@@ -79,6 +79,7 @@ const deleteAppCmd = deleteCmd.command('app <app-id>')
 
 const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .alias('s')
+  .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
   .action(deleteActions.deleteSiteAction)
 
 const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
