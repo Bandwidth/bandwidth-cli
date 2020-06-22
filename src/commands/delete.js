@@ -30,8 +30,8 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
       await sipPeer.deleteAsync(); //Waiting like this is really slow, but how else to guarantee that it waits enough before deleting the site?
     }
   }
-  const res = await site.deleteAsync(); //FIXME: I can also just create a new Site(), site.id = id, and then site.deleteAsync
-  console.log(res) //FIXME: if deleting site with sippeers, enable "force" that will unlink all.
+  const res = await site.deleteAsync(); //TODO: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
+  console.log(res)
 }
 
 module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
