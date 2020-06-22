@@ -36,7 +36,6 @@ module.exports.createAppAction = async (name, cmdObj) => {
           }
         ]
         const answers = await inquirer.prompt(messageAppPrompts);
-        console.log(numbers.Application)
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl

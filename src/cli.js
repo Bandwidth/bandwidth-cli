@@ -75,6 +75,7 @@ const deleteCmd = program.command('delete')
 const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
   .alias('applicatiion')
+  .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
   .action(deleteActions.deleteAppAction)
 
 const deleteSiteCmd = deleteCmd.command('site <site-id>')

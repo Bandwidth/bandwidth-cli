@@ -3,9 +3,21 @@ const numbers = require("@bandwidth/numbers");
 
 
 
-module.exports.deleteAppAction = async (appId) => {
+module.exports.deleteAppAction = async (appId, cmdObj) => {
+  const opts = cmdObj.opts();
+  const force = opts.force;
   const app = await numbers.Application.getAsync(appId);
-  app.deleteAsync().catch()
+  const associatedSipPeers = await app.getSipPeersAsync();
+  if (force && associatedSipPeers) {
+    for await (sipPeerData of associatedSipPeers) {
+      let peer = new numbers.SipPeer();
+      peer.id = sipPeerData.peerId;
+      peer.siteId = sipPeerData.siteId;
+      peer.client = new numbers.Client();
+      await peer.removeApplicationsAsync()
+    }
+  }
+  app.deleteAsync()
 }
 
 module.exports.deleteSiteAction = async (siteId, cmdObj) => {
