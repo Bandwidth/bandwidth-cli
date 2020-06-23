@@ -1,5 +1,4 @@
 const { Command } = require('commander');
-const utils = require('./api-utils');
 const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
 const createActions = require('./commands/create');

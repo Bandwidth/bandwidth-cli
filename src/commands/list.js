@@ -1,10 +1,9 @@
-const utils = require('../api-utils');
 const numbers = require("@bandwidth/numbers");
 
 
 
 module.exports.listAppAction = async () => {
-  const appList = await utils.listApplications();
+  const appList = await numbers.Application.listAsync();
   console.log(appList)
 }
 

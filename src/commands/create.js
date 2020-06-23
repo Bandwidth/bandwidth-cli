@@ -18,8 +18,8 @@ module.exports.createAppAction = async (name, cmdObj) => {
           }
         ]
         const answers = await inquirer.prompt(voiceAppPrompts);
-        const createdApp = await utils.createVoiceApplication({
-          name: name,
+        const createdApp = await numbers.Application.createVoiceApplicationAsync({
+          appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
         })
         console.log(createdApp)
