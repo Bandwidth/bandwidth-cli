@@ -60,12 +60,12 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     {
       type: 'input',
       name: 'addressLine1',
-      message: "Sites require an address. Please enter address line 1"
+      message: "Sites require an address. Please enter address line 1. (example: 900 Main Campus Dr)"
     },
     {
       type: 'input',
       name: 'addressLine2',
-      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space"
+      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
     }
   ]
   const answers = await inquirer.prompt(sitePrompts);
