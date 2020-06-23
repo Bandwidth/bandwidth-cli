@@ -1,4 +1,3 @@
-const utils = require('../api-utils');
 const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
 
@@ -69,7 +68,13 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     }
   ]
   const answers = await inquirer.prompt(sitePrompts);
-  const address = await utils.geocode(answers.addressLine1, ...answers.addressLine2.split(', '))
+  const line2 = answers.addressLine2.split(', ');
+  const address = await numbers.Geocode.requestAsync({
+    addressLine1: answers.addressLine1,
+    city: line2[0],
+    stateCode: line2[1],
+    zip: line2[2]
+  })
   const createdSite = await numbers.Site.createAsync({
     name: name,
     address: {
