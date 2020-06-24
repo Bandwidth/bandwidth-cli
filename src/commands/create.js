@@ -20,7 +20,8 @@ module.exports.createAppAction = async (name, cmdObj) => {
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
         })
-        console.log(createdApp)
+        printer.success('Voice application created. See details of your created application below.')
+        printer.removeClient(createdApp);
       }
       break;
     case 'm':
@@ -38,7 +39,8 @@ module.exports.createAppAction = async (name, cmdObj) => {
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
         })
-        console.log(createdApp)
+        printer.success('Messaging application created. See details of your created application below.')
+        printer.removeClient(createdApp);
       }
       break;
     default:
@@ -74,8 +76,9 @@ module.exports.createSiteAction = async (name, cmdObj) => {
       ...address,
       addressType: addressType,
     }
-  }).catch(console.log)
-  console.log(createdSite)
+  }).catch(printer.httpError)
+  printer.success('Site created. See details of your created Site below.')
+  printer.removeClient(createdSite);
 }
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
@@ -85,6 +88,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch(console.log)
-  console.log(createdPeer)
+  }).catch(printer.httpError)
+  printer.success('Sip Peer created. See details of your created Peer below.')
+  printer.removeClient(createdPeer);
 }

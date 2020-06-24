@@ -21,7 +21,7 @@ program
 
 const createCmd = program.command('create')
   .alias('c')
-	.description('Create an organizational category for phone numbers, such as sip peers/locations, sites/sub-accounts, and applications.')
+  .description('Create an organizational category for phone numbers, such as sip peers/locations, sites/sub-accounts, and applications.')
 
 const createAppCmd = createCmd.command('app <name>')
   .alias('a')
@@ -36,16 +36,16 @@ const createSiteCmd = createCmd.command('site <name>')
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
-	.requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
-	.option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
-	.action(createActions.createSipPeerAction)
+  .requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
+  .option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
+  .action(createActions.createSipPeerAction)
 
 
 /**************************'LIST' COMMAND**************************/
 
 const listCmd = program.command('list')
   .alias('l')
-	.description('List the sip peers, sites, and applications associated with your account.');
+  .description('List the sip peers, sites, and applications associated with your account.');
 
 
 const listAppCmd = listCmd.command('app')
@@ -61,7 +61,7 @@ const listSiteCmd = listCmd.command('site')
 const listSipPeerCmd = listCmd.command('sippeer <site-id>')
   .alias('p')
   .alias('sippeers')
-	.alias('peer')
+  .alias('peer')
   .action(listActions.listSipPeerAction);
 
 /**************************'DELETE' COMMAND**************************/
@@ -69,7 +69,7 @@ const listSipPeerCmd = listCmd.command('sippeer <site-id>')
 const deleteCmd = program.command('delete')
   .alias('d')
   .alias('del')
-	.description('Delete a site, location, or sip peer.');
+  .description('Delete a site, location, or sip peer.');
 
 const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
@@ -83,7 +83,7 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .action(deleteActions.deleteSiteAction)
 
 const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
-	.alias('p')
-	.alias('peer')
-	.requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
-	.action(deleteActions.deleteSipPeerAction);
+  .alias('p')
+  .alias('peer')
+  .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .action(deleteActions.deleteSipPeerAction);

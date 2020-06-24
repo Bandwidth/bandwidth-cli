@@ -1,5 +1,6 @@
 var colors = require('colors/safe');
 const inquirer = require('inquirer');
+const YAML = require('yaml');
 
 /**
  * This file is intended to make the output style of the entire CLI uniform. In
@@ -58,7 +59,8 @@ module.exports.httpError = (err) => {
  * Print out javascript object.
  */
 module.exports.printObj = (jsObj) => {
-  console.log(jsObj)
+  console.log();
+  console.log(YAML.stringify(jsObj))
 }
 
 /**
@@ -66,8 +68,18 @@ module.exports.printObj = (jsObj) => {
  */
 module.exports.removeClient = (jsObj) => {
   // FIXME: remove a clientfield
-  module.exports.printObj(jsObj)
+  const copy = {...jsObj};
+  delete copy.client;
+  module.exports.printObj(copy)
 }
+
+/**
+ * Print something successful, in green..
+ */
+module.exports.success = (text) => {
+  console.log(colors.green(text))
+}
+
 
 /**
  * A normal log statement. Can be changed if needed.
