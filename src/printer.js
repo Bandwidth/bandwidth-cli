@@ -81,14 +81,12 @@ module.exports.printObj = (jsObj) => {
  * Print out javascript objects, removing the client if there is one.
  */
 module.exports.removeClient = (jsObj) => {
-  // FIXME: remove a clientfield
-  const copy = {...jsObj};
-  delete copy.client;
+  const {client, ...copy} = jsObj;
   module.exports.printObj(copy)
 }
 
 /**
- * Print something successful, in green..
+ * Print something successful, in green.
  */
 module.exports.success = (text) => {
   console.log(colors.green(text))

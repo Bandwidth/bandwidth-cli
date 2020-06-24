@@ -33,7 +33,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
             message: "Please enter a message callbackUrl"
           }
         ]
-        const answers = await await printer.prompt(messageAppPrompts)
+        const answers = await printer.prompt(messageAppPrompts)
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
