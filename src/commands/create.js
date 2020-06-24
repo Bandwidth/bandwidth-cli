@@ -1,4 +1,3 @@
-const utils = require('../api-utils');
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 
@@ -60,16 +59,22 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     {
       type: 'input',
       name: 'addressLine1',
-      message: "Sites require an address. Please enter address line 1"
+      message: "Sites require an address. Please enter address line 1. (example: 900 Main Campus Dr)"
     },
     {
       type: 'input',
       name: 'addressLine2',
-      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space"
+      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
     }
   ]
   const answers = await printer.prompt(sitePrompts);
-  const address = await utils.geocode(answers.addressLine1, ...answers.addressLine2.split(', '))
+  const line2 = answers.addressLine2.split(', ');
+  const address = await numbers.Geocode.requestAsync({
+    addressLine1: answers.addressLine1,
+    city: line2[0],
+    stateCode: line2[1],
+    zip: line2[2]
+  })
   const createdSite = await numbers.Site.createAsync({
     name: name,
     address: {
