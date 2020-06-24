@@ -1,10 +1,12 @@
 var colors = require('colors/safe');
+const inquirer = require('inquirer');
 
 /**
  * This file is intended to make the output style of the entire CLI uniform. In
  * particular, it should handle the formatting and style of any and all output
- * that the CLI generates and shows the user. Please do not write to console
- * outside of this method (and commander's defaults.)
+ * that the CLI generates and shows the user. It also enables a possible "verbose"
+ * or "quiet" switch, which is what nexmo is currently doing.
+ * Please do not write to console outside of this method (and commander's defaults.)
  */
 
 /**
@@ -40,19 +42,34 @@ module.exports.reject = (message) => {
 
 /**
  * Inquire and asynchronously return the response.
+ * @param prompts a list of prompts to be used by inquirer
  */
-module.exports.prompt = async (prompts) => {
+module.exports.prompt = inquirer.prompt;
 
+/**
+ * Print out http request errors.
+ */
+module.exports.httpError = (err) => {
+  const message = err;//parse the response somehow
+  module.exports.error(message)
 }
 
 /**
- * Print out http requests.
+ * Print out javascript object.
  */
-module.exports.http = (res) => {
-  console.log(res);
+module.exports.printObj = (jsObj) => {
+  console.log(jsObj)
 }
 
 /**
- * A normal log statement. Can be changed if needed. 
+ * Print out javascript objects, removing the client if there is one.
+ */
+module.exports.removeClient = (jsObj) => {
+  // FIXME: remove a clientfield
+  module.exports.printObj(jsObj)
+}
+
+/**
+ * A normal log statement. Can be changed if needed.
  */
 module.exports.print = console.log

@@ -1,8 +1,6 @@
 const utils = require('../api-utils');
 const numbers = require("@bandwidth/numbers");
-const inquirer = require('inquirer');
-
-
+const printer = require('../printer')
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -17,7 +15,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
             message: "Please enter a callInitiatedCallbackUrl" //this is the only mandatory field so far.
           }
         ]
-        const answers = await inquirer.prompt(voiceAppPrompts);
+        const answers = await printer.prompt(voiceAppPrompts)
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
@@ -29,13 +27,13 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'messaging':
       {
         const messageAppPrompts = [
-          {//consider delcaring this elsewhere??? Seems like clutter.
+          {
             type: 'input',
             name: 'msgCallbackUrl',
             message: "Please enter a message callbackUrl"
           }
         ]
-        const answers = await inquirer.prompt(messageAppPrompts);
+        const answers = await await printer.prompt(messageAppPrompts)
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
@@ -44,7 +42,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
       }
       break;
     default:
-      console.log('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
+      printer.reject('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
   }
 }
 
@@ -68,7 +66,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
       message: "Please enter the city, state, and ZIP, each seperated by a comma and a space"
     }
   ]
-  const answers = await inquirer.prompt(sitePrompts);
+  const answers = await printer.prompt(sitePrompts);
   const address = await utils.geocode(answers.addressLine1, ...answers.addressLine2.split(', '))
   const createdSite = await numbers.Site.createAsync({
     name: name,
