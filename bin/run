@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+const { program } = require('../src/cli.js');
+async function main(args) {
+  program.parse(args)
+}
+main(process.argv)
