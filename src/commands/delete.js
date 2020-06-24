@@ -29,6 +29,7 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
   const site = await numbers.Site.getAsync(siteId);
   if (force) {
     const associatedSipPeers = await site.getSipPeersAsync()
+    associatedSipPeers.sort((peerA, peerB) => peerA.isDefaultPeer - peerB.isDefaultPeer)//delete default peer last
     for await (sipPeer of associatedSipPeers) {
       await sipPeer.deleteAsync(); //Waiting like this is really slow, but how else to guarantee that it waits enough before deleting the site?
       printer.warn(`Deleting Sip Peer ${sipPeer.id}`)
