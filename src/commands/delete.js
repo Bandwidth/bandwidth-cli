@@ -1,5 +1,5 @@
-const numbers = require("@bandwidth/numbers");
-
+const numbers = require('@bandwidth/numbers');
+const printer = require('../printer')
 
 
 module.exports.deleteAppAction = async (appId, cmdObj) => {
@@ -13,10 +13,14 @@ module.exports.deleteAppAction = async (appId, cmdObj) => {
       peer.id = sipPeerData.peerId;
       peer.siteId = sipPeerData.siteId;
       peer.client = new numbers.Client();
+      printer.warn(`Unlinking your application with Sip Peer ${peer.id}`);
       await peer.removeApplicationsAsync()
     }
+    printer.print();
   }
-  app.deleteAsync()
+  app.deleteAsync().then(() => {
+    printer.print('Application successfully deleted')
+  })
 }
 
 module.exports.deleteSiteAction = async (siteId, cmdObj) => {
@@ -27,14 +31,14 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
     const associatedSipPeers = await site.getSipPeersAsync()
     for await (sipPeer of associatedSipPeers) {
       await sipPeer.deleteAsync(); //Waiting like this is really slow, but how else to guarantee that it waits enough before deleting the site?
+      printer.warn(`Deleting Sip Peer ${sipPeer.id}`)
     }
   }
-  const res = await site.deleteAsync(); //TODO: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
-  console.log(res)
+  const res = await site.deleteAsync().then( _ => printer.print('Site successfully deleted.')); //IDEA: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
 }
 
 module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
   const siteId = cmdObj.opts().siteId;
   const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId);
-  sipPeer.delete();
+  sipPeer.deleteAsync().then(_ => printer.print('Sip Peer successfully deleted.'));
 }

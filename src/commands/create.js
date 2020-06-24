@@ -8,7 +8,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'v':
     case 'voice':
       {
-        const voiceAppPrompts = [
+        const voiceAppPrompts = [ //possible add "advanced" creating for other fields?
           {
             type: 'input',
             name: 'callInitiatedCallbackUrl',
@@ -19,7 +19,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        })
+        });
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }

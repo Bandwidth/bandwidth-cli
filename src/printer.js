@@ -5,8 +5,8 @@ const YAML = require('yaml');
 /**
  * This file is intended to make the output style of the entire CLI uniform. In
  * particular, it should handle the formatting and style of any and all output
- * that the CLI generates and shows the user. It also enables a possible "verbose"
- * or "quiet" switch, which is what nexmo is currently doing.
+ * that the CLI generates and shows the user. It makes future expandions, such
+ * as "verbose" or "quiet" options, easier to implement.
  * Please do not write to console outside of this method (and commander's defaults.)
  */
 
@@ -15,7 +15,7 @@ const YAML = require('yaml');
  */
 module.exports.error = (error) => {
   console.error(colors.red(error));
-  process.exit()
+  process.exit(1);
 }
 /**
  * A warning that does not immediately terminate the program.
@@ -38,7 +38,7 @@ module.exports.printTable = (data, maxCols) => {
  */
 module.exports.reject = (message) => {
   console.error(colors.brightRed(message));
-  process.exit()
+  process.exit(0)
 }
 
 /**
