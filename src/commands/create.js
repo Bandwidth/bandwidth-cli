@@ -1,7 +1,5 @@
 const numbers = require("@bandwidth/numbers");
-const inquirer = require('inquirer');
-
-
+const printer = require('../printer')
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -9,41 +7,43 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'v':
     case 'voice':
       {
-        const voiceAppPrompts = [
+        const voiceAppPrompts = [ //possible add "advanced" creating for other fields?
           {
             type: 'input',
             name: 'callInitiatedCallbackUrl',
             message: "Please enter a callInitiatedCallbackUrl" //this is the only mandatory field so far.
           }
         ]
-        const answers = await inquirer.prompt(voiceAppPrompts);
+        const answers = await printer.prompt(voiceAppPrompts)
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        })
-        console.log(createdApp)
+        });
+        printer.success('Voice application created. See details of your created application below.')
+        printer.removeClient(createdApp);
       }
       break;
     case 'm':
     case 'messaging':
       {
         const messageAppPrompts = [
-          {//consider delcaring this elsewhere??? Seems like clutter.
+          {
             type: 'input',
             name: 'msgCallbackUrl',
             message: "Please enter a message callbackUrl"
           }
         ]
-        const answers = await inquirer.prompt(messageAppPrompts);
+        const answers = await printer.prompt(messageAppPrompts)
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
         })
-        console.log(createdApp)
+        printer.success('Messaging application created. See details of your created application below.')
+        printer.removeClient(createdApp);
       }
       break;
     default:
-      console.log('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
+      printer.reject('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
   }
 }
 
@@ -67,7 +67,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
       message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
     }
   ]
-  const answers = await inquirer.prompt(sitePrompts);
+  const answers = await printer.prompt(sitePrompts);
   const line2 = answers.addressLine2.split(', ');
   const address = await numbers.Geocode.requestAsync({
     addressLine1: answers.addressLine1,
@@ -81,8 +81,9 @@ module.exports.createSiteAction = async (name, cmdObj) => {
       ...address,
       addressType: addressType,
     }
-  }).catch(console.log)
-  console.log(createdSite)
+  }).catch(printer.httpError)
+  printer.success('Site created. See details of your created Site below.')
+  printer.removeClient(createdSite);
 }
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
@@ -92,6 +93,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch(console.log)
-  console.log(createdPeer)
+  }).catch(printer.httpError)
+  printer.success('Sip Peer created. See details of your created Peer below.')
+  printer.removeClient(createdPeer);
 }

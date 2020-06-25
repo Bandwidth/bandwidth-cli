@@ -1,23 +1,31 @@
 const numbers = require("@bandwidth/numbers");
-
+const printer = require('../printer')
 
 
 module.exports.listAppAction = async () => {
   const appList = await numbers.Application.listAsync();
-  console.log(appList)
+  printer.table(appList, {
+    fields: ['applicationId', 'serviceType', 'appName'],
+    key: 'applicationId'
+  });
 }
 
 module.exports.listSiteAction = async () => {
   try {
     const sitesList = await numbers.Site.listAsync()
-    console.log(sitesList) //FIXME probably make a table here.
-  } catch {
-    console.log('an error has occured')
+    printer.table(sitesList, {
+      fields: ['id', 'name', 'sipPeerCount'],
+      key: 'id'
+    });
+  } catch (err){
+    printer.error(err)
   }
-  //list things
 }
 
 module.exports.listSipPeerAction = async (siteId, cmdObj) => {
   const sipPeerList = await numbers.SipPeer.listAsync(siteId)
-  console.log(sipPeerList)
+  printer.table(sipPeerList, {
+    fields: ['peerId', 'peerName', 'isDefaultPeer'],
+    key: 'peerId'
+  })
 }
