@@ -1,5 +1,6 @@
 const numbers = require("@bandwidth/numbers");
-const printer = require('../printer')
+const printer = require('../printer');
+const { ApiError, BadInputError } = require('../errors')
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -18,7 +19,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        }).catch(err => throw new ApiError(err));
+        }).catch((err) => {throw new ApiError(err)});
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -37,7 +38,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
-        })
+        }).catch((err) => {throw new ApiError(err)});
         printer.success('Messaging application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -74,14 +75,14 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     city: line2[0],
     stateCode: line2[1],
     zip: line2[2]
-  })
+  }).catch((err) => {throw new ApiError(err)});
   const createdSite = await numbers.Site.createAsync({
     name: name,
     address: {
       ...address,
       addressType: addressType,
     }
-  }).catch(printer.httpError)
+  }).catch((err) => {throw new ApiError(err)});
   printer.success('Site created. See details of your created Site below.')
   printer.removeClient(createdSite);
 }
@@ -93,7 +94,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch(printer.httpError)
+  }).catch((err) => {throw new ApiError(err)});
   printer.success('Sip Peer created. See details of your created Peer below.')
   printer.removeClient(createdPeer);
 }

@@ -13,12 +13,12 @@ class ApiError extends CliError {
    * @constructor
    * @param res the http packet with the response
    */
-  constructor(res) {
-    const message = (res.body.indexOf('<Description>') >= 0)?
-      res.body.split('<Description>').pop().split('</Description>')[0]:
+  constructor(packet) {
+    const message = (packet.response.res.text.indexOf('<Description>') >= 0)?
+      packet.response.res.text.split('<Description>').pop().split('</Description>')[0]:
       "An unknown error occured."
-    super(message, res.status);
-    this.res = res;
+    super(message, 'Error Code ' + packet.status.toString());
+    this.res = packet.response;
     Error.captureStackTrace(this, ApiError);
   }
 }
@@ -29,8 +29,8 @@ class BadInputError extends CliError {
    * @constructor
    * @param field the name of the input field which is malformed.
    */
-  constructor(message, name, field) {
-    super(message, name);
+  constructor(message, field) {
+    super(message, 'Bad Input');
     this.field = field;
     Error.captureStackTrace(this, BadInputError);
   }
