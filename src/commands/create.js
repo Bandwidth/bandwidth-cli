@@ -44,7 +44,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
       }
       break;
     default:
-      printer.reject('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
+      throw new BadInputError('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
   }
 }
 
@@ -54,7 +54,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   if (options.addressType === 's') {addressType = 'service'}
   if (options.addressType === 'b') {addressType = 'billing'}
   if (addressType !== 'service' && addressType !== 'billing') {
-    throw Error('addressType must be either service(s) or billing(b)')
+    throw new BadInputError('addressType must be either service(s) or billing(b)');
   }
   const sitePrompts = [
     {

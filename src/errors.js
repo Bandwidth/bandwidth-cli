@@ -44,10 +44,10 @@ const errorHandler = (action) => {
   return async (...args) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
-        return printer.reject(err)
+        return printer.reject(err.name + ":", err.message)
       }
       if (err instanceof ApiError) {
-        return printer.error(err);
+        return printer.error(err.name + ":", err.message);
       }
       throw err;
     });
