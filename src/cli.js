@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 const createActions = require('./commands/create');
 const deleteActions = require('./commands/delete');
 const listActions = require('./commands/list');
+const { loginAction } = require('./commands/login');
 const { ApiError, errorHandler } = require('./errors');
 numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
@@ -88,3 +89,9 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
   .alias('peer')
   .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(errorHandler(deleteActions.deleteSipPeerAction));
+
+/**************************'Log in' COMMAND**************************/
+
+const loginCmd = program.command('login')
+  .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
+  .action(loginAction)
