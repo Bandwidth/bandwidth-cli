@@ -44,7 +44,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
       }
       break;
     default:
-      throw new BadInputError('type must be either voice(v) or messaging(m)') //FIXME make this an error and catch it.
+      throw new BadInputError('type must be either voice(v) or messaging(m)')
   }
 }
 
