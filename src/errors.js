@@ -1,4 +1,5 @@
-const printer = require('./printer')
+const printer = require('./printer');
+
 class CliError extends Error {
   constructor(message, name) {
     super(message)
@@ -49,6 +50,9 @@ const errorHandler = (action) => {
       }
       if (err instanceof ApiError) {
         return printer.error(err.name + ":", err.message);
+      }
+      if (err instanceof CliError) {
+        return printer.error("An unknown internal error has occured. See the stack trace below.\n\n", err)
       }
       throw err;
     });
