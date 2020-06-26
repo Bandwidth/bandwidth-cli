@@ -62,14 +62,6 @@ module.exports.reject = (...messages) => {
 module.exports.prompt = inquirer.prompt;
 
 /**
- * Print out http request errors.
- */
-module.exports.httpError = (err) => {
-  const message = err;//FIXME: do in DX-1324
-  module.exports.error(message)
-}
-
-/**
  * Print out javascript object in a more readable yml format.
  */
 module.exports.printObj = (jsObj) => {
