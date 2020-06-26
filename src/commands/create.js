@@ -18,7 +18,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        });
+        }).catch(err => throw new ApiError(err));
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }

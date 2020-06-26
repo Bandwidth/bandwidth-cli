@@ -13,8 +13,11 @@ class ApiError extends CliError {
    * @constructor
    * @param res the http packet with the response
    */
-  constructor(message, name, res) {
-    super(message, name);
+  constructor(res) {
+    const message = (res.body.indexOf('<Description>') >= 0)?
+      res.body.split('<Description>').pop().split('</Description>')[0]:
+      "An unknown error occured."
+    super(message, res.status);
     this.res = res;
     Error.captureStackTrace(this, ApiError);
   }
@@ -40,6 +43,9 @@ class BadInputError extends CliError {
 const errorHandler = (action) => {
   return async (...args) => {
     await action(...args).catch((err) => {
+      if (err instanceof BadInputError) {
+        return printer.reject(err)
+      }
       printer.error(err)
     });
   }
