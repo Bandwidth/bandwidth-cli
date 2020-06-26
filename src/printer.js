@@ -13,15 +13,15 @@ const YAML = require('yaml');
 /**
  * Breaking error that terminates the program.
  */
-module.exports.error = (error) => {
-  console.error(colors.red(error));
+module.exports.error = (...errors) => {
+  console.error(...errors.map(error => colors.red(error)));
   process.exit(1);
 }
 /**
  * A warning that does not immediately terminate the program.
  */
-module.exports.warn = (warning) => {
-  console.warn(colors.yellow(warning));
+module.exports.warn = (...warnings) => {
+  console.warn(...warnings.map(warning => colors.yellow(warning)));
 }
 
 /**
@@ -50,8 +50,8 @@ module.exports.table = (data, options) => {
 /**
  * Reject bad user input and terminates the program.
  */
-module.exports.reject = (message) => {
-  console.error(colors.brightRed(message));
+module.exports.reject = (...messages) => {
+  console.error(...messages.map(message => colors.brightRed(message)));
   process.exit(0)
 }
 
@@ -88,8 +88,8 @@ module.exports.removeClient = (jsObj) => {
 /**
  * Print something successful, in green.
  */
-module.exports.success = (text) => {
-  console.log(colors.green(text))
+module.exports.success = (...messages) => {
+  console.log(...messages.map(message => colors.green(message)));
 }
 
 

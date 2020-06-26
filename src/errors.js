@@ -46,7 +46,10 @@ const errorHandler = (action) => {
       if (err instanceof BadInputError) {
         return printer.reject(err)
       }
-      printer.error(err)
+      if (err instanceof ApiError) {
+        return printer.error(err);
+      }
+      throw err;
     });
   }
 }
