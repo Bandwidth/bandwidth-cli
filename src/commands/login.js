@@ -23,9 +23,12 @@ module.exports.loginAction = async () => {//FIXME
     }
   ]
   const {username, password, accountId} = await printer.prompt(loginPrompts)
+  if (!(username || password || accountId)) {
+    return printer.warn('No credentials were entered and the login has been aborted.')
+  }
   await utils.saveAccountId(accountId);
   await utils.saveDashboardCredentials({
     username: username,
     password: password});
-  printer.success('your credentials have been saved. You can now start using the CLI.')
+  printer.success('Your credentials have been saved. You can now start using the CLI.')
 }

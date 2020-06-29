@@ -23,7 +23,13 @@ const readConfig = (config) => {
   }
 }
 const saveDashboardCredentials = async ({username, password}) => {
-  writeConfig('dashboard username', username)
+  const oldCredentials = await readDashboardCredentials();
+  username = username || oldCredentials.username;
+  password = password || oldCredentials.password
+  if (!username || !password) {
+    throw new BadInputError('both a username and a password must be set.')
+  }
+  await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
   await keytar.setPassword('bandwidth_cli_dashboard', username, password);
 }
 
@@ -34,7 +40,9 @@ const readDashboardCredentials = async () => {
 }
 
 const saveAccountId = async (accId) => {
-  writeConfig('account id', accId);
+  if (accId) {
+    writeConfig('account id', accId);
+  }
 }
 
 const readAccountId = async () => {
