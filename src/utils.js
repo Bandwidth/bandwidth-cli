@@ -2,6 +2,7 @@ const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
+const numbers = require('@bandwidth/numbers');
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -37,8 +38,9 @@ const saveAccountId = async (accId) => {
 }
 
 const readAccountId = async () => {
-  readConfig('account id');
+  return readConfig('account id');
 }
+
 module.exports = {
   saveDashboardCredentials,
   readDashboardCredentials,

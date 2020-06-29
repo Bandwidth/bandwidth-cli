@@ -11,9 +11,10 @@ module.exports.loginAction = async () => {//FIXME
       message: "Please enter your Bandwidth dashboard username"
     },
     {
-      type: 'input',
+      type: 'password',
       name: 'password',
-      message: "Please enter your Bandwidth dashboard username. This will be securely stored."
+      message: "Please enter your Bandwidth dashboard username. This will be securely stored.",
+      mask: '*'
     },
     {
       type: 'input',

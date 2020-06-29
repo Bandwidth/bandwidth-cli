@@ -6,11 +6,7 @@ const deleteActions = require('./commands/delete');
 const listActions = require('./commands/list');
 const { loginAction } = require('./commands/login');
 const { ApiError, errorHandler } = require('./errors');
-numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
-numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
-numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
-
-
+const utils = require('./utils');
 
 module.exports.program = program = new Command();
 
