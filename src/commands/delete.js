@@ -7,7 +7,7 @@ module.exports.deleteAppAction = async (appId, cmdObj) => {
   const force = opts.force;
   const app = await numbers.Application.getAsync(appId).catch((err) => {
     if (err.status === 404) {
-      throw new BadInputError('An application with that appId was not found.', 'appId')
+      throw new BadInputError('An application with that appId was not found.', 'appId', '', {res:err})
     }
     throw new ApiError(err)
   });
@@ -32,7 +32,7 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
   const force = opts.force;
   const site = await numbers.Site.getAsync(siteId).catch((err) => {
     if (err.status === 404) {
-      throw new BadInputError('A site with that siteId was not found.', 'siteId')
+      throw new BadInputError('A site with that siteId was not found.', 'siteId', '', {res: err})
     }
     throw new ApiError(err)
   });
@@ -52,7 +52,7 @@ module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
   const siteId = cmdObj.opts().siteId;
   const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
     if (err.status === 404) {
-      throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId')
+      throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', '', {res:err})
     }
     throw new ApiError(err)
   });
