@@ -45,10 +45,10 @@ class BadInputError extends CliError {
  * @param action the async action function to catch errors for.
  */
 const errorHandler = (action) => {
-  // IDEA: verbose/debugging can be handled here. Also possibly additional 'tips', where each error has a tip for what you can likely do to fix it (if it's a common error).
   return async (...args) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
+        printer.print(err.context.res)
         return printer.reject(err.name + ":", err.message, '\n' + (err.suggestion||''))
       }
       if (err instanceof ApiError) {
