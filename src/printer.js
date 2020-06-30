@@ -91,11 +91,12 @@ module.exports.success = (...messages) => {
  */
 module.exports.custom = (color='white', exitcode=false, type='log') => {
   const ret = (...messages) => {
-    console[type](...messages.map(messages => colors[color](message)));
+    console[type](...messages.map(message => colors[color](message)));
     if (typeof exitcode === 'number') {
       process.exit(exitcode)
     }
   }
+  return ret;
 }
 
 /**

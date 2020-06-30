@@ -16,12 +16,26 @@ class ApiError extends CliError {
    * @param packet the http packet with the response
    */
   constructor(packet) {
+    const defaultSuggest = ApiError.errorCodeSuggest(packet.status)
     const message = (packet.response.res.text.indexOf('<Description>') >= 0)?
       packet.response.res.text.split('<Description>').pop().split('</Description>')[0]:
       "An unknown error occured."
-    const suggestion = ''//FIXME handle API error cases
+    const suggestion = defaultSuggest;
     super(message, 'Error Code ' + packet.status.toString(), suggestion, {res: packet});
     Error.captureStackTrace(this, ApiError);
+  }
+
+  /**
+   * Given an error code, checks to see if it's a common error code and create default
+   * suggestion or messages.
+   * @return a default suggestion for the error code.
+   */
+  static errorCodeSuggest = (code) => {
+    const suggestions = {
+      401: 'To set your API credentials, try "bandwidth login"',
+      404: 'Check for typos in your account ID.'
+    }
+    return suggestions[code] || '';
   }
 }
 
@@ -48,11 +62,11 @@ const errorHandler = (action) => {
   return async (...args) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
-        printer.print(err.context.res)
         return printer.reject(err.name + ":", err.message, '\n' + (err.suggestion||''))
       }
       if (err instanceof ApiError) {
-        return printer.error(err.name + ":", err.message, '\n' + (err.suggestion||''));
+        printer.custom('red')(err.name + ":", err.message)
+        return printer.custom('white', true)(err.suggestion)
       }
       throw err;
     });
