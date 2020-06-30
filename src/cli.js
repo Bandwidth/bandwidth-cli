@@ -90,4 +90,4 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
 
 const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
-  .action(loginAction)
+  .action(errorHandler(loginAction))

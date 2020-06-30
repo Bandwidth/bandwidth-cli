@@ -19,7 +19,7 @@ const readConfig = (config) => {
     mapping = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     return mapping[config];
   } catch (err) {
-    throw new BadInputError(`Unable to read config '${config}'. Check that you have configured it correctly.`, config);
+    return undefined;
   }
 }
 const saveDashboardCredentials = async ({username, password}) => {
@@ -29,12 +29,18 @@ const saveDashboardCredentials = async ({username, password}) => {
   if (!username || !password) {
     throw new BadInputError('both a username and a password must be set.')
   }
-  await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
+  if (oldCredentials.username) {
+    await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
+  }
+  writeConfig('dashboard username', username)
   await keytar.setPassword('bandwidth_cli_dashboard', username, password);
 }
 
 const readDashboardCredentials = async () => {
   const username = readConfig('dashboard username');
+  if (!username) {
+    return {username: undefined, password: undefined}
+  }
   const password = await keytar.getPassword('bandwidth_cli_dashboard', username);
   return {username, password};
 }
