@@ -1,10 +1,15 @@
 const { Command } = require('commander');
 const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
-const createActions = require('./commands/create');
-const deleteActions = require('./commands/delete');
-const listActions = require('./commands/list');
 const { ApiError, errorHandler } = require('./errors');
+const actions = {
+  ...require('./commands/create'),
+  ...require('./commands/delete'),
+  ...require('./commands/list')
+}
+Object.keys(actions).map(function(key, index) {
+  actions[key] = errorHandler(actions[key]);
+});
 numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
 numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
@@ -27,19 +32,19 @@ const createCmd = program.command('create')
 const createAppCmd = createCmd.command('app <name>')
   .alias('a')
   .requiredOption('-t, --type <type>', 'An application must be a voice(v) or messaging(m) application')
-  .action(errorHandler(createActions.createAppAction))
+  .action(actions.createAppAction)
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
   .requiredOption('-t, --addressType <type>', 'A site must be a billing(b) or service(s) application')
-  .action(errorHandler(createActions.createSiteAction))
+  .action(actions.createSiteAction)
 
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
   .requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
-  .action(errorHandler(createActions.createSipPeerAction))
+  .action(actions.createSipPeerAction)
 
 
 /**************************'LIST' COMMAND**************************/
@@ -52,18 +57,18 @@ const listCmd = program.command('list')
 const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
-  .action(errorHandler(listActions.listAppAction));
+  .action(actions.listAppAction);
 
 const listSiteCmd = listCmd.command('site')
   .alias('s')
   .alias('sites')
-  .action(errorHandler(listActions.listSiteAction));
+  .action(actions.listSiteAction);
 
 const listSipPeerCmd = listCmd.command('sippeer <site-id>')
   .alias('p')
   .alias('sippeers')
   .alias('peer')
-  .action(errorHandler(listActions.listSipPeerAction));
+  .action(actions.listSipPeerAction);
 
 /**************************'DELETE' COMMAND**************************/
 
@@ -76,15 +81,15 @@ const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
   .alias('applicatiion')
   .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
-  .action(errorHandler(deleteActions.deleteAppAction))
+  .action(actions.deleteAppAction)
 
 const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .alias('s')
   .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
-  .action(errorHandler(deleteActions.deleteSiteAction))
+  .action(actions.deleteSiteAction)
 
 const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
   .alias('p')
   .alias('peer')
   .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
-  .action(errorHandler(deleteActions.deleteSipPeerAction));
+  .action(actions.deleteSipPeerAction);

@@ -1,8 +1,9 @@
 const printer = require('./printer')
 class CliError extends Error {
-  constructor(message, name) {
+  constructor(message, name, suggestion) {
     super(message)
     this.name = name;
+    this.suggestion = suggestion;
     Error.captureStackTrace(this, CliError);
   }
 }
@@ -45,10 +46,10 @@ const errorHandler = (action) => {
   return async (...args) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
-        return printer.reject(err.name + ":", err.message)
+        return printer.reject(err.name + ":", err.message, '\n' + err.suggestion)
       }
       if (err instanceof ApiError) {
-        return printer.error(err.name + ":", err.message);
+        return printer.error(err.name + ":", err.message, '\n' + err.suggestion);
       }
       throw err;
     });
