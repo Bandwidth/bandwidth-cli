@@ -13,15 +13,15 @@ const YAML = require('yaml');
 /**
  * Breaking error that terminates the program.
  */
-module.exports.error = (error) => {
-  console.error(colors.red(error));
+module.exports.error = (...errors) => {
+  console.error(...errors.map(error => colors.red(error)));
   process.exit(1);
 }
 /**
  * A warning that does not immediately terminate the program.
  */
-module.exports.warn = (warning) => {
-  console.warn(colors.yellow(warning));
+module.exports.warn = (...warnings) => {
+  console.warn(...warnings.map(warning => colors.yellow(warning)));
 }
 
 /**
@@ -50,8 +50,8 @@ module.exports.table = (data, options) => {
 /**
  * Reject bad user input and terminates the program.
  */
-module.exports.reject = (message) => {
-  console.error(colors.brightRed(message));
+module.exports.reject = (...messages) => {
+  console.error(...messages.map(message => colors.brightRed(message)));
   process.exit(0)
 }
 
@@ -60,14 +60,6 @@ module.exports.reject = (message) => {
  * @param prompts a list of prompts to be used by inquirer
  */
 module.exports.prompt = inquirer.prompt;
-
-/**
- * Print out http request errors.
- */
-module.exports.httpError = (err) => {
-  const message = err;//FIXME: do in DX-1324
-  module.exports.error(message)
-}
 
 /**
  * Print out javascript object in a more readable yml format.
@@ -88,10 +80,24 @@ module.exports.removeClient = (jsObj) => {
 /**
  * Print something successful, in green.
  */
-module.exports.success = (text) => {
-  console.log(colors.green(text))
+module.exports.success = (...messages) => {
+  console.log(...messages.map(message => colors.green(message)));
 }
 
+/**
+ * Create a custom printer function.
+ * @param color the color to print with
+ * @param exitcode the code to exit with. Will not exit if it's not an integer
+ */
+module.exports.custom = (color='white', exitcode=false, type='log') => {
+  const ret = (...messages) => {
+    console[type](...messages.map(message => colors[color](message)));
+    if (typeof exitcode === 'number') {
+      process.exit(exitcode)
+    }
+  }
+  return ret;
+}
 
 /**
  * A normal log statement. Can be changed if needed.

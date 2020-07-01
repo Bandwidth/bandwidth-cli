@@ -1,12 +1,17 @@
 const numbers = require('@bandwidth/numbers');
 const printer = require('../printer')
-
+const { ApiError,BadInputError } = require('../errors')
 
 module.exports.deleteAppAction = async (appId, cmdObj) => {
   const opts = cmdObj.opts();
   const force = opts.force;
-  const app = await numbers.Application.getAsync(appId);
-  const associatedSipPeers = await app.getSipPeersAsync();
+  const app = await numbers.Application.getAsync(appId).catch((err) => {
+    if (err.status === 404) {
+      throw new BadInputError('An application with that appId was not found.', 'appId', '', {res:err})
+    }
+    throw new ApiError(err)
+  });
+  const associatedSipPeers = await app.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
   if (force && associatedSipPeers) {
     for await (sipPeerData of associatedSipPeers) {
       let peer = new numbers.SipPeer();
@@ -14,32 +19,43 @@ module.exports.deleteAppAction = async (appId, cmdObj) => {
       peer.siteId = sipPeerData.siteId;
       peer.client = new numbers.Client();
       printer.warn(`Unlinking your application with Sip Peer ${peer.id}`);
-      await peer.removeApplicationsAsync()
+      await peer.removeApplicationsAsync().catch((err) => {throw new ApiError(err)});
     }
     printer.print();
   }
-  app.deleteAsync().then(() => {
-    printer.print('Application successfully deleted')
-  })
+  app.deleteAsync().catch((err) => {throw new ApiError(err)});
+  printer.print('Application successfully deleted')
 }
 
 module.exports.deleteSiteAction = async (siteId, cmdObj) => {
   const opts = cmdObj.opts();
   const force = opts.force;
-  const site = await numbers.Site.getAsync(siteId);
+  const site = await numbers.Site.getAsync(siteId).catch((err) => {
+    if (err.status === 404) {
+      throw new BadInputError('A site with that siteId was not found.', 'siteId', '', {res: err})
+    }
+    throw new ApiError(err)
+  });
   if (force) {
-    const associatedSipPeers = await site.getSipPeersAsync()
+    const associatedSipPeers = await site.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
     associatedSipPeers.sort((peerA, peerB) => peerA.isDefaultPeer - peerB.isDefaultPeer)//delete default peer last
     for await (sipPeer of associatedSipPeers) {
-      await sipPeer.deleteAsync(); //Waiting like this is really slow, but how else to guarantee that it waits enough before deleting the site?
+      await sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)}); //Waiting like this is really slow, but how else to guarantee that it waits enough before deleting the site?
       printer.warn(`Deleting Sip Peer ${sipPeer.id}`)
     }
   }
-  const res = await site.deleteAsync().then( _ => printer.print('Site successfully deleted.')); //IDEA: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
+  const res = await site.deleteAsync().catch((err) => {throw new ApiError(err)});
+  printer.print('Site successfully deleted.'); //IDEA: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
 }
 
 module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
   const siteId = cmdObj.opts().siteId;
-  const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId);
-  sipPeer.deleteAsync().then(_ => printer.print('Sip Peer successfully deleted.'));
+  const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
+    if (err.status === 404) {
+      throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', '', {res:err})
+    }
+    throw new ApiError(err)
+  });
+  sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)});
+  printer.print('Sip Peer successfully deleted.');
 }
