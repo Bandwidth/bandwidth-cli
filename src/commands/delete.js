@@ -56,6 +56,6 @@ module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
     }
     throw new ApiError(err)
   });
-  sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)});
+  await sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)});
   printer.print('Sip Peer successfully deleted.');
 }

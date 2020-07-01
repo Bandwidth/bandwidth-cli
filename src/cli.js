@@ -86,7 +86,7 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
   .action(actions.deleteSiteAction)
 
-const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
+const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('p')
   .alias('peer')
   .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
