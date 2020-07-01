@@ -84,6 +84,20 @@ module.exports.success = (...messages) => {
   console.log(...messages.map(message => colors.green(message)));
 }
 
+/**
+ * Create a custom printer function.
+ * @param color the color to print with
+ * @param exitcode the code to exit with. Will not exit if it's not an integer
+ */
+module.exports.custom = (color='white', exitcode=false, type='log') => {
+  const ret = (...messages) => {
+    console[type](...messages.map(message => colors[color](message)));
+    if (typeof exitcode === 'number') {
+      process.exit(exitcode)
+    }
+  }
+  return ret;
+}
 
 /**
  * A normal log statement. Can be changed if needed.
