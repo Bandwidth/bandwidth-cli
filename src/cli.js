@@ -44,7 +44,7 @@ const createSiteCmd = createCmd.command('site <name>')
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
-  .requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
+  .option('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
   .action(actions.createSipPeerAction)
 
@@ -93,7 +93,7 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
 const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
   .alias('p')
   .alias('peer')
-  .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(actions.deleteSipPeerAction);
 
 /**************************'DEFAULT' COMMAND**************************/

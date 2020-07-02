@@ -58,14 +58,11 @@ const readAccountId = async () => {
 
 
 
-const listDefault = async () => {
-  const defaults = readConfig('defaults');
-  (Object.keys(defaults).length)?
-  printer.printObj(readConfig('defaults')):
-  printer.print('No defaults have been set. To set a default api setting, use "bandwidth default <default-name> <default-value>"')
+const getDefaults = async () => {
+  return readConfig('defaults');
 }
-const getDefault = async (defaultName) => {
-  printer.print(readConfig('defaults')[defaultName])
+const readDefault = async (defaultName) => {
+  return readConfig('defaults')[defaultName];
 }
 const setDefault = async (defaultName, value) => {
   const defaults = readConfig('defaults');
@@ -74,7 +71,7 @@ const setDefault = async (defaultName, value) => {
   }
   defaults[defaultName] = value;
   writeConfig('defaults', defaults)
-  return printer.print(`Default ${defaultName} set.`)
+  return defaultName;
 }
 const deleteDefault = async (defaultName) => {
   const defaults = readConfig('defaults');
@@ -82,8 +79,8 @@ const deleteDefault = async (defaultName) => {
     throw new BadInputError(`No default ${defaultName} has been set`, 'defaultName', 'To see current default api settings, try "bandwidth default".')
   }
   delete defaults[defaultName];
-  writeConfig('defaults', defaults)
-  return printer.print(`Default ${defaultName} deleted`)
+  writeConfig('defaults', defaults);
+  return defaultName;
 }
 
 
@@ -92,10 +89,9 @@ module.exports = {
   readDashboardCredentials,
   saveAccountId,
   readAccountId,
-  defaultUtils: {
-    listDefault,
-    getDefault,
-    setDefault,
-    deleteDefault
-  }
+  getDefaults,
+  readDefault,
+  setDefault,
+  deleteDefault
+
 }

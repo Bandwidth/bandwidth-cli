@@ -1,7 +1,7 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { ApiError, BadInputError } = require('../errors')
-
+const utils = require('../utils')
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   switch (options.type) {
@@ -89,7 +89,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
-  const siteId = options.siteId;
+  const siteId = options.siteId || utils.readDefault('site');
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
     isDefaultPeer: options.default,
