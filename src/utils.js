@@ -3,6 +3,7 @@ const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
+const printer = require('./printer')
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -55,9 +56,28 @@ const readAccountId = async () => {
   return readConfig('account id');
 }
 
+
+
+const listDefault = async () => {
+  printer.print('sdf')
+}
+const getDefault = async (defaultName) => {
+}
+const setDefault = async (defaultName, value) => {
+}
+const deleteDefault = async (defaultName) => {
+}
+
+
 module.exports = {
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
-  readAccountId
+  readAccountId,
+  defaultUtils: {
+    listDefault,
+    getDefault,
+    setDefault,
+    deleteDefault
+  }
 }
