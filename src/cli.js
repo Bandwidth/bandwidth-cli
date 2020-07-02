@@ -5,7 +5,8 @@ const { ApiError, errorHandler } = require('./errors');
 const actions = {
   ...require('./commands/create'),
   ...require('./commands/delete'),
-  ...require('./commands/list')
+  ...require('./commands/list'),
+  ...require('./commands/default')
 }
 Object.keys(actions).map(function(key, index) {
   actions[key] = errorHandler(actions[key]);
@@ -96,7 +97,9 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
   .action(actions.deleteSipPeerAction);
 
 /**************************'DEFAULT' COMMAND**************************/
-const defaultCmd = program.command('default')
+const defaultCmd = program.command('default [default-name] [default-value]')
   .alias('def')
-  .usage('[<name-default>]')
-  .action(actions.listDefaultAction)
+  .usage('[[-d] <default-name>] [<default-value>]')
+  .option('-d, --delete', 'Delete specified defaultName.')
+  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
+  .action(actions.defaultAction)
