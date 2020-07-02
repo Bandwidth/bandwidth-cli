@@ -59,13 +59,31 @@ const readAccountId = async () => {
 
 
 const listDefault = async () => {
-  printer.print('sdf')
+  const defaults = readConfig('defaults');
+  (Object.keys(defaults).length)?
+  printer.printObj(readConfig('defaults')):
+  printer.print('No defaults have been set. To set a default api setting, use "bandwidth default <default-name> <default-value>"')
 }
 const getDefault = async (defaultName) => {
+  printer.print(readConfig('defaults')[defaultName])
 }
 const setDefault = async (defaultName, value) => {
+  const defaults = readConfig('defaults');
+  if (defaults[defaultName]) {
+    printer.warn(`Default ${defaultName} is being overwritten from ${defaults[defaultName]}`);
+  }
+  defaults[defaultName] = value;
+  writeConfig('defaults', defaults)
+  return printer.print(`Default ${defaultName} set.`)
 }
 const deleteDefault = async (defaultName) => {
+  const defaults = readConfig('defaults');
+  if (!defaults[defaultName]) {
+    throw new BadInputError(`No default ${defaultName} has been set`, 'defaultName', 'To see current default api settings, try "bandwidth default".')
+  }
+  delete defaults[defaultName];
+  writeConfig('defaults', defaults)
+  return printer.print(`Default ${defaultName} deleted`)
 }
 
 
