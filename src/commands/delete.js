@@ -1,6 +1,6 @@
 const numbers = require('@bandwidth/numbers');
 const printer = require('../printer')
-const { ApiError,BadInputError } = require('../errors')
+const { ApiError, BadInputError } = require('../errors')
 
 module.exports.deleteAppAction = async (appId, cmdObj) => {
   const opts = cmdObj.opts();

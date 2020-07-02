@@ -1,6 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
-const { ApiError, errorHandler } = require('../errors');
+const { ApiError } = require('../errors');
 
 module.exports.listAppAction = async () => {
   const appList = await numbers.Application.listAsync().catch((err) => {throw new ApiError(err)});;

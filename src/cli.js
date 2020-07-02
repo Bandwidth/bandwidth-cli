@@ -20,6 +20,7 @@ module.exports.program = program = new Command();
 
 const description = 'A descriptive description to describe something worth describing with a description.';
 program
+  .name('bandwidth')
   .version('0.0.1')
   .description(description);
 
@@ -93,3 +94,9 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
   .alias('peer')
   .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(actions.deleteSipPeerAction);
+
+/**************************'DEFAULT' COMMAND**************************/
+const defaultCmd = program.command('default')
+  .alias('def')
+  .usage('[<name-default>]')
+  .action(actions.listDefaultAction)
