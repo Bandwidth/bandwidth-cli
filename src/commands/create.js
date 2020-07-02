@@ -89,7 +89,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
-  const siteId = options.siteId || utils.readDefault('site');
+  const siteId = options.siteId || await utils.readDefault('site');
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
     isDefaultPeer: options.default,
