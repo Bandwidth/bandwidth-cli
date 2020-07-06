@@ -20,14 +20,11 @@ module.exports.listSiteAction = async () => {
 }
 
 module.exports.listSipPeerAction = async (siteId, cmdObj) => {
-  const usedSiteId = siteId || await utils.readDefault('site')
-  if (!usedSiteId) {
+  siteId = await utils.processDefault('site', siteId)
+  if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
-  if (!siteId) {
-    printer.print(`Using default site ${usedSiteId}`)
-  }
-  const sipPeerList = await numbers.SipPeer.listAsync(usedSiteId).catch((err) => {throw new ApiError(err)});
+  const sipPeerList = await numbers.SipPeer.listAsync(siteId).catch((err) => {throw new ApiError(err)});
   printer.table(sipPeerList, {
     fields: ['peerId', 'peerName', 'isDefaultPeer'],
     key: 'peerId'

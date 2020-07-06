@@ -82,6 +82,18 @@ const deleteDefault = async (defaultName) => {
   writeConfig('defaults', defaults);
   return defaultName;
 }
+/**
+ * Takes in a default value and a default field. If the value is null, uses the default
+ * and alerts the user. Returns undefined if the default is not set.
+ */
+const processDefault = async (field, value) => {
+  if (value) {return value;}
+  const defaultValue = await readDefault(field);
+  if (defaultValue) {
+    printer.print(`Using default ${field} ${defaultValue}`);
+  }
+  return defaultValue;
+}
 
 
 module.exports = {
@@ -92,6 +104,7 @@ module.exports = {
   getDefaults,
   readDefault,
   setDefault,
-  deleteDefault
+  deleteDefault,
+  processDefault
 
 }

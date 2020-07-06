@@ -89,12 +89,9 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
-  const siteId = options.siteId || await utils.readDefault('site');
+  const siteId = await utils.processDefault('site', options.siteId);
   if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
-  }
-  if (!options.siteId) {
-    printer.print(`Using default site ${siteId}`)
   }
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
