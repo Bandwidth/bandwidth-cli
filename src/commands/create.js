@@ -90,11 +90,18 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   const siteId = options.siteId || await utils.readDefault('site');
+  if (!siteId) {
+    throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
+  }
+  if (!options.siteId) {
+    printer.print(`Using default site ${siteId}`)
+  }
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
   }).catch((err) => {throw new ApiError(err)});
+  printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
   if (defaultApp){
     const smsSettings = {
@@ -104,19 +111,21 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
       zone3: true,
       zone4: true,
       zone5: true,
-      protocol: "HTTP"
+      protocol: "HTTP",
     }
-    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings}).catch((err) => {
+    const httpSettings = {
+      v2Messaging: true
+    }
+    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings}).catch((err) => {
       if (err) {
         throw new ApiError(err);
       }
-    });
+    }).then(()=>{printer.print("enabled SMS by default.")}); //TODO: no-sms option? Or something. Should think this through.
     await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp}).catch((err) => {
       if (err) {
         throw new ApiError(err);
       }
-    });
-    printer.print(`Linked created Sip Peer to default application ${defaultApp}`);
+    }).then(()=>{printer.print(`Linked created Sip Peer to default application ${defaultApp}`)});
   }
   printer.success('Sip Peer created. See details of your created Peer below.');
   printer.removeClient(createdPeer);

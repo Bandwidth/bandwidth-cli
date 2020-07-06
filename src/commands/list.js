@@ -1,6 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
-const { ApiError } = require('../errors');
+const { ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
 
 module.exports.listAppAction = async () => {
@@ -20,11 +20,14 @@ module.exports.listSiteAction = async () => {
 }
 
 module.exports.listSipPeerAction = async (siteId, cmdObj) => {
-  siteId = siteId || await utils.readDefault('site')
-  if (!siteId) {
-    throw new BadInputError('A site id must be specified via arguments if no default site is specified')
+  const usedSiteId = siteId || await utils.readDefault('site')
+  if (!usedSiteId) {
+    throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
-  const sipPeerList = await numbers.SipPeer.listAsync(siteId).catch((err) => {throw new ApiError(err)});
+  if (!siteId) {
+    printer.print(`Using default site ${usedSiteId}`)
+  }
+  const sipPeerList = await numbers.SipPeer.listAsync(usedSiteId).catch((err) => {throw new ApiError(err)});
   printer.table(sipPeerList, {
     fields: ['peerId', 'peerName', 'isDefaultPeer'],
     key: 'peerId'
