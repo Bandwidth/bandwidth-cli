@@ -100,6 +100,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   }).catch((err) => {throw new ApiError(err)});
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
+  //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
   if (defaultApp){
     const smsSettings = {
       tollFree: true,
@@ -117,7 +118,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
       if (err) {
         throw new ApiError(err);
       }
-    }).then(()=>{printer.print("enabled SMS by default.")}); //TODO: no-sms option? Or something. Should think this through.
+    }).then(()=>{printer.print("enabled SMS by default.")}); //TODO: option to disable SMS or customize peer creation
     await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp}).catch((err) => {
       if (err) {
         throw new ApiError(err);

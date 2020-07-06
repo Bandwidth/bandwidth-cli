@@ -50,10 +50,10 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
 }
 
 module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
-  const siteId = cmdObj.opts().siteId || (await utils.readDefault('site'));
+  const siteId = await utils.processDefault('site', cmdObj.opts().siteId);
   const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
     if (err.status === 404) {
-      throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', '', {res:err})
+      throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', 'Check for typos in the site of sippeer IDs.', {res:err})
     }
     throw new ApiError(err)
   });
