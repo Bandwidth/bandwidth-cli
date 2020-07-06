@@ -1,6 +1,7 @@
 const numbers = require('@bandwidth/numbers');
-const printer = require('../printer')
-const { ApiError, BadInputError } = require('../errors')
+const printer = require('../printer');
+const { ApiError, BadInputError } = require('../errors');
+const utils = require('../utils');
 
 module.exports.deleteAppAction = async (appId, cmdObj) => {
   const opts = cmdObj.opts();
@@ -49,13 +50,13 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
 }
 
 module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
-  const siteId = cmdObj.opts().siteId;
+  const siteId = cmdObj.opts().siteId || (await utils.readDefault('site'));
   const sipPeer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
     if (err.status === 404) {
       throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', '', {res:err})
     }
     throw new ApiError(err)
   });
-  sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)});
+  await sipPeer.deleteAsync().catch((err) => {throw new ApiError(err)});
   printer.print('Sip Peer successfully deleted.');
 }

@@ -95,6 +95,29 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     isDefaultPeer: options.default,
     siteId: siteId,
   }).catch((err) => {throw new ApiError(err)});
-  printer.success('Sip Peer created. See details of your created Peer below.')
+  const defaultApp = await utils.readDefault('application');
+  if (defaultApp){
+    const smsSettings = {
+      tollFree: true,
+      zone1: true,
+      zone2: true,
+      zone3: true,
+      zone4: true,
+      zone5: true,
+      protocol: "HTTP"
+    }
+    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings}).catch((err) => {
+      if (err) {
+        throw new ApiError(err);
+      }
+    });
+    await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp}).catch((err) => {
+      if (err) {
+        throw new ApiError(err);
+      }
+    });
+    printer.print(`Linked created Sip Peer to default application ${defaultApp}`);
+  }
+  printer.success('Sip Peer created. See details of your created Peer below.');
   printer.removeClient(createdPeer);
 }

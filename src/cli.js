@@ -66,7 +66,7 @@ const listSiteCmd = listCmd.command('site')
   .alias('sites')
   .action(actions.listSiteAction);
 
-const listSipPeerCmd = listCmd.command('sippeer <site-id>')
+const listSipPeerCmd = listCmd.command('sippeer [site-id]')
   .alias('p')
   .alias('sippeers')
   .alias('peer')
@@ -99,7 +99,7 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
 /**************************'DEFAULT' COMMAND**************************/
 const defaultCmd = program.command('default [default-name] [default-value]')
   .alias('def')
-  .usage('[[-d] <default-name>] [<default-value>]')
+  .usage('[[-d] <default-name> [<default-value>]]')
   .option('-d, --delete', 'Delete specified defaultName.')
   .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)

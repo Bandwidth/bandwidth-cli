@@ -11,7 +11,7 @@ module.exports.defaultAction = async (defaultName, defaultValue, cmdObj) => {
   if (!defaultName) {
     const defaults = await utils.getDefaults();
     return (Object.keys(defaults).length)?
-    printer.table(defaults):
+    printer.printObj(defaults):
     printer.print('No defaults have been set. To set a default api setting, use "bandwidth default <default-name> <default-value>"')
   }
   if (!validDefaults.includes(defaultName)) {
