@@ -3,6 +3,9 @@ const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
+const accIdKey = 'account_id';
+const dashboardUserKey = 'dashboard_username';
+const keytarKey = 'bandwidth_cli_dashboard';
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -30,29 +33,29 @@ const saveDashboardCredentials = async ({username, password}) => {
     throw new BadInputError('both a username and a password must be set.')
   }
   if (oldCredentials.username) {
-    await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
+    await keytar.deletePassword(keytarKey, oldCredentials.username);
   }
-  writeConfig('dashboard username', username)
-  await keytar.setPassword('bandwidth_cli_dashboard', username, password);
+  writeConfig(dashboardUserKey, username)
+  await keytar.setPassword(keytarKey, username, password);
 }
 
 const readDashboardCredentials = async () => {
-  const username = readConfig('dashboard username');
+  const username = readConfig(dashboardUserKey);
   if (!username) {
     return {username: undefined, password: undefined}
   }
-  const password = await keytar.getPassword('bandwidth_cli_dashboard', username);
+  const password = await keytar.getPassword(keytarKey, username);
   return {username, password};
 }
 
 const saveAccountId = async (accId) => {
   if (accId) {
-    writeConfig('account id', accId);
+    writeConfig(accIdKey, accId);
   }
 }
 
 const readAccountId = async () => {
-  return readConfig('account id');
+  return readConfig(accIdKey);
 }
 
 module.exports = {
