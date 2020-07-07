@@ -6,7 +6,7 @@ const utils = require('../utils')
 
 module.exports.quickstartAction = async () => {
   printer.print('An address is required for this quickstart.');
-  const sitePrompts = [
+  const prompts = [
     {
       type: 'input',
       name: 'addressLine1',
@@ -16,9 +16,20 @@ module.exports.quickstartAction = async () => {
       type: 'input',
       name: 'addressLine2',
       message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
+    },
+    {
+      type: 'input',
+      name: 'messageCallbackUrl',
+      message: "Please enter a callback message callback url" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
     }
   ]
-  const answers = await printer.prompt(sitePrompts);
+  const answers = await printer.prompt(prompts);
+  for (const [field, answer] of Object.entries(answers)) {
+    if (!answer) {
+      throw new BadInputError(`${field} is required for a quickstart.`, field);
+    }
+  }
+
   const line2 = answers.addressLine2.split(', ');
   const address = await numbers.Geocode.requestAsync({
     addressLine1: answers.addressLine1,
@@ -35,5 +46,38 @@ module.exports.quickstartAction = async () => {
     }
   }).catch((err) => {throw new ApiError(err)});
   printer.success(`Site created with id ${createdSite.id}`)
-  
+  const createdPeer = await numbers.SipPeer.createAsync({
+    peerName: 'My Sip Peer',
+    isDefaultPeer: true,
+    siteId: createdSite.id,
+  }).catch((err) => {throw new ApiError(err)});
+  printer.success(`Sip Peer created with id ${createdPeer.id}`)
+  const smsSettings = {
+    tollFree: true,
+    zone1: true,
+    zone2: true,
+    zone3: true,
+    zone4: true,
+    zone5: true,
+    protocol: "HTTP",
+  }
+  const httpSettings = {
+    v2Messaging: true
+  }
+  await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings}).catch((err) => {
+    if (err) {
+      throw new ApiError(err);
+    }
+  })
+  printer.print("enabled SMS.");
+  const createdApp = await numbers.Application.createMessagingApplicationAsync({
+    appName: 'My Messaging Application',
+    msgCallbackUrl: answers.messageCallbackUrl
+  }).catch((err) => {throw new ApiError(err)});
+  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
+  await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId}).catch((err) => {
+    if (err) {
+      throw new ApiError(err);
+    }
+  }).then(()=>{printer.print(`Sip Peer to application`)});
 }
