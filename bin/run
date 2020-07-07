@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 const { program } = require('../src/cli.js');
+const numbers = require('@bandwidth/numbers')
+const utils = require('../src/utils')
 async function main(args) {
+  //Ideally move to utils, but numbers.Client doesn't remain consisted if we move it to utils.
+  numbers.Client.globalOptions.accountId = await utils.readAccountId();
+  const dashboardCreds = await utils.readDashboardCredentials();
+  numbers.Client.globalOptions.userName = dashboardCreds.username;
+  numbers.Client.globalOptions.password = dashboardCreds.password;
   program.parse(args)
 }
 main(process.argv)

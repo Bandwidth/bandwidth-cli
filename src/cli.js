@@ -1,21 +1,19 @@
 const { Command } = require('commander');
 const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
-const { ApiError, errorHandler } = require('./errors');
 const actions = {
   ...require('./commands/create'),
   ...require('./commands/delete'),
   ...require('./commands/list'),
-  ...require('./commands/default')
+  ...require('./commands/default'),
+  ...require('./commands/login')
 }
+const { ApiError, errorHandler } = require('./errors');
+const utils = require('./utils');
+
 Object.keys(actions).map(function(key, index) {
   actions[key] = errorHandler(actions[key]);
 });
-numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
-numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
-numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
-
-
 
 module.exports.program = program = new Command();
 
@@ -90,7 +88,7 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
   .action(actions.deleteSiteAction)
 
-const deleteSipPeerCmd = deleteCmd.command('sippeer <args here>')
+const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('p')
   .alias('peer')
   .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
@@ -103,3 +101,7 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .option('-d, --delete', 'Delete specified defaultName.')
   .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)
+
+const loginCmd = program.command('login')
+  .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
+  .action(actions.loginAction)

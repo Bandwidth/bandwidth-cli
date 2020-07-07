@@ -3,7 +3,11 @@ const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
-const printer = require('./printer')
+const printer = require('./printer');
+const accIdKey = 'account_id';
+const dashboardUserKey = 'dashboard_username';
+const keytarKey = 'bandwidth_cli_dashboard';
+const defaultKey = 'defaults';
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -33,53 +37,53 @@ const saveDashboardCredentials = async ({username, password}) => {
   if (oldCredentials.username) {
     await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
   }
-  writeConfig('dashboard username', username)
-  await keytar.setPassword('bandwidth_cli_dashboard', username, password);
+  writeConfig(dashboardUserKey, username)
+  await keytar.setPassword(keytarKey, username, password);
 }
 
 const readDashboardCredentials = async () => {
-  const username = readConfig('dashboard username');
+  const username = readConfig(dashboardUserKey);
   if (!username) {
     return {username: undefined, password: undefined}
   }
-  const password = await keytar.getPassword('bandwidth_cli_dashboard', username);
+  const password = await keytar.getPassword(keytarKey, username);
   return {username, password};
 }
 
 const saveAccountId = async (accId) => {
   if (accId) {
-    writeConfig('account id', accId);
+    writeConfig(accIdKey, accId);
   }
 }
 
 const readAccountId = async () => {
-  return readConfig('account id');
+  return readConfig(accIdKey);
 }
 
 
 
 const getDefaults = async () => {
-  return readConfig('defaults');
+  return readConfig(defaultKey);
 }
 const readDefault = async (defaultName) => {
-  return readConfig('defaults')[defaultName];
+  return readConfig(defaultKey)[defaultName];
 }
 const setDefault = async (defaultName, value) => {
-  const defaults = readConfig('defaults');
+  const defaults = readConfig(defaultKey);
   if (defaults[defaultName]) {
     printer.warn(`Default ${defaultName} is being overwritten from ${defaults[defaultName]}`);
   }
   defaults[defaultName] = value;
-  writeConfig('defaults', defaults)
+  writeConfig(defaultKey, defaults)
   return defaultName;
 }
 const deleteDefault = async (defaultName) => {
-  const defaults = readConfig('defaults');
+  const defaults = readConfig(defaultKey);
   if (!defaults[defaultName]) {
     throw new BadInputError(`No default ${defaultName} has been set`, 'defaultName', 'To see current default api settings, try "bandwidth default".')
   }
   delete defaults[defaultName];
-  writeConfig('defaults', defaults);
+  writeConfig(defaultKey, defaults);
   return defaultName;
 }
 /**
@@ -106,5 +110,4 @@ module.exports = {
   setDefault,
   deleteDefault,
   processDefault
-
 }

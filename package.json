@@ -12,7 +12,8 @@
     "url": "git+https://github.com/Bandwidth/band-cli.git"
   },
   "bin": {
-    "bandwidth": "./bin/run"
+    "bandwidth": "./bin/run",
+    "bw": "./bin/run"
   },
   "author": "Bryan Wu",
   "license": "MIT",
@@ -27,6 +28,7 @@
     "commander": "^5.1.0",
     "fast-xml-parser": "^3.17.4",
     "inquirer": "^7.1.0",
+    "keytar": "^6.0.1",
     "yaml": "^1.10.0"
   }
 }
