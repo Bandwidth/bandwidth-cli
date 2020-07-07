@@ -4,6 +4,7 @@ const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
+
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
 const keytarKey = 'bandwidth_cli_dashboard';
