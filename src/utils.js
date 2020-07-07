@@ -3,9 +3,11 @@ const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
+const printer = require('./printer');
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
 const keytarKey = 'bandwidth_cli_dashboard';
+const defaultKey = 'defaults';
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -33,7 +35,7 @@ const saveDashboardCredentials = async ({username, password}) => {
     throw new BadInputError('both a username and a password must be set.')
   }
   if (oldCredentials.username) {
-    await keytar.deletePassword(keytarKey, oldCredentials.username);
+    await keytar.deletePassword('bandwidth_cli_dashboard', oldCredentials.username);
   }
   writeConfig(dashboardUserKey, username)
   await keytar.setPassword(keytarKey, username, password);
@@ -58,9 +60,54 @@ const readAccountId = async () => {
   return readConfig(accIdKey);
 }
 
+
+
+const getDefaults = async () => {
+  return readConfig(defaultKey);
+}
+const readDefault = async (defaultName) => {
+  return readConfig(defaultKey)[defaultName];
+}
+const setDefault = async (defaultName, value) => {
+  const defaults = readConfig(defaultKey);
+  if (defaults[defaultName]) {
+    printer.warn(`Default ${defaultName} is being overwritten from ${defaults[defaultName]}`);
+  }
+  defaults[defaultName] = value;
+  writeConfig(defaultKey, defaults)
+  return defaultName;
+}
+const deleteDefault = async (defaultName) => {
+  const defaults = readConfig(defaultKey);
+  if (!defaults[defaultName]) {
+    throw new BadInputError(`No default ${defaultName} has been set`, 'defaultName', 'To see current default api settings, try "bandwidth default".')
+  }
+  delete defaults[defaultName];
+  writeConfig(defaultKey, defaults);
+  return defaultName;
+}
+/**
+ * Takes in a default value and a default field. If the value is null, uses the default
+ * and alerts the user. Returns undefined if the default is not set.
+ */
+const processDefault = async (field, value) => {
+  if (value) {return value;}
+  const defaultValue = await readDefault(field);
+  if (defaultValue) {
+    printer.print(`Using default ${field} ${defaultValue}`);
+  }
+  return defaultValue;
+}
+
+
 module.exports = {
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
-  readAccountId
+  readAccountId,
+  getDefaults,
+  readDefault,
+  setDefault,
+  deleteDefault,
+  processDefault
 }

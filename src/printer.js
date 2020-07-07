@@ -1,6 +1,7 @@
 var colors = require('colors/safe');
 const inquirer = require('inquirer');
 const YAML = require('yaml');
+//Be very cautious about requiring anything, due to dircular dependencies
 
 /**
  * This file is intended to make the output style of the entire CLI uniform. In

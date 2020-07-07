@@ -5,6 +5,7 @@ const actions = {
   ...require('./commands/create'),
   ...require('./commands/delete'),
   ...require('./commands/list'),
+  ...require('./commands/default'),
   ...require('./commands/login')
 }
 const { ApiError, errorHandler } = require('./errors');
@@ -18,6 +19,7 @@ module.exports.program = program = new Command();
 
 const description = 'A descriptive description to describe something worth describing with a description.';
 program
+  .name('bandwidth')
   .version('0.0.1')
   .description(description);
 
@@ -40,8 +42,8 @@ const createSiteCmd = createCmd.command('site <name>')
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
-  .requiredOption('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
-  .option('-d, --default', "Determines whether the sip peer is the default peer of the sub account.")
+  .option('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
+  .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
   .action(actions.createSipPeerAction)
 
 
@@ -62,7 +64,7 @@ const listSiteCmd = listCmd.command('site')
   .alias('sites')
   .action(actions.listSiteAction);
 
-const listSipPeerCmd = listCmd.command('sippeer <site-id>')
+const listSipPeerCmd = listCmd.command('sippeer [site-id]')
   .alias('p')
   .alias('sippeers')
   .alias('peer')
@@ -89,10 +91,16 @@ const deleteSiteCmd = deleteCmd.command('site <site-id>')
 const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('p')
   .alias('peer')
-  .requiredOption('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(actions.deleteSipPeerAction);
 
-/**************************'Log in' COMMAND**************************/
+/**************************'DEFAULT' COMMAND**************************/
+const defaultCmd = program.command('default [default-name] [default-value]')
+  .alias('def')
+  .usage('[[-d] <default-name> [<default-value>]]')
+  .option('-d, --delete', 'Delete specified defaultName.')
+  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
+  .action(actions.defaultAction)
 
 const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')

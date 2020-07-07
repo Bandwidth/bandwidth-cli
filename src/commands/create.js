@@ -1,7 +1,7 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { ApiError, BadInputError } = require('../errors')
-
+const utils = require('../utils')
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   switch (options.type) {
@@ -89,12 +89,42 @@ module.exports.createSiteAction = async (name, cmdObj) => {
 
 module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
-  const siteId = options.siteId;
+  const siteId = await utils.processDefault('site', options.siteId);
+  if (!siteId) {
+    throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
+  }
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
   }).catch((err) => {throw new ApiError(err)});
-  printer.success('Sip Peer created. See details of your created Peer below.')
+  printer.print('Peer created successfully...')
+  const defaultApp = await utils.readDefault('application');
+  //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
+  if (defaultApp){
+    const smsSettings = {
+      tollFree: true,
+      zone1: true,
+      zone2: true,
+      zone3: true,
+      zone4: true,
+      zone5: true,
+      protocol: "HTTP",
+    }
+    const httpSettings = {
+      v2Messaging: true
+    }
+    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings}).catch((err) => {
+      if (err) {
+        throw new ApiError(err);
+      }
+    }).then(()=>{printer.print("enabled SMS by default.")}); //TODO: option to disable SMS or customize peer creation
+    await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp}).catch((err) => {
+      if (err) {
+        throw new ApiError(err);
+      }
+    }).then(()=>{printer.print(`Linked created Sip Peer to default application ${defaultApp}`)});
+  }
+  printer.success('Sip Peer created. See details of your created Peer below.');
   printer.removeClient(createdPeer);
 }
