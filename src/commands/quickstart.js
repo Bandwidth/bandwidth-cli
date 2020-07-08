@@ -20,7 +20,7 @@ module.exports.quickstartAction = async () => {
     {
       type: 'input',
       name: 'messageCallbackUrl',
-      message: "Please enter a messaging callback callback url" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
+      message: "Please enter a message callbackUrl. Information about sent messages will be sent here." //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
     }
   ]
   const answers = await printer.prompt(prompts);
@@ -30,11 +30,6 @@ module.exports.quickstartAction = async () => {
     }
   }
   const setupNo = await utils.incrementSetupNo();
-  const createdApp = await numbers.Application.createMessagingApplicationAsync({
-    appName: `My Messaging Application ${setupNo}`,
-    msgCallbackUrl: answers.messageCallbackUrl
-  }).catch((err) => {throw new ApiError(err)});
-  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const line2 = answers.addressLine2.split(', ');
   const address = await numbers.Geocode.requestAsync({
     addressLine1: answers.addressLine1,
@@ -42,7 +37,12 @@ module.exports.quickstartAction = async () => {
     stateCode: line2[1],
     zip: line2[2]
   }).catch((err) => {throw new ApiError(err)});
-  printer.print('Address validated.')
+  printer.print('Address validated.');
+  const createdApp = await numbers.Application.createMessagingApplicationAsync({
+    appName: `My Messaging Application ${setupNo}`,
+    msgCallbackUrl: answers.messageCallbackUrl
+  }).catch((err) => {throw new ApiError(err)});
+  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const createdSite = await numbers.Site.createAsync({
     name: `My Site ${setupNo}`,
     address: {
@@ -80,9 +80,9 @@ module.exports.quickstartAction = async () => {
       throw new ApiError(err);
     }
   }).then(()=>{printer.print(`Sip Peer linked to application`)});
-  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Setting default sip peer...'))
-  await utils.setDefault('site', createdSite.id).then(()=> printer.print('Setting default site...'))
-  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Setting default sip peer...'))
+  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Default Sip Peer set'))
+  await utils.setDefault('site', createdSite.id).then(()=> printer.print('Default site set'))
+  await utils.setDefault('application', createdPeer.id).then(()=> printer.print('Default application set'))
   printer.print();
   printer.success('setup successful. To order a number using this setup, use "bandwidth order [phone number]"')
 }

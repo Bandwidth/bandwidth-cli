@@ -31,7 +31,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
           {
             type: 'input',
             name: 'msgCallbackUrl',
-            message: "Please enter a message callbackUrl"
+            message: "Please enter a message callbackUrl. Information about sent messages will be sent here."
           }
         ]
         const answers = await printer.prompt(messageAppPrompts)
