@@ -9,6 +9,7 @@ const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
 const keytarKey = 'bandwidth_cli_dashboard';
 const defaultKey = 'defaults';
+const setupNumberKey = 'setup_number'; //My application 1, my application 2, etc. For setting up stuff.
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -28,6 +29,7 @@ const readConfig = (config) => {
     return undefined;
   }
 }
+
 const saveDashboardCredentials = async ({username, password}) => {
   const oldCredentials = await readDashboardCredentials();
   username = username || oldCredentials.username;
@@ -61,6 +63,12 @@ const readAccountId = async () => {
   return readConfig(accIdKey);
 }
 
+const incrementSetupNo = async() => {
+  let setupNo = readConfig(setupNumberKey);
+  setupNo = setupNo?setupNo+=1:1;
+  writeConfig(setupNumberKey, setupNo);
+  return setupNo;
+}
 
 
 const getDefaults = async () => {
@@ -110,5 +118,6 @@ module.exports = {
   readDefault,
   setDefault,
   deleteDefault,
-  processDefault
+  processDefault,
+  incrementSetupNo
 }

@@ -26,24 +26,25 @@ module.exports.quickstartAction = async () => {
   const answers = await printer.prompt(prompts);
   for (const [field, answer] of Object.entries(answers)) {
     if (!answer) {
-      //throw new BadInputError(`${field} is required for a quickstart.`, field);
+      throw new BadInputError(`${field} is required for a quickstart.`, field);
     }
   }
+  const setupNo = await utils.incrementSetupNo();
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
-    appName: 'My Messaging Application',
-    msgCallbackUrl: 'http://example.com'//answers.messageCallbackUrl
+    appName: `My Messaging Application ${setupNo}`,
+    msgCallbackUrl: answers.messageCallbackUrl
   }).catch((err) => {throw new ApiError(err)});
   printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const line2 = answers.addressLine2.split(', ');
   const address = await numbers.Geocode.requestAsync({
-    addressLine1: '900 Main Campus Dr',//answers.addressLine1,
-    city: 'Raleigh',//line2[0],
-    stateCode: 'nc',//line2[1],
-    zip: 27606//line2[2]
+    addressLine1: answers.addressLine1,
+    city: line2[0],
+    stateCode: line2[1],
+    zip: line2[2]
   }).catch((err) => {throw new ApiError(err)});
   printer.print('Address validated.')
   const createdSite = await numbers.Site.createAsync({
-    name: 'My Site',
+    name: `My Site ${setupNo}`,
     address: {
       ...address,
       addressType: 'billing',//doesn't matter, so I just chose one and went with it.
@@ -51,7 +52,7 @@ module.exports.quickstartAction = async () => {
   }).catch((err) => {throw new ApiError(err)});
   printer.success(`Site created with id ${createdSite.id}`)
   const createdPeer = await numbers.SipPeer.createAsync({
-    peerName: 'My Sip Peer',
+    peerName: `My Sip Peer ${setupNo}`,
     isDefaultPeer: true,
     siteId: createdSite.id,
   }).catch((err) => {throw new ApiError(err)});
@@ -78,5 +79,10 @@ module.exports.quickstartAction = async () => {
     if (err) {
       throw new ApiError(err);
     }
-  }).then(()=>{printer.print(`Sip Peer to application`)});
+  }).then(()=>{printer.print(`Sip Peer linked to application`)});
+  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Setting default sip peer...'))
+  await utils.setDefault('site', createdSite.id).then(()=> printer.print('Setting default site...'))
+  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Setting default sip peer...'))
+  printer.print();
+  printer.success('setup successful. To order a number using this setup, use "bandwidth order [phone number]"')
 }
