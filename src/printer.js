@@ -86,6 +86,15 @@ module.exports.success = (...messages) => {
 }
 
 /**
+ * Print something only if ver, in green.
+ */
+module.exports.printIf = (toPrint, ...messages) => {
+  if (toPrint) {
+    console.log(...messages);
+  }
+}
+
+/**
  * Create a custom printer function.
  * @param color the color to print with
  * @param exitcode the code to exit with. Will not exit if it's not an integer

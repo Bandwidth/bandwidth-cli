@@ -4,7 +4,9 @@ const { ApiError, BadInputError } = require('../errors')
 const utils = require('../utils')
 
 
-module.exports.quickstartAction = async () => {
+module.exports.quickstartAction = async (cmdObj) => {
+  const opts = cmdObj.opts();
+  const verbose = opts.verbose;
   printer.print('An address is required for this quickstart.');
   const prompts = [
     {
@@ -37,7 +39,7 @@ module.exports.quickstartAction = async () => {
     stateCode: line2[1],
     zip: line2[2]
   }).catch((err) => {throw new ApiError(err)});
-  printer.print('Address validated.');
+  printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
     appName: `My Messaging Application ${setupNo}`,
     msgCallbackUrl: answers.messageCallbackUrl
@@ -74,15 +76,15 @@ module.exports.quickstartAction = async () => {
       throw new ApiError(err);
     }
   })
-  printer.print("enabled SMS.");
+  printer.printIf(verbose, "enabled SMS.");
   await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId}).catch((err) => {
     if (err) {
       throw new ApiError(err);
     }
-  }).then(()=>{printer.print(`Sip Peer linked to application`)});
-  await utils.setDefault('sippeer', createdPeer.id).then(()=> printer.print('Default Sip Peer set'))
-  await utils.setDefault('site', createdSite.id).then(()=> printer.print('Default site set'))
-  await utils.setDefault('application', createdPeer.id).then(()=> printer.print('Default application set'))
+  }).then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
+  await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
+  await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
+  await utils.setDefault('application', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
   printer.print();
   printer.success('setup successful. To order a number using this setup, use "bandwidth order [phone number]"')
 }

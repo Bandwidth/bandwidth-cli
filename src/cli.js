@@ -97,6 +97,7 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
 
 /**************************'QUICKSTART' COMMAND**************************/
 const quickstartCmd = program.command('quickstart')
+  .option('-v, --verbose', 'List out the steps that are being set.')
   .action(actions.quickstartAction);
 
 /**************************'DEFAULT' COMMAND**************************/
