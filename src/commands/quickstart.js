@@ -88,6 +88,33 @@ module.exports.quickstartAction = async (cmdObj) => {
   await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
   await utils.setDefault('application', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
+
+  let orderResponse = await printer.prompt({
+    type: 'confirm',
+    name: 'orderNumber',
+    message: 'order a phone number?',
+    default: true
+  })
+
+  const orderNumber = orderResponse.orderNumber
+  if (orderNumber) {
+    var order = {
+      name:"Bandwidth Quickstart Order",
+      siteId: createdSite.id,
+      peerId: createdPeer.id,
+      ZIPSearchAndOrderType: {
+        quantity: 1,
+        zip: address.zip
+      }
+    };
+    const createdOrder = (await numbers.Order.createAsync(order)).order;
+    const orderedTn = (await createdOrder.getTnsAsync()).telephoneNumber;
+    if (orderedTn) {
+      printer.success(`Phone number order for ${orderedTn} placed based on area code`)
+    } else {
+      printer.warn('Order placed but was unable to retrieve your phone number. Check your Bandwidth Dashboard.')
+    }
+  }
   printer.print();
-  printer.success('setup successful. To order a number using this setup, use "bandwidth order [phone number]"')
+  printer.print(`setup successful. To order ${orderNumber?'more numbers':'a number'} using this setup, use "bandwidth order [phone number]"`)
 }
