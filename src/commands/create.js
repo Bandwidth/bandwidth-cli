@@ -70,6 +70,9 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   ]
   const answers = await printer.prompt(sitePrompts);
   const line2 = answers.addressLine2.split(', ');
+  if (line2.length !== 3) {
+    throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')
+  }
   const address = await numbers.Geocode.requestAsync({
     addressLine1: answers.addressLine1,
     city: line2[0],

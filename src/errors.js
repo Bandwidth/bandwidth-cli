@@ -67,8 +67,7 @@ const errorHandler = (action) => {
         return printer.custom('white', true)(err.suggestion||'')
       }
       if (err instanceof ApiError) {
-        printer.custom('red')(err.name + ":", err.message)
-        printer.print(err.context, err.context.res);
+        printer.custom('red')(err.name + ":", err.message);
         return printer.custom('white', true)(err.suggestion||'')
       }
       if (err instanceof CliError) {

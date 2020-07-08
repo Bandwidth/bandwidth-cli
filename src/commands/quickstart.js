@@ -31,8 +31,11 @@ module.exports.quickstartAction = async (cmdObj) => {
       throw new BadInputError(`${field} is required for a quickstart.`, field);
     }
   }
-  const setupNo = await utils.incrementSetupNo();
+  const setupNo = await utils.incrementSetupNo(); //used to avoid name clash errors, if for some reason they run it multiple times.
   const line2 = answers.addressLine2.split(', ');
+  if (line2.length !== 3) {
+    throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')
+  }
   const address = await numbers.Geocode.requestAsync({
     addressLine1: answers.addressLine1,
     city: line2[0],
@@ -49,7 +52,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     name: `My Site ${setupNo}`,
     address: {
       ...address,
-      addressType: 'billing',//doesn't matter, so I just chose one and went with it.
+      addressType: 'billing',//billing/service have no functional differences but is required.
     }
   }).catch((err) => {throw new ApiError(err)});
   printer.success(`Site created with id ${createdSite.id}`)
@@ -76,7 +79,7 @@ module.exports.quickstartAction = async (cmdObj) => {
       throw new ApiError(err);
     }
   })
-  printer.printIf(verbose, "enabled SMS.");
+  printer.printIf(verbose, "enabled SMS in sip peer.");
   await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId}).catch((err) => {
     if (err) {
       throw new ApiError(err);

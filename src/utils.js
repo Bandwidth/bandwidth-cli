@@ -9,7 +9,7 @@ const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
 const keytarKey = 'bandwidth_cli_dashboard';
 const defaultKey = 'defaults';
-const setupNumberKey = 'setup_number'; //My application 1, my application 2, etc. For setting up stuff.
+const setupNumberKey = 'setup_number'; //My application 1, my application 2, etc. For avoiding confusion in quickstart.
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -63,11 +63,15 @@ const readAccountId = async () => {
   return readConfig(accIdKey);
 }
 
+/**
+ * Returns an empty string the first time, and then 1, 2, 3... thereafter.
+ * Used to avoid name clashes for the fixed names applied in quickstart.
+ */
 const incrementSetupNo = async() => {
   let setupNo = readConfig(setupNumberKey);
-  setupNo = setupNo?setupNo+=1:1;
+  setupNo = setupNo?setupNo+=1:0;
   writeConfig(setupNumberKey, setupNo);
-  return setupNo;
+  return setupNo || ''; //if 0, then nothing
 }
 
 

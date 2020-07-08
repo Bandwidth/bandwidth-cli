@@ -86,7 +86,7 @@ module.exports.success = (...messages) => {
 }
 
 /**
- * Print something only if ver, in green.
+ * Print something only if toPrint is true, for verbose/quiet cases.
  */
 module.exports.printIf = (toPrint, ...messages) => {
   if (toPrint) {
