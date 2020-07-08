@@ -20,22 +20,26 @@ module.exports.quickstartAction = async () => {
     {
       type: 'input',
       name: 'messageCallbackUrl',
-      message: "Please enter a callback message callback url" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
+      message: "Please enter a messaging callback callback url" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
     }
   ]
   const answers = await printer.prompt(prompts);
   for (const [field, answer] of Object.entries(answers)) {
     if (!answer) {
-      throw new BadInputError(`${field} is required for a quickstart.`, field);
+      //throw new BadInputError(`${field} is required for a quickstart.`, field);
     }
   }
-
+  const createdApp = await numbers.Application.createMessagingApplicationAsync({
+    appName: 'My Messaging Application',
+    msgCallbackUrl: 'http://example.com'//answers.messageCallbackUrl
+  }).catch((err) => {throw new ApiError(err)});
+  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const line2 = answers.addressLine2.split(', ');
   const address = await numbers.Geocode.requestAsync({
-    addressLine1: answers.addressLine1,
-    city: line2[0],
-    stateCode: line2[1],
-    zip: line2[2]
+    addressLine1: '900 Main Campus Dr',//answers.addressLine1,
+    city: 'Raleigh',//line2[0],
+    stateCode: 'nc',//line2[1],
+    zip: 27606//line2[2]
   }).catch((err) => {throw new ApiError(err)});
   printer.print('Address validated.')
   const createdSite = await numbers.Site.createAsync({
@@ -70,11 +74,6 @@ module.exports.quickstartAction = async () => {
     }
   })
   printer.print("enabled SMS.");
-  const createdApp = await numbers.Application.createMessagingApplicationAsync({
-    appName: 'My Messaging Application',
-    msgCallbackUrl: answers.messageCallbackUrl
-  }).catch((err) => {throw new ApiError(err)});
-  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId}).catch((err) => {
     if (err) {
       throw new ApiError(err);
