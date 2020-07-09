@@ -46,6 +46,10 @@ const createSipPeerCmd = createCmd.command('sippeer <name>')
   .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
   .action(actions.createSipPeerAction)
 
+const createOrderCmd = createCmd.command('order <quantity>')
+  .alias('o')
+  .action(console.log)
+  
 
 /**************************'LIST' COMMAND**************************/
 
