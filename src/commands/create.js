@@ -10,14 +10,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'v':
     case 'voice':
       {
-        const voiceAppPrompts = [ //possible add "advanced" creating for other fields?
-          {
-            type: 'input',
-            name: 'callInitiatedCallbackUrl',
-            message: "Please enter a callInitiatedCallbackUrl. Information for outbound calls will be sent here, and Bandwidth will attempt to grab BXML at this endpoint. (example: http://example.com)" //this is the only mandatory field so far.
-          }
-        ]
-        const answers = await printer.prompt(voiceAppPrompts)
+        const answers = await printer.prompt(prompts.callInitiatedCallbackUrl)
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
@@ -29,14 +22,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'm':
     case 'messaging':
       {
-        const messageAppPrompts = [
-          {
-            type: 'input',
-            name: 'msgCallbackUrl',
-            message: "Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)"
-          }
-        ]
-        const answers = await printer.prompt(messageAppPrompts)
+        const answers = await printer.prompt(prompts.msgCallbackUrl)
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
@@ -59,16 +45,8 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     throw new BadInputError('addressType must be either service(s) or billing(b)');
   }
   const sitePrompts = [
-    {
-      type: 'input',
-      name: 'addressLine1',
-      message: "Sites require an address. Please enter address line 1. (example: 900 Main Campus Dr)"
-    },
-    {
-      type: 'input',
-      name: 'addressLine2',
-      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
-    }
+    prompts.addressLine1,
+    prompts.addressLine2
   ]
   const answers = await printer.prompt(sitePrompts);
   const line2 = answers.addressLine2.split(', ');

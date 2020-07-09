@@ -1,7 +1,7 @@
 {
   "msgCallbackUrl": {
     "type": "input",
-    "name": "msgCallbackUr",
+    "name": "msgCallbackUrl",
     "message": "Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)"
   },
   "callInitiatedCallbackUrl": {

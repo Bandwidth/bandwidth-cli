@@ -9,24 +9,12 @@ module.exports.quickstartAction = async (cmdObj) => {
   const opts = cmdObj.opts();
   const verbose = opts.verbose;
   printer.print('An address is required for this quickstart.');
-  const prompts = [
-    {
-      type: 'input',
-      name: 'addressLine1',
-      message: "Please enter address line 1/your street address. (example: 900 Main Campus Dr)"
-    },
-    {
-      type: 'input',
-      name: 'addressLine2',
-      message: "Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)"
-    },
-    {
-      type: 'input',
-      name: 'messageCallbackUrl',
-      message: "Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
-    }
+  const quickstartPrompts = [
+    prompts.addressLine1,
+    prompts.addressLine2,
+    prompts.msgCallbackUrl
   ]
-  const answers = await printer.prompt(prompts);
+  const answers = await printer.prompt(quickstartPrompts);
   for (const [field, answer] of Object.entries(answers)) {
     if (!answer) {
       throw new BadInputError(`${field} is required for a quickstart.`, field);
@@ -46,7 +34,7 @@ module.exports.quickstartAction = async (cmdObj) => {
   printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
     appName: `My Messaging Application ${setupNo}`,
-    msgCallbackUrl: answers.messageCallbackUrl
+    msgCallbackUrl: answers.msgCallbackUrl
   }).catch((err) => {throw new ApiError(err)});
   printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const createdSite = await numbers.Site.createAsync({
