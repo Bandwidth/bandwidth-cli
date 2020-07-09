@@ -26,7 +26,6 @@ program
   .description(description);
 
 /**************************'CREATE' COMMAND**************************/
-
 const createCmd = program.command('create')
   .alias('c')
   .description('Create an organizational category for phone numbers, such as sip peers/locations, sites/sub-accounts, and applications.')
@@ -52,8 +51,70 @@ const createOrderCmd = createCmd.command('order <quantity>')
   .alias('o')
   .action(console.log)
 
-/**************************'ORDER' COMMAND**************************/
 
+/**************************'DEFAULT' COMMAND**************************/
+const defaultCmd = program.command('default [default-name] [default-value]')
+  .alias('def')
+  .usage('[[-d] <default-name> [<default-value>]]')
+  .option('-d, --delete', 'Delete specified defaultName.')
+  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
+  .action(actions.defaultAction)
+
+
+/**************************'DELETE' COMMAND**************************/
+const deleteCmd = program.command('delete')
+  .alias('d')
+  .alias('del')
+  .description('Delete a site, location, or sip peer.');
+
+const deleteAppCmd = deleteCmd.command('app <app-id>')
+  .alias('a')
+  .alias('applicatiion')
+  .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
+  .action(actions.deleteAppAction)
+
+const deleteSiteCmd = deleteCmd.command('site <site-id>')
+  .alias('s')
+  .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
+  .action(actions.deleteSiteAction)
+
+const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
+  .alias('p')
+  .alias('peer')
+  .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .action(actions.deleteSipPeerAction);
+
+
+/**************************'LIST' COMMAND**************************/
+const listCmd = program.command('list')
+  .alias('l')
+  .description('List the sip peers, sites, and applications associated with your account.');
+
+
+const listAppCmd = listCmd.command('app')
+  .alias('a')
+  .alias('apps')
+  .action(actions.listAppAction);
+
+const listSiteCmd = listCmd.command('site')
+  .alias('s')
+  .alias('sites')
+  .action(actions.listSiteAction);
+
+const listSipPeerCmd = listCmd.command('sippeer [site-id]')
+  .alias('p')
+  .alias('sippeers')
+  .alias('peer')
+  .action(actions.listSipPeerAction);
+
+
+/**************************'LOGIN' COMMAND**************************/
+const loginCmd = program.command('login')
+  .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
+  .action(actions.loginAction)
+
+
+/**************************'ORDER' COMMAND**************************/
 const orderCmd = program.command('order')
   .alias('o')
   .description('Order phone numbers.');
@@ -78,67 +139,7 @@ const orderSearchCmd = orderCmd.command('search')
   .action(actions.orderSearchAction);
 
 
-/**************************'LIST' COMMAND**************************/
-
-const listCmd = program.command('list')
-  .alias('l')
-  .description('List the sip peers, sites, and applications associated with your account.');
-
-
-const listAppCmd = listCmd.command('app')
-  .alias('a')
-  .alias('apps')
-  .action(actions.listAppAction);
-
-const listSiteCmd = listCmd.command('site')
-  .alias('s')
-  .alias('sites')
-  .action(actions.listSiteAction);
-
-const listSipPeerCmd = listCmd.command('sippeer [site-id]')
-  .alias('p')
-  .alias('sippeers')
-  .alias('peer')
-  .action(actions.listSipPeerAction);
-
-/**************************'DELETE' COMMAND**************************/
-
-const deleteCmd = program.command('delete')
-  .alias('d')
-  .alias('del')
-  .description('Delete a site, location, or sip peer.');
-
-const deleteAppCmd = deleteCmd.command('app <app-id>')
-  .alias('a')
-  .alias('applicatiion')
-  .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
-  .action(actions.deleteAppAction)
-
-const deleteSiteCmd = deleteCmd.command('site <site-id>')
-  .alias('s')
-  .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
-  .action(actions.deleteSiteAction)
-
-const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
-  .alias('p')
-  .alias('peer')
-  .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
-  .action(actions.deleteSipPeerAction);
-
 /**************************'QUICKSTART' COMMAND**************************/
 const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
   .action(actions.quickstartAction);
-
-/**************************'DEFAULT' COMMAND**************************/
-const defaultCmd = program.command('default [default-name] [default-value]')
-  .alias('def')
-  .usage('[[-d] <default-name> [<default-value>]]')
-  .option('-d, --delete', 'Delete specified defaultName.')
-  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
-  .action(actions.defaultAction)
-
-/**************************'LOGIN' COMMAND**************************/
-const loginCmd = program.command('login')
-  .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
-  .action(actions.loginAction)
