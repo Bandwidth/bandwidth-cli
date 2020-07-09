@@ -51,27 +51,29 @@ const createOrderCmd = createCmd.command('order <quantity>')
   .alias('o')
   .action(console.log)
 
-/**************************'LIST' COMMAND**************************/
+/**************************'ORDER' COMMAND**************************/
 
 const orderCmd = program.command('order')
   .alias('o')
   .description('Order phone numbers.');
 
-
-const orderNumberCmd = orderCmd.command('number')
+const orderNumberCmd = orderCmd.command('number <numbers...>')
   .alias('n')
   .alias('numbers')
   .alias('no')
   .alias('nos')
+  .option('-s, --siteId', "Specify a site id to order a number with.")
+  .description('Order a specific list of phone numbers.')
   .action(actions.orderNumberAction);
 
 const orderCategoryCmd = orderCmd.command('category')
-  .alias('s')
-  .alias('sites')
+  .alias('c')
+  .alias('categories')
+  .description('Order phone numbers based on categories.')
   .action(actions.orderCategoryAction);
 
 const orderSearchCmd = orderCmd.command('search')
-  .alias('c')
+  .alias('s')
   .action(actions.orderSearchAction);
 
 
@@ -131,7 +133,6 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .action(actions.defaultAction)
 
 /**************************'LOGIN' COMMAND**************************/
-
 const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
   .action(actions.loginAction)
