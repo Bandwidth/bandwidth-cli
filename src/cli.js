@@ -7,7 +7,8 @@ const actions = {
   ...require('./commands/order'),
   ...require('./commands/list'),
   ...require('./commands/default'),
-  ...require('./commands/login')
+  ...require('./commands/login'),
+  ...require('./commands/quickstart')
 }
 const { ApiError, errorHandler } = require('./errors');
 const utils = require('./utils');
@@ -123,6 +124,11 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('peer')
   .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(actions.deleteSipPeerAction);
+
+/**************************'QUICKSTART' COMMAND**************************/
+const quickstartCmd = program.command('quickstart')
+  .option('-v, --verbose', 'List out the steps that are being set.')
+  .action(actions.quickstartAction);
 
 /**************************'DEFAULT' COMMAND**************************/
 const defaultCmd = program.command('default [default-name] [default-value]')
