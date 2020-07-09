@@ -22,7 +22,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     {
       type: 'input',
       name: 'messageCallbackUrl',
-      message: "Please enter a message callbackUrl. Information about sent messages will be sent here." //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
+      message: "Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)" //TODO possible: if blank, then no messaging. If the voice is blank, no voice?
     }
   ]
   const answers = await printer.prompt(prompts);

@@ -12,7 +12,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
           {
             type: 'input',
             name: 'callInitiatedCallbackUrl',
-            message: "Please enter a callInitiatedCallbackUrl" //this is the only mandatory field so far.
+            message: "Please enter a callInitiatedCallbackUrl (example: http://example.com)" //this is the only mandatory field so far.
           }
         ]
         const answers = await printer.prompt(voiceAppPrompts)
@@ -31,7 +31,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
           {
             type: 'input',
             name: 'msgCallbackUrl',
-            message: "Please enter a message callbackUrl. Information about sent messages will be sent here."
+            message: "Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)"
           }
         ]
         const answers = await printer.prompt(messageAppPrompts)
