@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 const actions = {
   ...require('./commands/create'),
   ...require('./commands/delete'),
+  ...require('./commands/order'),
   ...require('./commands/list'),
   ...require('./commands/default'),
   ...require('./commands/login')
@@ -49,7 +50,30 @@ const createSipPeerCmd = createCmd.command('sippeer <name>')
 const createOrderCmd = createCmd.command('order <quantity>')
   .alias('o')
   .action(console.log)
-  
+
+/**************************'LIST' COMMAND**************************/
+
+const orderCmd = program.command('order')
+  .alias('o')
+  .description('Order phone numbers.');
+
+
+const orderNumberCmd = orderCmd.command('number')
+  .alias('n')
+  .alias('numbers')
+  .alias('no')
+  .alias('nos')
+  .action(actions.orderNumberAction);
+
+const orderCategoryCmd = orderCmd.command('category')
+  .alias('s')
+  .alias('sites')
+  .action(actions.orderCategoryAction);
+
+const orderSearchCmd = orderCmd.command('search')
+  .alias('c')
+  .action(actions.orderSearchAction);
+
 
 /**************************'LIST' COMMAND**************************/
 
@@ -105,6 +129,8 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .option('-d, --delete', 'Delete specified defaultName.')
   .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)
+
+/**************************'LOGIN' COMMAND**************************/
 
 const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
