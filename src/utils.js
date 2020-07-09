@@ -76,17 +76,18 @@ const incrementSetupNo = async() => {
 
 
 const getDefaults = async () => {
-  return readConfig(defaultKey);
+  return (readConfig(defaultKey)||{});
 }
 const readDefault = async (defaultName) => {
-  return readConfig(defaultKey)[defaultName];
+  const config = readConfig(defaultKey);
+  return (config||{})[defaultName];
 }
 /**
  * Sets the default.
  * @param quiet an optional param which, if truthy, will suppress overwritten warnings.
  */
 const setDefault = async (defaultName, value, quiet) => {
-  const defaults = readConfig(defaultKey);
+  const defaults = readConfig(defaultKey) || {};
   if (defaults[defaultName] && !quiet) {
     printer.warn(`Default ${defaultName} is being overwritten from ${defaults[defaultName]}`);
   }

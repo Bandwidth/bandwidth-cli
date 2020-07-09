@@ -12,7 +12,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     {
       type: 'input',
       name: 'addressLine1',
-      message: "Please enter address line 1. (example: 900 Main Campus Dr)"
+      message: "Please enter address line 1/your street address. (example: 900 Main Campus Dr)"
     },
     {
       type: 'input',
