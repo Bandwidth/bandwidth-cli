@@ -1,6 +1,7 @@
 const numbers = require('@bandwidth/numbers');
 const printer = require('../printer');
 const utils = require('../utils');
+const prompts = require('../../assets/prompts.json');
 const { ApiError, BadInputError} = require('../errors');
 
 module.exports.loginAction = async () => {//FIXME

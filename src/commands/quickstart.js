@@ -1,7 +1,8 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
-const { ApiError, BadInputError } = require('../errors')
-const utils = require('../utils')
+const { ApiError, BadInputError } = require('../errors');
+const utils = require('../utils');
+const prompts = require('../../assets/prompts.json');
 
 
 module.exports.quickstartAction = async (cmdObj) => {

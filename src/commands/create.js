@@ -1,7 +1,9 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
-const { ApiError, BadInputError } = require('../errors')
-const utils = require('../utils')
+const { ApiError, BadInputError } = require('../errors');
+const utils = require('../utils');
+const prompts = require('../../assets/prompts.json');
+
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   switch (options.type) {
@@ -12,7 +14,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
           {
             type: 'input',
             name: 'callInitiatedCallbackUrl',
-            message: "Please enter a callInitiatedCallbackUrl (example: http://example.com)" //this is the only mandatory field so far.
+            message: "Please enter a callInitiatedCallbackUrl. Information for outbound calls will be sent here, and Bandwidth will attempt to grab BXML at this endpoint. (example: http://example.com)" //this is the only mandatory field so far.
           }
         ]
         const answers = await printer.prompt(voiceAppPrompts)
