@@ -6,7 +6,8 @@ const actions = {
   ...require('./commands/delete'),
   ...require('./commands/list'),
   ...require('./commands/default'),
-  ...require('./commands/login')
+  ...require('./commands/login'),
+  ...require('./commands/quickstart')
 }
 const { ApiError, errorHandler } = require('./errors');
 const utils = require('./utils');
@@ -94,6 +95,11 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
   .action(actions.deleteSipPeerAction);
 
+/**************************'QUICKSTART' COMMAND**************************/
+const quickstartCmd = program.command('quickstart')
+  .option('-v, --verbose', 'List out the steps that are being set.')
+  .action(actions.quickstartAction);
+
 /**************************'DEFAULT' COMMAND**************************/
 const defaultCmd = program.command('default [default-name] [default-value]')
   .alias('def')
@@ -102,6 +108,7 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)
 
+/**************************'LOGIN' COMMAND**************************/
 const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
   .action(actions.loginAction)

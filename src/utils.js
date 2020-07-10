@@ -4,10 +4,12 @@ const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
+
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
 const keytarKey = 'bandwidth_cli_dashboard';
 const defaultKey = 'defaults';
+const setupNumberKey = 'setup_number'; //My application 1, my application 2, etc. For avoiding confusion in quickstart.
 
 const writeConfig = (config, value) => {
   let mapping;
@@ -27,6 +29,7 @@ const readConfig = (config) => {
     return undefined;
   }
 }
+
 const saveDashboardCredentials = async ({username, password}) => {
   const oldCredentials = await readDashboardCredentials();
   username = username || oldCredentials.username;
@@ -60,17 +63,32 @@ const readAccountId = async () => {
   return readConfig(accIdKey);
 }
 
+/**
+ * Returns an empty string the first time, and then 1, 2, 3... thereafter.
+ * Used to avoid name clashes for the fixed names applied in quickstart.
+ */
+const incrementSetupNo = async() => {
+  let setupNo = readConfig(setupNumberKey);
+  setupNo = setupNo?setupNo+=1:0;
+  writeConfig(setupNumberKey, setupNo);
+  return setupNo || ''; //if 0, then nothing
+}
 
 
 const getDefaults = async () => {
-  return readConfig(defaultKey);
+  return (readConfig(defaultKey)||{});
 }
 const readDefault = async (defaultName) => {
-  return readConfig(defaultKey)[defaultName];
+  const config = readConfig(defaultKey);
+  return (config||{})[defaultName];
 }
-const setDefault = async (defaultName, value) => {
-  const defaults = readConfig(defaultKey);
-  if (defaults[defaultName]) {
+/**
+ * Sets the default.
+ * @param quiet an optional param which, if truthy, will suppress overwritten warnings.
+ */
+const setDefault = async (defaultName, value, quiet) => {
+  const defaults = readConfig(defaultKey) || {};
+  if (defaults[defaultName] && !quiet) {
     printer.warn(`Default ${defaultName} is being overwritten from ${defaults[defaultName]}`);
   }
   defaults[defaultName] = value;
@@ -109,5 +127,6 @@ module.exports = {
   readDefault,
   setDefault,
   deleteDefault,
-  processDefault
+  processDefault,
+  incrementSetupNo
 }

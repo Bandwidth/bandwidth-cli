@@ -26,7 +26,11 @@ module.exports.defaultAction = async (defaultName, defaultValue, cmdObj) => {
   }
   //no delete switch but not setting a default value
   if (!defaultValue) {
-    return printer.print(await utils.readDefault(defaultName));
+    const retrievedDefault = await utils.readDefault(defaultName);
+    if (retrievedDefault) {
+      return printer.print(await utils.readDefault(defaultName));
+    }
+    return printer.warn(`Default ${defaultValue} not set.`)
   }
   //set default value
   const setName = await utils.setDefault(defaultName, defaultValue);
