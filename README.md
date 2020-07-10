@@ -1,9 +1,9 @@
-#Bandwidth CLI
-##Table of Contents
-[table of contexts](##Table of Contents)
-[setup](##Installation/Setup)
+# Bandwidth CLI
+## Table of Contents
+[table of contexts](## Table of Contents)
+[setup](## Installation/Setup)
 
-##Installation/Setup
+## Installation/Setup
 This Bandwidth CLI uses nodeJs version X.X.X. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node.
 
 With node on your machine, install the package globally through npm (or yarn)
@@ -27,7 +27,7 @@ Leaving a field blank will keep it at its previous value.
 Your credentials have been saved. You can now start using the CLI.
 ```
 
-##Getting started
+## Getting started
 First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number, or
 simply setup your account (and order numbers later).
 
