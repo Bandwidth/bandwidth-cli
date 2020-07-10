@@ -1,7 +1,7 @@
 # Bandwidth CLI
 ## Table of Contents
-[table of contexts](## Table of Contents)
-[setup](## Installation/Setup)
+[table of contexts](##table-of-contents)
+[setup](##installationsetup)
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version X.X.X. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node.
@@ -66,3 +66,49 @@ status: COMPLETE
 At this point, you can now use the number for messages. Should you need more (or different) numbers than
 the 10 that were offered, you can order more numbers using the `bandwidth order`. For more information, see
 [the `bandwidth order` command](###order)
+
+## commands
+[create](###create) [default](###default) [delete](###delete) [list](###list) [login](###login) [order](###order) [quickstart](###quickstart)
+
+### create
+used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
+<!---FIXME: addressType should be address-type -->
+#### create site
+```
+>create site --address-type billing "my site name"
+Site created. See details of your created Site below.
+
+id: 37390
+name: my site name
+address:
+  houseNumber: 900
+  streetName: MAIN CAMPUS
+  streetSuffix: DR
+  city: RALEIGH
+  stateCode: NC
+  zip: 27606
+  plusFour: 5177
+  country: United States
+  addressType: Billing
+>create site --address-type serviec "my site name"
+Site created. See details of your created Site below.
+
+id: 37391
+name: my site name
+address:
+  houseNumber: 900
+  streetName: MAIN CAMPUS
+  streetSuffix: DR
+  city: RALEIGH
+  stateCode: NC
+  zip: 27606
+  plusFour: 5177
+  country: United States
+  addressType: Service
+```
+
+#### create sip peer
+```
+create peer "my peer name"
+create site --address-type serviec "my site name"
+```
