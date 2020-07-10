@@ -74,6 +74,15 @@ the 10 that were offered, you can order more numbers using the `bandwidth order`
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
 <!---FIXME: addressType should be address-type -->
 #### create site
+
+usage: `create site <sitename>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --address-type| Title       | yes
+
 ```
 >create site --address-type billing "my site name"
 Site created. See details of your created Site below.
@@ -108,7 +117,48 @@ address:
 ```
 
 #### create sip peer
+Create a sip peer (also known as location). Since all sip peers are nested under sub-accounts/sites,
+a siteId must be specified if no default site is set.
+
+This command will automatically turn on sms and link the default application to the site as a messaging application.  
+
 ```
-create peer "my peer name"
-create site --address-type serviec "my site name"
+>create peer "my peer name"
+Using default site 37397
+Peer created successfully...
+enabled SMS by default.
+Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
+Sip Peer created. See details of your created Peer below.
+
+peerId: 624651
+peerName: "my peer name"
+isDefaultPeer: false
+voiceHosts: 0
+voiceHostGroups: 0
+products:
+  product: TERMINATION
+id: 624651
+siteId: 37397
+
+or, manually specify siteId
+
+>create peer --site-id mysiteId peername
+Peer created successfully...
+enabled SMS by default.
+Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
+Sip Peer created. See details of your created Peer below.
+
+peerId: 624651
+peerName: peername
+isDefaultPeer: false
+voiceHosts: 0
+voiceHostGroups: 0
+products:
+  product: TERMINATION
+id: 624651
+siteId: 37397
 ```
+
+```
+
+#### create application
