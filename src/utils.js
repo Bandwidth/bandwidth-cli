@@ -117,6 +117,36 @@ const processDefault = async (field, value) => {
   return defaultValue;
 }
 
+/**
+ * Derives and teturns the appropriate order type from the list of attributes.
+ */
+const deriveOrderType = (numberAttributes) => {
+  const orderTypeMap = {
+    areaCode: 'areaCodeSearchAndOrderType',
+    rateCenter: 'rateCenterSearchAndOrderType',
+    npaNxx: 'NPANXXSearchAndOrderType',
+    npaNxxX: 'NPANXXXSearchAndOrderType',
+    state: 'stateSearchAndOrderType',
+    city: 'citySearchAndOrderType',
+    zip: 'ZIPSearchAndOrderType',
+    lata: 'LATASearchAndOrderType'
+  }
+  if (numberAttributes.length === 0) {
+    return undefined;
+  }
+  const withoutState = numberAttributes.filter(attribute => attribute !== 'state')
+  if (withoutState.length === 0) { //state is the only one
+    return orderTypeMap.state
+  }
+  if (withoutState.length === 1 && (withoutState.includes('rateCenter') || withoutState.includes('city'))) { //these require the state as well.
+    return orderTypeMap[withoutState.pop()];
+  }
+  if (numberAttributes.length === 1) {
+    return orderTypeMap[numberAttributes.pop()];
+  }
+  return 'combinedSearchAndOrderType'
+}
+
 
 module.exports = {
   saveDashboardCredentials,
@@ -128,5 +158,6 @@ module.exports = {
   setDefault,
   deleteDefault,
   processDefault,
-  incrementSetupNo
+  incrementSetupNo,
+  deriveOrderType
 }
