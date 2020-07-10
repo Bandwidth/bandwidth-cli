@@ -3,11 +3,11 @@ const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
 const actions = {
   ...require('./commands/create'),
-  ...require('./commands/delete'),
-  ...require('./commands/order'),
-  ...require('./commands/list'),
   ...require('./commands/default'),
+  ...require('./commands/delete'),
+  ...require('./commands/list'),
   ...require('./commands/login'),
+  ...require('./commands/order'),
   ...require('./commands/quickstart')
 }
 const { ApiError, errorHandler } = require('./errors');
