@@ -1,7 +1,7 @@
 # Bandwidth CLI
 ## Table of Contents
-[table of contexts](##table-of-contents)
-[setup](##installationsetup)
+[table of contexts](#table-of-contents)
+[setup](#installationsetup)
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version X.X.X. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node.
@@ -65,10 +65,10 @@ status: COMPLETE
 ```
 At this point, you can now use the number for messages. Should you need more (or different) numbers than
 the 10 that were offered, you can order more numbers using the `bandwidth order`. For more information, see
-[the `bandwidth order` command](###order)
+[the `bandwidth order` command](#order)
 
 ## commands
-[create](###create) [default](###default) [delete](###delete) [list](###list) [login](###login) [order](###order) [quickstart](###quickstart)
+[create](#create) [default](#default) [delete](#delete) [list](#list) [login](#login) [order](#order) [quickstart](#quickstart)
 
 ### create
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
@@ -81,7 +81,7 @@ usage: `create site <sitename>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --address-type| Title       | yes
+| --address-type, -t| must be either billing or service.| yes
 
 ```
 >create site --address-type billing "my site name"
@@ -122,6 +122,15 @@ a siteId must be specified if no default site is set.
 
 This command will automatically turn on sms and link the default application to the site as a messaging application.  
 
+usage: `create sippeer <peername>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --site-id, -s| A valid siteId to put the peer under.| no (yes if no default site is configured.)
+| --default, -d| Make this a default sip peer under the site.| no
+
 ```
 >create peer "my peer name"
 Using default site 37397
@@ -159,6 +168,46 @@ id: 624651
 siteId: 37397
 ```
 
-```
-
 #### create application
+Create a voice or messaging application.
+
+This command will automatically turn on sms and link the default application to the site as a messaging application.  
+
+usage: `create app <appname>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --type, -t| Specify whether the application is voice or messaging.| yes
+
+```
+create a messaging application
+
+>bandwidth create application --type messaging appname
+? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
+>http://example.com
+Messaging application created. See details of your created application below.
+
+applicationId: 2c9a96e7-0869-4a6c-94b7-ad39c15db38a
+serviceType: Messaging-V2
+appName: appname
+callbackUrl: http://example.com
+msgCallbackUrl: http://example.com
+callbackCreds: 0
+
+or create a voice application
+
+>bandwidth create application --type voice appname
+? Please enter a callInitiatedCallbackUrl. Information for outbound calls will be sent here, and Bandwidth will attempt
+to grab BXML at this endpoint. (example: http://example.com)
+>http://example.com
+Voice application created. See details of your created application below.
+
+applicationId: cfa5dcf5-02ab-4451-af15-88548fa35777
+serviceType: Voice-V2
+appName: appname
+callInitiatedCallbackUrl: http://example.com
+callInitiatedMethod: POST
+
+```
