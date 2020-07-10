@@ -144,8 +144,17 @@ const orderCategoryCmd = orderCmd.command('category <quantity>')
   .description('Order phone numbers based on categories, such as area code, zip codes, cities, and states. Use options to specify their values, and specify how many through the argument.')
   .action(actions.orderCategoryAction);
 
-const orderSearchCmd = orderCmd.command('search')
+const orderSearchCmd = orderCmd.command('search <quantity>')
   .alias('s')
+  .option('--zip <zip-code>', "Order numbers by zip code.")
+  .option('--area-code <area-code>', "Order numbers by area code.")
+  .option('--npa-nxx <npa-nxx>', "Order numbers by the first 6 digits. eg (123)-456-xxxx")
+  .option('--npa-nxx-x <npa-nxx-x>', "Order numbers by the first 7 digits. eg (123)-456-7xxx")
+  .option('--state <state-code>', "Order numbers by state")
+  .option('--city <city>', "Order numbers by city.")
+  .option('--lata <lata>', "Order numbers by LATA (Local Access and Transport Area).")
+  .option('-s, --site-id <site-id>', "Specify a site id to order a number with, using its id.")
+  .option('-p, --peer-id <peer-id>', "Specify a sip peer to order a number with, using its id.")
   .description("Search phone numbers through categories such as area code, zip codes, cities, and states, and choose numbers that you'd like to order.")
   .action(actions.orderSearchAction);
 
