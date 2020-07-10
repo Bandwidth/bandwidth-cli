@@ -23,7 +23,6 @@
   "homepage": "https://github.com/Bandwidth/band-cli#readme",
   "dependencies": {
     "@bandwidth/numbers": "^1.4.0",
-    "axios": "^0.19.2",
     "colors": "^1.4.0",
     "commander": "^5.1.0",
     "fast-xml-parser": "^3.17.4",

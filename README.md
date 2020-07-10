@@ -1,1 +1,4 @@
-# band-cli
+# bandwidth_cli
+[setup](#Installation)
+
+## Installation
