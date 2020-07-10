@@ -155,7 +155,7 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
     printer.print(phoneNumber)
   });
   printer.printIf(truncated > 0, `[and ${truncated} more]`)
-  const answer = (await printer.prompt(prompts.confirmNumberOrder(phoneNumbers))).orderNumber;
+  const answer = (await printer.prompt('confirmNumberOrder', phoneNumbers)).confirmNumberOrder;
   if (!answer){return;}
   var order = {
     name:"Bandwidth Cli Order",

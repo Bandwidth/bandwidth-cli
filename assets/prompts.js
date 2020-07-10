@@ -19,24 +19,22 @@ module.exports = {
     'name': 'addressLine2',
     'message': 'Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)'
   },
-  'loginPrompts': [
-    {
-      'type': 'input',
-      'name': 'username',
-      'message': 'Please enter your Bandwidth dashboard username'
-    },
-    {
-      'type': 'password',
-      'name': 'password',
-      'message': 'Please enter your Bandwidth dashboard password. This will be securely stored.',
-      'mask': '*'
-    },
-    {
-      'type': 'input',
-      'name': 'accountId',
-      'message': 'Please enter your Bandwidth account ID.'
-    }
-  ],
+  'username': {
+    'type': 'input',
+    'name': 'username',
+    'message': 'Please enter your Bandwidth dashboard username'
+  },
+  'password': {
+    'type': 'password',
+    'name': 'password',
+    'message': 'Please enter your Bandwidth dashboard password. This will be securely stored.',
+    'mask': '*'
+  },
+  'accountId': {
+    'type': 'input',
+    'name': 'accountId',
+    'message': 'Please enter your Bandwidth account ID.'
+  },
   'orderNumberSelection': (choices) => {
     return {
       'type': 'checkbox',
@@ -48,7 +46,7 @@ module.exports = {
   'confirmNumberOrder': (numbers) => {
     return {
       'type': 'confirm',
-      'name': 'orderNumber',
+      'name': 'confirmNumberOrder',
       'message': `order ${numbers.length} phone number${numbers.length === 1?'':'s'}?`,
       'default': false
     }

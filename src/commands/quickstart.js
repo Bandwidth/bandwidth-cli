@@ -10,9 +10,9 @@ module.exports.quickstartAction = async (cmdObj) => {
   const verbose = opts.verbose;
   printer.print('An address is required for this quickstart.');
   const quickstartPrompts = [
-    prompts.addressLine1,
-    prompts.addressLine2,
-    prompts.msgCallbackUrl
+    'addressLine1',
+    'addressLine2',
+    'msgCallbackUrl'
   ]
   const answers = await printer.prompt(quickstartPrompts);
   for (const [field, answer] of Object.entries(answers)) {

@@ -55,7 +55,7 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   } else if (results.resultCount === 1) {
     selected = results.telephoneNumberList.telephoneNumber
   } else {
-    selected = (await printer.prompt(prompts.orderNumberSelection(results.telephoneNumberList.telephoneNumber))).orderNumberSelection
+    selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
   }
   await utils.placeNumberOrder(selected, siteId, peerId);
 }
