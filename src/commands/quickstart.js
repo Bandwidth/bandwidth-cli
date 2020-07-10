@@ -100,5 +100,5 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }
   printer.print();
-  printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order [phone number]"`)
+  printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"`)
 }

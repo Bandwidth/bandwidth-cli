@@ -169,8 +169,8 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
     }
   };
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. See the details of your order below.')
-  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+  printer.success('Your order was placed. Awaiting order completion...')
+  checkOrderStatus(createdOrder);
 }
 
 const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => {
@@ -182,8 +182,24 @@ const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => 
   query.quantity = quantity;
   order[orderType] = query
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. See the details of your order below.')
-  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+  printer.success('Your order was placed. Awaiting order completion...')
+  checkOrderStatus(createdOrder);
+}
+
+/**
+ * Continuously checks the status of the order until the order is complete, or
+ * until 10 attempts have been made with no response.
+ */
+const checkOrderStatus = async(order) => {
+  let orderStatus
+  for await (areaCode of [...Array(10).keys()]) {
+    orderStatus = (await order.getHistoryAsync()).pop();
+    if (orderStatus) {
+      delete orderStatus.author
+      printer.removeClient(orderStatus);
+      break;
+    }
+  }
 }
 
 module.exports = {

@@ -39,7 +39,7 @@ module.exports = {
     return {
       'type': 'checkbox',
       'name': 'orderNumberSelection',
-      'message': 'Your query has return these numbers. Select any and all of them that you would like to order.',
+      'message': `Found ${choices.length} number${choices.length === 1?'':'s'}. Choose which to order.`,
       'choices': choices
     }
   },
@@ -48,7 +48,7 @@ module.exports = {
       'type': 'confirm',
       'name': 'confirmNumberOrder',
       'message': `order ${numbers.length} phone number${numbers.length === 1?'':'s'}?`,
-      'default': false
+      'default': true
     }
   },
   'initiateOrderNumber': {

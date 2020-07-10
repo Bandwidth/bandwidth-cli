@@ -47,7 +47,7 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   if (results.resultCount === 0) {
     printer.custom('yellow', 1, warn)('No numbers were found. Check your query parameters.')
   } else if (results.resultCount === 1) {
-    selected = results.telephoneNumberList.telephoneNumber
+    selected = [results.telephoneNumberList.telephoneNumber]
   } else {
     selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
   }
