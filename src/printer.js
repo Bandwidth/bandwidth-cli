@@ -81,7 +81,6 @@ module.exports.prompt = async (promptNames, ...args) => {
   if (prompts.some(prompt => prompt instanceof Function)) {
     return module.exports.error('A prompt is missing argument calls.');
   }
-  console.log(prompts);
   return await inquirer.prompt(prompts);
 }
 

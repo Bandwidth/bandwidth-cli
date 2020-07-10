@@ -78,32 +78,27 @@ module.exports.quickstartAction = async (cmdObj) => {
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
   await utils.setDefault('application', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
 
-  let orderResponse = await printer.prompt({
-    type: 'confirm',
-    name: 'orderNumber',
-    message: 'order a phone number?',
-    default: true
-  })
-
-  const orderNumber = orderResponse.orderNumber
-  if (orderNumber) {
-    var order = {
-      name:"Bandwidth Quickstart Order",
+  let orderResponse = (await printer.prompt('initiateOrderNumber')).initiateOrderNumber
+  if (orderResponse) {
+    var query = {
       siteId: createdSite.id,
       peerId: createdPeer.id,
-      ZIPSearchAndOrderType: {
-        quantity: 1,
-        zip: address.zip
-      }
+      zip: address.zip,
+      quantity: 10
     };
-    const createdOrder = (await numbers.Order.createAsync(order)).order;
-    const orderedTn = (await createdOrder.getTnsAsync()).telephoneNumber;
-    if (orderedTn) {
-      printer.success(`Phone number order for ${orderedTn} placed based on area code`)
+    const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
+    let selected;
+    if (results.resultCount === 0) {
+      printer.warn('No numbers were found in the zip code of your address.')
+    } else if (results.resultCount === 1) {
+      selected = results.telephoneNumberList.telephoneNumber
     } else {
-      printer.warn('Order placed but was unable to retrieve your phone number. Check your Bandwidth Dashboard.')
+      selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
+    }
+    if (selected){
+      await utils.placeNumberOrder(selected, createdSite.id, createdPeer.id);
     }
   }
   printer.print();
-  printer.print(`setup successful. To order ${orderNumber?'more numbers':'a number'} using this setup, use "bandwidth order [phone number]"`)
+  printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order [phone number]"`)
 }

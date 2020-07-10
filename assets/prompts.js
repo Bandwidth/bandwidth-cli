@@ -50,5 +50,11 @@ module.exports = {
       'message': `order ${numbers.length} phone number${numbers.length === 1?'':'s'}?`,
       'default': false
     }
+  },
+  'initiateOrderNumber': {
+    type: 'confirm',
+    name: 'initiateOrderNumber',
+    message: 'order a phone number?',
+    default: true
   }
 }
