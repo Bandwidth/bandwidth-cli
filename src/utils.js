@@ -1,10 +1,9 @@
 const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
-const { CliError, BadInputError, ApiError } = require('./errors');
+const { BadInputError, ApiError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
-const prompts = require('../assets/prompts');
 
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';

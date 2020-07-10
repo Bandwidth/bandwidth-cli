@@ -10,8 +10,7 @@ const actions = {
   ...require('./commands/order'),
   ...require('./commands/quickstart')
 }
-const { ApiError, errorHandler } = require('./errors');
-const utils = require('./utils');
+const { errorHandler } = require('./errors');
 
 Object.keys(actions).map(function(key, index) {
   actions[key] = errorHandler(actions[key]);
@@ -46,11 +45,7 @@ const createSipPeerCmd = createCmd.command('sippeer <name>')
   .option('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
   .action(actions.createSipPeerAction)
-
-const createOrderCmd = createCmd.command('order <quantity>')
-  .alias('o')
-  .action(console.log)
-
+  
 
 /**************************'DEFAULT' COMMAND**************************/
 const defaultCmd = program.command('default [default-name] [default-value]')

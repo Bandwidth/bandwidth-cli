@@ -1,7 +1,7 @@
 const numbers = require('@bandwidth/numbers');
 const printer = require('../printer');
 const utils = require('../utils');
-const { ApiError, BadInputError} = require('../errors');
+const { BadInputError} = require('../errors');
 
 module.exports.loginAction = async () => {
   printer.print('Leaving a field blank will keep it at its previous value.')

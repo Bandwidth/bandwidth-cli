@@ -1,7 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { ApiError, BadInputError } = require('../errors');
-const prompts = require('../../assets/prompts');
 const utils = require('../utils');
 
 module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
@@ -45,7 +44,7 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
   let selected;
   if (results.resultCount === 0) {
-    printer.custom('yellow', 1, warn)('No numbers were found. Check your query parameters.')
+    printer.custom('yellow', 1, 'warn')('No numbers were found. Check your query parameters.')
   } else if (results.resultCount === 1) {
     selected = [results.telephoneNumberList.telephoneNumber]
   } else {
