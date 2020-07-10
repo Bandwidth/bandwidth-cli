@@ -40,8 +40,13 @@ module.exports.orderCategoryAction = async (quantity, cmdObj) => {
     siteId: siteId,
     peerId: peerId
   };
-  console.log(orderType);
-  order[orderType] = {}
+  const orderTypeObj = {...options, quantity: quantity}
+  delete orderTypeObj.siteId;
+  delete orderTypeObj.peerId;
+  order[orderType] = orderTypeObj
+  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
+  printer.success('Your order was placed. See the details of your order below.')
+  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
 }
 
 module.exports.orderSearchAction = async () => {
