@@ -44,5 +44,13 @@ module.exports = {
       'message': 'Your query has return these numbers. Select any and all of them that you would like to order.',
       'choices': choices
     }
+  },
+  'confirmNumberOrder': (numbers) => {
+    return {
+      'type': 'confirm',
+      'name': 'orderNumber',
+      'message': `order ${numbers.length} phone number${numbers.length === 1?'':'s'}?`,
+      'default': false
+    }
   }
 }

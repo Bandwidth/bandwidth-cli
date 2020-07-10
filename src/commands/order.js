@@ -11,20 +11,7 @@ module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
   if (!siteId) { //a lot of this violates DRY.
     throw new BadInputError('A site id is required to create a number order', 'siteId', 'Specify a siteId using the --siteId option, or set a default using "bandwidth default site [siteId]"')
   }
-  var order = {
-    name:"Bandwidth Cli Order",
-    siteId: siteId,
-    existingTelephoneNumberOrderType: {
-      telephoneNumberList:[
-        {
-          telephoneNumber:phoneNumbers
-        }
-      ]
-    }
-  };
-  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. See the details of your order below.')
-  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+  await utils.placeNumberOrder(phoneNumbers, siteId, peerId);
 }
 
 module.exports.orderCategoryAction = async (quantity, cmdObj) => {
@@ -61,12 +48,14 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   const query = {...options, quantity}
   delete query.siteId;
   delete query.peerId;
-  const results = await numbers.AvailableNumbers.listAsync(query);
+  const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
+  let selected;
   if (results.resultCount === 0) {
     printer.custom('yellow', 1, warn)('No numbers were found. Check your query parameters.')
   } else if (results.resultCount === 1) {
-    //confirm order
+    selected = results.telephoneNumberList.telephoneNumber
   } else {
-    await printer.prompt(prompts.orderNumberSelection(results.telephoneNumberList.telephoneNumber)).then(console.log)
+    selected = (await printer.prompt(prompts.orderNumberSelection(results.telephoneNumberList.telephoneNumber))).orderNumberSelection
   }
+  await utils.placeNumberOrder(selected, siteId, peerId);
 }

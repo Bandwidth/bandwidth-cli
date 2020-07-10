@@ -4,6 +4,7 @@ const { CliError, BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
+const prompts = require('../assets/prompts');
 
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
@@ -147,6 +148,31 @@ const deriveOrderType = (numberAttributes) => {
   return 'combinedSearchAndOrderType'
 }
 
+const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
+  if (!phoneNumbers.length) {return printer.error('You did not select any numbers and the order has been aborted.')}
+  const truncated = (phoneNumbers.length - 20);
+  phoneNumbers.slice(0, 20).forEach((phoneNumber) => {
+    printer.print(phoneNumber)
+  });
+  printer.printIf(truncated > 0, `[and ${truncated} more]`)
+  const answer = (await printer.prompt(prompts.confirmNumberOrder(phoneNumbers))).orderNumber;
+  if (!answer){return;}
+  var order = {
+    name:"Bandwidth Cli Order",
+    siteId: siteId,
+    existingTelephoneNumberOrderType: {
+      telephoneNumberList:[
+        {
+          telephoneNumber:phoneNumbers
+        }
+      ]
+    }
+  };
+  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
+  printer.success('Your order was placed. See the details of your order below.')
+  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+}
+
 
 module.exports = {
   saveDashboardCredentials,
@@ -159,5 +185,6 @@ module.exports = {
   deleteDefault,
   processDefault,
   incrementSetupNo,
-  deriveOrderType
+  deriveOrderType,
+  placeNumberOrder
 }
