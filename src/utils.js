@@ -1,6 +1,6 @@
 const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
-const { CliError, BadInputError } = require('./errors');
+const { CliError, BadInputError, ApiError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
@@ -173,6 +173,18 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
 }
 
+const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => {
+  var order = {
+    name:"Bandwidth Quickstart Order",
+    siteId: siteId,
+    peerId: peerId
+  };
+  query.quantity = quantity;
+  order[orderType] = query
+  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
+  printer.success('Your order was placed. See the details of your order below.')
+  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+}
 
 module.exports = {
   saveDashboardCredentials,
@@ -186,5 +198,6 @@ module.exports = {
   processDefault,
   incrementSetupNo,
   deriveOrderType,
-  placeNumberOrder
+  placeNumberOrder,
+  placeCategoryOrder
 }

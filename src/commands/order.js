@@ -26,16 +26,10 @@ module.exports.orderCategoryAction = async (quantity, cmdObj) => {
   delete query.peerId;
   const numberAttributes = Object.entries(query).filter(([key, value]) => value).map(([key, value]) => key);//keys with truthy values
   const orderType = utils.deriveOrderType(numberAttributes);
-  var order = {
-    name:"Bandwidth Quickstart Order",
-    siteId: siteId,
-    peerId: peerId
-  };
-  query.quantity = quantity;
-  order[orderType] = query
-  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. See the details of your order below.')
-  printer.removeClient(createdOrder) // TODO: wait until the order worked/failed before posting?
+  if (!orderType) {
+    throw new BadInputError('Order parameters are required. Please specify at least one order, such as area code or zip.', 'orderType', 'To set an areacode or state, try "bandwidth order category --state [state-code] --area-code [area code] [quantity]"')
+  }
+  await utils.placeCategoryOrder(quantity, orderType, query, siteId, peerId)
 }
 
 module.exports.orderSearchAction = async (quantity, cmdObj) => {
