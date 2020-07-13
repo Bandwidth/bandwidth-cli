@@ -2,7 +2,7 @@
 ## Table of Contents
 - [table of contents](#table-of-contents)
 - [setup](#installationsetup)
-- [getting started](#gettingstarted)
+- [getting started with Bandwidth](#gettingstarted)
 - [commands](#commands)
 
 ## Installation/Setup
@@ -29,9 +29,9 @@ Leaving a field blank will keep it at its previous value.
 Your credentials have been saved. You can now start using the CLI.
 ```
 
-## Getting started
-First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number, or
-simply setup your account (and order numbers later).
+## Getting Started With Bandwidth
+First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number without prior
+setup, or simply setup your account (and order numbers later).
 
 ```
 >bandwidth quickstart
@@ -66,11 +66,9 @@ note: Created a new number order for 3 numbers from RALEIGH, NC
 status: COMPLETE
 ```
 At this point, you can now use the number for messages. Should you need more (or different) numbers than
-the 10 that were offered, you can order more numbers using the `bandwidth order`. For more information, see
-[the `bandwidth order` command](#order)
+the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
-commands overview
 | command   | Description |
 | ----------- | ----------- |
 |[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
@@ -388,6 +386,7 @@ switches/options
 
 ### login
 usage: `login`
+
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
@@ -400,4 +399,65 @@ Leaving a field blank will keep it at its previous value.
 ? Please enter your Bandwidth dashboard password. This will be securely stored. **********
 ? Please enter your Bandwidth account ID. 1234567
 Your credentials have been saved. You can now start using the CLI.
+```
+
+### order
+Order phone numbers in three ways
+- [Order a list of specific numbers](#ordernumber)
+- [Order a given quantity of numbers with a criteria](#ordercategory)
+- [Search for numbers with a criteria and select those that you want to order](#ordersearch)
+
+
+#### order number
+usage: `order number <phone-numbers...>`
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|site-id| the site of the number being ordered|no (yes if no default site is configured.)
+|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+
+```
+>bandwdith order numbers 4242064432 4242064617
+
+4242064432
+4242064617
+? order 2 phone numbers?
+>Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-13T18:39:08.952Z
+note: Created a new number order for 2 numbers from REDONDO, CA
+status: COMPLETE
+```
+
+#### order category
+usage: `order category [order-parameters] <quantity>`
+
+Orders a specified quantity of numbers based on a set of query parameters. At least one
+query parameter is required.
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|site-id| the site of the number being ordered|no (yes if no default site is configured.)
+|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|zip | the zip code of the number | no
+|area-code| the area code of the number | no
+|npa-nxx| the first 6 digits of the phone number | no
+|npa-nxx-x| the first 7 digits of the phone numebr | no
+|state| the city of the number | no
+|area-code| the LATA (Local Access and Transport Area) of the number | no
+```
+>bandwdith order numbers 4242064432 4242064617
+
+4242064432
+4242064617
+? order 2 phone numbers?
+>Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-13T18:39:08.952Z
+note: Created a new number order for 2 numbers from REDONDO, CA
+status: COMPLETE
 ```
