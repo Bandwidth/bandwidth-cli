@@ -1,6 +1,7 @@
 var colors = require('colors/safe');
 const inquirer = require('inquirer');
 const YAML = require('yaml');
+const promptLibrary = require('../assets/prompts');
 //Be very cautious about requiring anything, due to dircular dependencies
 
 /**
@@ -58,9 +59,30 @@ module.exports.reject = (...messages) => {
 
 /**
  * Inquire and asynchronously return the response.
- * @param prompts a list of prompts to be used by inquirer
+ * @param promptNames a list of promptNames to be used by inquirer, found in prompts.js
+ * @param args the arguments to each prompt, passed in as a list. args[0], for example, is the args for prompt 1.
  */
-module.exports.prompt = inquirer.prompt;
+module.exports.prompt = async (promptNames, ...args) => {
+  if (!Array.isArray(promptNames)) {
+    promptNames = [promptNames];
+  }
+  let prompts = promptNames.map(promptName => promptLibrary[promptName]);
+  if (!prompts.every(a => a)) {
+    return module.exports.error('internal error: prompt not found');
+  }
+  prompts.forEach((prompt, i) => {
+    if (args[i]) {
+      if (!(prompt instanceof Function)) {
+        return module.exports.error('internal error: attempted to assign argument to prompt.');
+      }
+      prompts[i] = prompt(args[i])
+    }
+  });
+  if (prompts.some(prompt => prompt instanceof Function)) {
+    return module.exports.error('A prompt is missing argument calls.');
+  }
+  return await inquirer.prompt(prompts);
+}
 
 /**
  * Print out javascript object in a more readable yml format.

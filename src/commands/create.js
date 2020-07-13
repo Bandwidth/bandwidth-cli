@@ -2,7 +2,6 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
-const prompts = require('../../assets/prompts.json');
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -10,7 +9,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'v':
     case 'voice':
       {
-        const answers = await printer.prompt(prompts.callInitiatedCallbackUrl)
+        const answers = await printer.prompt('callInitiatedCallbackUrl')
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
@@ -22,7 +21,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'm':
     case 'messaging':
       {
-        const answers = await printer.prompt(prompts.msgCallbackUrl)
+        const answers = await printer.prompt('msgCallbackUrl')
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
@@ -44,11 +43,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   if (addressType !== 'service' && addressType !== 'billing') {
     throw new BadInputError('addressType must be either service(s) or billing(b)');
   }
-  const sitePrompts = [
-    prompts.addressLine1,
-    prompts.addressLine2
-  ]
-  const answers = await printer.prompt(sitePrompts);
+  const answers = await printer.prompt(['addressLine1', 'addressLine2']);
   const line2 = answers.addressLine2.split(', ');
   if (line2.length !== 3) {
     throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')

@@ -17,6 +17,9 @@ class ApiError extends CliError {
    * @param packet the http packet with the response
    */
   constructor(packet) {
+    if (packet.constructor.name === 'BandwidthError') { //SDK error type
+      printer.error(packet.toString())
+    }
     const defaultSuggest = ApiError.errorCodeSuggest(packet.status)
     const message = (packet.response.res.text.indexOf('<Description>') >= 0)?
       packet.response.res.text.split('<Description>').pop().split('</Description>')[0]:

@@ -1,12 +1,11 @@
 const numbers = require('@bandwidth/numbers');
 const printer = require('../printer');
 const utils = require('../utils');
-const prompts = require('../../assets/prompts.json');
-const { ApiError, BadInputError} = require('../errors');
+const { BadInputError} = require('../errors');
 
 module.exports.loginAction = async () => {
   printer.print('Leaving a field blank will keep it at its previous value.')
-  const {username, password, accountId} = await printer.prompt(prompts.loginPrompts)
+  const {username, password, accountId} = await printer.prompt(['username', 'password', 'accountId'])
   if (!(username || password || accountId)) {
     return printer.warn('No credentials were entered and the login has been aborted.')
   }
