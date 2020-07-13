@@ -89,7 +89,7 @@ used to create sites(also known as sub-accounts), sip peers (also known as locat
 <!---FIXME: addressType should be address-type -->
 #### create site
 
-usage: `create site <sitename>`
+usage: `bandwidth create site <sitename>`
 
 
 switches/options
@@ -137,7 +137,7 @@ a siteId must be specified if no default site is set.
 This command will automatically turn on sms and link the default application to the site as a messaging application. If the
 default application is a voice application, there will be an error.
 
-usage: `create sippeer <peername>`
+usage: `bandwidth create sippeer <peername>`
 
 
 switches/options
@@ -188,7 +188,7 @@ siteId: 37397
 #### create application
 Create a voice or messaging application.
 
-usage: `create app --type <type> <appname>`
+usage: `bandwidth create app --type <type> <appname>`
 
 
 switches/options
@@ -236,10 +236,10 @@ number, the default site and sip peer will be used if none are specified.
 
 usage:
 ```
-default                                 //list all defaults
-default <default-name>                  //print the value of a particular default
-default <default-name> <default value>  //set a new default
-default -d <default-name>               //delete a default
+bandwidth default                                 //list all defaults
+bandwidth default <default-name>                  //print the value of a particular default
+bandwidth default <default-name> <default value>  //set a new default
+bandwidth default -d <default-name>               //delete a default
 ```
 
 switches/options
@@ -278,7 +278,7 @@ Delete sites(also known as sub-accounts), sip peers (also known as locations), a
 #### delete site
 Delete a site
 
-usage: `delete site [--force] <site-id>`
+usage: `bandwidth delete site [--force] <site-id>`
 
 
 switches/options
@@ -294,7 +294,7 @@ Site successfully deleted.
 #### delete sippeer
 Delete a sippeer
 
-usage: `delete peer [--force] <peer-id>`
+usage: `bandwidth delete peer [--force] <peer-id>`
 
 
 switches/options
@@ -310,7 +310,7 @@ Sip Peer successfully deleted.
 #### delete application
 Delete an application
 
-usage: `delete app [--force] <app-id>`
+usage: `bandwidth delete app [--force] <app-id>`
 
 
 switches/options
@@ -328,7 +328,7 @@ List sites(subaccounts), sip peers(locations), or applications
 
 #### list site
 
-usage: `list site`
+usage: `bandwidth list site`
 
 
 switches/options
@@ -348,7 +348,7 @@ switches/options
 ```
 #### list peer
 
-usage: `list peer [site-id]`
+usage: `bandwidth list peer [site-id]`
 
 Siteid is required unless a default site id is set, in which case the peers under the default
 site will be listed instead.
@@ -370,7 +370,7 @@ switches/options
 
 #### list application
 
-usage: `list app`
+usage: `bandwidth list app`
 
 
 switches/options
@@ -390,7 +390,7 @@ switches/options
 ```
 
 ### login
-usage: `login`
+usage: `bandwidth login`
 
 switches/options
 | name      | Description | required |
@@ -414,7 +414,7 @@ Order phone numbers in three ways
 
 
 #### order number
-usage: `order number <phone-numbers...>`
+usage: `bandwidth order number <phone-numbers...>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
@@ -436,7 +436,7 @@ status: COMPLETE
 ```
 
 #### order category
-usage: `order category [order-parameters] <quantity>`
+usage: `bandwidth order category [order-parameters] <quantity>`
 
 Orders a specified quantity of numbers based on a set of query parameters. At least one
 query parameter is required.
@@ -496,7 +496,7 @@ telephoneNumbers:
 ```
 
 #### order search
-usage: `order search [order-parameters] <quantity>`
+usage: `bandwidth order search [order-parameters] <quantity>`
 
 Finds a specified quantity of numbers based on a set of query parameters. At least one
 query parameter is required. You may choose to order any number of the orders found.
@@ -554,7 +554,7 @@ telephoneNumbers:
 
 
 ### quickstart
-usage: `quickstart`
+usage: `bandwidth quickstart`
 
 Set up your account quickly and process details automatically to immediately enable number
 ordering and development.
