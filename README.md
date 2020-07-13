@@ -64,6 +64,10 @@ setup successful. To order more numbers using this setup, use "bandwidth order c
 orderDate: 2020-07-10T22:03:45.475Z
 note: Created a new number order for 3 numbers from RALEIGH, NC
 status: COMPLETE
+telephoneNumbers:
+  - "9195007741"
+  - "9195181224"
+  - "9195182893"
 ```
 At this point, you can now use the number for messages. Should you need more (or different) numbers than
 the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
@@ -546,3 +550,16 @@ telephoneNumbers:
   - "9198586910"
   - "9198586913"
 ```
+
+
+### quickstart
+usage: `quickstart`
+
+Set up your account quickly and process details automatically to immediately enable number
+ordering and development.
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|-v, verbose| Increase setup verbosity| no
