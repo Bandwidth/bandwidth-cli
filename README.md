@@ -59,8 +59,6 @@ Sip Peer created with id 624642
 ? order 3 phone numbers? Yes
 Your order was placed. Awaiting order completion...
 
-setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
-
 orderDate: 2020-07-10T22:03:45.475Z
 note: Created a new number order for 3 numbers from RALEIGH, NC
 status: COMPLETE
@@ -68,6 +66,9 @@ telephoneNumbers:
   - "9195007741"
   - "9195181224"
   - "9195182893"
+
+setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
+
 ```
 At this point, you can now use the number for messages. Should you need more (or different) numbers than
 the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
@@ -563,3 +564,40 @@ switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
 |-v, verbose| Increase setup verbosity| no
+
+```
+>bandwidth quickstart
+An address is required for this quickstart.
+? Please enter address line 1. (example: 900 Main Campus Dr)
+>900 Main Campus Dr
+? Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)
+>Raleigh, NC, 27606
+? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
+>http://example.com
+Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
+Site created with id 37390
+Sip Peer created with id 624642
+? order a phone number?
+>Yes
+? Found 10 numbers. Choose which to order.
+ (*) 9195007741
+ (*) 9195181224
+>(*) 9195182893
+ ( ) 9195182967
+ ( ) 9195784173
+ ( ) 9196703710
+ ( ) 9197060281
+(Move up and down to reveal more choices)
+? order 3 phone numbers? Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-10T22:03:45.475Z
+note: Created a new number order for 3 numbers from RALEIGH, NC
+status: COMPLETE
+telephoneNumbers:
+  - "9195007741"
+  - "9195181224"
+  - "9195182893"
+
+setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
+```
