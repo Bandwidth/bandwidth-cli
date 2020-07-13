@@ -70,7 +70,16 @@ the 10 that were offered, you can order more numbers using the `bandwidth order`
 [the `bandwidth order` command](#order)
 
 ## commands
-[create](#create) [default](#default) [delete](#delete) [list](#list) [login](#login) [order](#order) [quickstart](#quickstart)
+commands overview
+| command   | Description |
+| ----------- | ----------- |
+|[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
+|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, and applications.
+|[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications.
+|[list](#list)| List sip peers/locations, sites/sub-accounts, and applications.
+|[login](#login)| login to your bandwidth account to use this tool
+|[order](#order)|order phone numbers
+|[quickstart](#quickstart)|set up your account quickly and process details automatically
 
 ### create
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
