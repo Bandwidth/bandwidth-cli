@@ -178,7 +178,12 @@ const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => 
     siteId: siteId,
     peerId: peerId
   };
+  printer.print('You have selected the following:')
+  const displayedQuery = Object.entries(query).reduce((a,[k,v]) => (v ? (a[k]=v, a) : a), {})
+  printer.printObj(displayedQuery)
   query.quantity = quantity;
+  const answer = (await printer.prompt('confirmCategoryOrder', query)).confirmCategoryOrder;
+  if (!answer){return;}
   order[orderType] = query
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
@@ -195,6 +200,8 @@ const checkOrderStatus = async(order) => {
     orderStatus = (await order.getHistoryAsync()).pop();
     if (orderStatus) {
       delete orderStatus.author
+      const tns = await order.getTnsAsync();
+      orderStatus.telephoneNumbers = tns.telephoneNumber
       printer.removeClient(orderStatus);
       break;
     }

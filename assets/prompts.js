@@ -51,6 +51,14 @@ module.exports = {
       'default': true
     }
   },
+  'confirmCategoryOrder': (query) => {
+    return {
+      'type': 'confirm',
+      'name': 'confirmCategoryOrder',
+      'message': `order ${query.quantity} numbers?`,
+      'default': true
+    }
+  },
   'initiateOrderNumber': {
     type: 'confirm',
     name: 'initiateOrderNumber',
