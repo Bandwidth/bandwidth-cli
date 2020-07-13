@@ -1,7 +1,9 @@
 # Bandwidth CLI
 ## Table of Contents
-[table of contexts](#table-of-contents)
-[setup](#installationsetup)
+- [table of contents](#table-of-contents)
+- [setup](#installationsetup)
+- [getting started](#gettingstarted)
+- [commands](#commands)
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version X.X.X. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node.
@@ -270,7 +272,6 @@ Application successfully deleted
 List sites(subaccounts), sip peers(locations), or applications
 
 #### list site
-list sites
 
 usage: `list site`
 
@@ -289,4 +290,46 @@ switches/options
 │   123   │             'site1'              │      7       │
 │   456   │          'site no two'           │      1       │
 └─────────┴──────────────────────────────────┴──────────────┘
+```
+#### list peer
+
+usage: `list peer [site-id]`
+
+Siteid is required unless a default site id is set, in which case the peers under the default
+site will be listed instead.
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|none|
+
+```
+>bw l p 45928
+┌─────────┬──────────────────┬───────────────┐
+│ (index) │     peerName     │ isDefaultPeer │
+├─────────┼──────────────────┼───────────────┤
+│ 624650  │ 'My Sip Peer 23' │     true      │
+│ 624651  │    'peername'    │     false     │
+└─────────┴──────────────────┴───────────────┘
+```
+
+#### list application
+
+usage: `list app`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|none|
+
+```
+>bandwidth list application
+
+┌──────────────────────────────────────┬────────────────┬───────────────────────────────┐
+│               (index)                │  serviceType   │            appName            │
+├──────────────────────────────────────┼────────────────┼───────────────────────────────┤
+│ 77762e2e-59ff-4fb4-8586-fee69f073ed9 │ 'Messaging-V2' │   'my great messaging apps'   │
+│ ecbba874-6be3-41b9-a63f-20bbb1c9dc95 │   'Voice-V2'   │            'name'             │
+└──────────────────────────────────────┴────────────────┴───────────────────────────────┘
 ```
