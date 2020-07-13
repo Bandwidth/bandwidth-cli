@@ -120,7 +120,8 @@ address:
 Create a sip peer (also known as location). Since all sip peers are nested under sub-accounts/sites,
 a siteId must be specified if no default site is set.
 
-This command will automatically turn on sms and link the default application to the site as a messaging application.  
+This command will automatically turn on sms and link the default application to the site as a messaging application. If the
+default application is a voice application, there will be an error.
 
 usage: `create sippeer <peername>`
 
@@ -171,9 +172,7 @@ siteId: 37397
 #### create application
 Create a voice or messaging application.
 
-This command will automatically turn on sms and link the default application to the site as a messaging application.  
-
-usage: `create app <appname>`
+usage: `create app --type <type> <appname>`
 
 
 switches/options
@@ -195,9 +194,11 @@ appName: appname
 callbackUrl: http://example.com
 msgCallbackUrl: http://example.com
 callbackCreds: 0
+```
 
 or create a voice application
 
+```
 >bandwidth create application --type voice appname
 ? Please enter a callInitiatedCallbackUrl. Information for outbound calls will be sent here, and Bandwidth will attempt
 to grab BXML at this endpoint. (example: http://example.com)
@@ -210,4 +211,39 @@ appName: appname
 callInitiatedCallbackUrl: http://example.com
 callInitiatedMethod: POST
 
+```
+
+### delete
+Delete sites(also known as sub-accounts), sip peers (also known as locations), applications.
+
+#### delete sippeer
+Delete a sippeer
+
+usage: `delete peer [--force] <peer-id>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --siteId, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
+
+```
+>bandwidth delete peer --siteId 37397 624651
+Sip Peer successfully deleted.
+```
+
+#### delete application
+Delete an application
+
+usage: `delete app [--force] <app-id>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --force, -f| Delete the application even if it is linked to a peer/location.| no
+
+```
+>bandwidth delete app 241f63fe-4a46-4a64-893c-f71d775603b2
+Application successfully deleted
 ```
