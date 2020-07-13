@@ -265,3 +265,28 @@ switches/options
 >bandwidth delete app 241f63fe-4a46-4a64-893c-f71d775603b2
 Application successfully deleted
 ```
+
+### list
+List sites(subaccounts), sip peers(locations), or applications
+
+#### list site
+list sites
+
+usage: `list site`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|none|
+
+```
+>bandwidth list site
+
+┌─────────┬──────────────────────────────────┬──────────────┐
+│ (index) │               name               │ sipPeerCount │
+├─────────┼──────────────────────────────────┼──────────────┤
+│   123   │             'site1'              │      7       │
+│   456   │          'site no two'           │      1       │
+└─────────┴──────────────────────────────────┴──────────────┘
+```
