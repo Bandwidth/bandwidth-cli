@@ -208,6 +208,59 @@ const checkOrderStatus = async(order) => {
   }
 }
 
+/**
+ * Force deleting a peer will do the following in order:
+ * 1. Delete port orders
+ * 2. Disconnect or move all numbesr
+ * 3. Remove linked applications.
+ * 4. Remove mms settings
+ * 5. remove sms settings
+ * 6. convrt to SIP
+ * 7. Delete location.
+ * only step 7 will be carried out if force delete is off.
+ */
+const delPeer = async(peer, force, verbose) => {
+  const tns = await peer.getTnsAsync().catch((err) => {throw new ApiError(err)}); //TODO delete all TNs
+  return console.log(tns);
+  await numbers.Disconnect.createAsync("Disconnect Order", ["9195551212", "9195551213"], callback);
+  await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
+  printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)
+  await peer.deleteSmsSettingsAsync().catch((err) => {throw new ApiError(err)});
+  printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);
+  await peer.deleteAsync().catch((err) => {throw new ApiError(err)});
+  printer.warn(`Sip peer ${peer.id} deleted.`);
+}
+
+const delApp = async (app, force) => {
+  const associatedSipPeers = await app.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
+  if (force && associatedSipPeers) {
+    for await (sipPeerData of associatedSipPeers) {
+      let peer = new numbers.SipPeer();
+      peer.id = sipPeerData.peerId;
+      peer.siteId = sipPeerData.siteId;
+      peer.client = new numbers.Client();
+      printer.warn(`Unlinking your application ${app.applicationId} with Sip Peer ${peer.id}`);
+      await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
+    }
+    printer.print();
+  }
+  await app.deleteAsync().catch((err) => {throw new ApiError(err)});
+}
+
+
+const delSite = async(site, force) => {
+  if (force) {
+    const associatedSipPeers = await site.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
+    associatedSipPeers.sort((peerA, peerB) => peerA.isDefaultPeer - peerB.isDefaultPeer)//delete default peer last
+    for await (sipPeer of associatedSipPeers) {
+      await delPeer(sipPeer, force) //Rewrite with Promise.all if speed becomes an issue.
+      printer.warn(`Deleting Sip Peer ${sipPeer.id}`)
+    }
+  }
+  await site.deleteAsync().catch((err) => {throw new ApiError(err)});
+}
+
+
 module.exports = {
   saveDashboardCredentials,
   readDashboardCredentials,
@@ -221,5 +274,8 @@ module.exports = {
   incrementSetupNo,
   deriveOrderType,
   placeNumberOrder,
-  placeCategoryOrder
+  placeCategoryOrder,
+  delSite,
+  delApp,
+  delPeer
 }
