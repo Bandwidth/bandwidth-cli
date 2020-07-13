@@ -451,7 +451,7 @@ switches/options
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
 |npa-nxx-x| the first 7 digits of the phone numebr | no
-|state| the city of the number.  | no
+|state| the state abbreviation of the number.  | no
 |area-code| the LATA (Local Access and Transport Area) of the number | no
 ```
 >bandwidth order category --state nc 5
@@ -511,7 +511,7 @@ switches/options
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
 |npa-nxx-x| the first 7 digits of the phone numebr | no
-|state| the city of the number.  | no
+|state| the state abbreviation of the number.  | no
 |area-code| the LATA (Local Access and Transport Area) of the number | no
 ```
 >bandwidth order search --state nc 5
