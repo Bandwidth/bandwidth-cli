@@ -149,9 +149,11 @@ products:
   product: TERMINATION
 id: 624651
 siteId: 37397
+```
 
 or, manually specify siteId
 
+```
 >create peer --site-id mysiteId peername
 Peer created successfully...
 enabled SMS by default.
@@ -215,6 +217,22 @@ callInitiatedMethod: POST
 
 ### delete
 Delete sites(also known as sub-accounts), sip peers (also known as locations), applications.
+
+#### delete site
+Delete a site
+
+usage: `delete site [--force] <site-id>`
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --force, -f| Force-delete the site and remove sip peers| no
+
+```
+>bandwidth delete site 37397
+Site successfully deleted.
+```
 
 #### delete sippeer
 Delete a sippeer
