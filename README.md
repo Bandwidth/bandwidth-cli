@@ -417,7 +417,7 @@ switches/options
 |peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
 
 ```
->bandwdith order numbers 4242064432 4242064617
+>bandwidth order numbers 4242064432 4242064617
 
 4242064432
 4242064617
@@ -446,18 +446,99 @@ switches/options
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
 |npa-nxx-x| the first 7 digits of the phone numebr | no
-|state| the city of the number | no
+|state| the city of the number.  | no
 |area-code| the LATA (Local Access and Transport Area) of the number | no
 ```
->bandwdith order numbers 4242064432 4242064617
+>bandwidth order category --state nc 5
+You have selected the following:
 
-4242064432
-4242064617
+state: nc
+
+? order 5 numbers? Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-13T19:31:44.093Z
+note: Created a new number order for 5 numbers from (Multiple) Rate Centers
+status: COMPLETE
+telephoneNumbers:
+  - "2525131647"
+  - "2526426029"
+  - "7043224179"
+  - "7045503870"
+  - "7045504093"
+```
+
+You can combine as many of these queries as you'd like.
+
+```
+>bandwidth order category --state nc --city raleigh --npa-nxx 919858 3
+? Found 3 numbers. Choose which to order. 9198586910, 9198586913
+9198586910
+9198586913
+? order 2 phone numbers? Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-13T19:35:25.832Z
+note: Created a new number order for 2 numbers from RALEIGH, NC
+status: COMPLETE
+telephoneNumbers:
+  - "9198586910"
+  - "9198586913"
+```
+
+#### order search
+usage: `order search [order-parameters] <quantity>`
+
+Finds a specified quantity of numbers based on a set of query parameters. At least one
+query parameter is required. You may choose to order any number of the orders found.
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|site-id| the site of the number being ordered|no (yes if no default site is configured.)
+|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|zip | the zip code of the number | no
+|area-code| the area code of the number | no
+|npa-nxx| the first 6 digits of the phone number | no
+|npa-nxx-x| the first 7 digits of the phone numebr | no
+|state| the city of the number.  | no
+|area-code| the LATA (Local Access and Transport Area) of the number | no
+```
+>bandwidth order search --state nc 5
+? Found 5 numbers. Choose which to order.
+>(*) 7047091101
+ ( ) 7047091161
+ ( ) 7047091328
+ ( ) 7047091233
+ ( ) 7047091391
+7047091101
+7047091233
 ? order 2 phone numbers?
 >Yes
 Your order was placed. Awaiting order completion...
 
-orderDate: 2020-07-13T18:39:08.952Z
-note: Created a new number order for 2 numbers from REDONDO, CA
+orderDate: 2020-07-13T19:37:57.740Z
+note: Created a new number order for 2 numbers from ALTON, NC
 status: COMPLETE
+telephoneNumbers:
+  - "7047091101"
+  - "7047091233"
+```
+
+You can combine as many of these queries as you'd like.
+```
+>bandwidth order search--state nc --city raleigh --npa-nxx 919858 3
+? Found 3 numbers. Choose which to order. 9198586910, 9198586913
+9198586910
+9198586913
+? order 2 phone numbers? Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-13T19:35:25.832Z
+note: Created a new number order for 2 numbers from RALEIGH, NC
+status: COMPLETE
+telephoneNumbers:
+  - "9198586910"
+  - "9198586913"
 ```
