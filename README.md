@@ -403,9 +403,9 @@ Your credentials have been saved. You can now start using the CLI.
 
 ### order
 Order phone numbers in three ways
-- [Order a list of specific numbers](#ordernumber)
-- [Order a given quantity of numbers with a criteria](#ordercategory)
-- [Search for numbers with a criteria and select those that you want to order](#ordersearch)
+- [Order a list of specific numbers](#order-number)
+- [Order a given quantity of numbers with a criteria](#order-category)
+- [Search for numbers with a criteria and select those that you want to order](#order-search)
 
 
 #### order number
@@ -472,10 +472,14 @@ You can combine as many of these queries as you'd like.
 
 ```
 >bandwidth order category --state nc --city raleigh --npa-nxx 919858 3
-? Found 3 numbers. Choose which to order. 9198586910, 9198586913
-9198586910
-9198586913
-? order 2 phone numbers? Yes
+You have selected the following:
+
+npaNxx: "919858"
+state: nc
+city: raleigh
+
+? order 3 numbers?
+>Yes
 Your order was placed. Awaiting order completion...
 
 orderDate: 2020-07-13T19:35:25.832Z
