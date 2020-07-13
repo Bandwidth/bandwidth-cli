@@ -169,10 +169,10 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   };
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
-  checkOrderStatus(createdOrder);
+  await checkOrderStatus(createdOrder);
 }
 
-const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => {
+const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) => {
   var order = {
     name:"Bandwidth Quickstart Order",
     siteId: siteId,
@@ -187,7 +187,7 @@ const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => 
   order[orderType] = query
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
-  checkOrderStatus(createdOrder);
+  await checkOrderStatus(createdOrder);
 }
 
 /**
