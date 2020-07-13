@@ -376,3 +376,19 @@ switches/options
 │ ecbba874-6be3-41b9-a63f-20bbb1c9dc95 │   'Voice-V2'   │            'name'             │
 └──────────────────────────────────────┴────────────────┴───────────────────────────────┘
 ```
+
+### login
+usage: `login`
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|none|
+
+```
+>bandwidth login
+Leaving a field blank will keep it at its previous value.
+? Please enter your Bandwidth dashboard username myUsername
+? Please enter your Bandwidth dashboard password. This will be securely stored. **********
+? Please enter your Bandwidth account ID. 1234567
+Your credentials have been saved. You can now start using the CLI.
+```
