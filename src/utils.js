@@ -195,6 +195,8 @@ const checkOrderStatus = async(order) => {
     orderStatus = (await order.getHistoryAsync()).pop();
     if (orderStatus) {
       delete orderStatus.author
+      const tns = await order.getTnsAsync();
+      orderStatus.telephoneNumbers = tns.telephoneNumber
       printer.removeClient(orderStatus);
       break;
     }
