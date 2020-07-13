@@ -217,6 +217,49 @@ callInitiatedMethod: POST
 
 ```
 
+### default
+Set, view, and manage a default site(subaccount), sip peer (location), and application. Defaults are
+used automatically for required fields if none are specified. For example, when [ordering](#order) a
+number, the default site and sip peer will be used if none are specified.
+
+usage:
+```
+default                                 //list all defaults
+default <default-name>                  //print the value of a particular default
+default <default-name> <default value>  //set a new default
+default -d <default-name>               //delete a default
+```
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+| --delete, -d| delete the settings of a default| no
+
+```
+>bandwidth default
+sippeer: 837494
+site: 30673
+application: 48e92ba2-20a7-9f8a-9e85-a1944fc5ad4c
+
+
+>bandwidth default site
+30673
+
+>bandwidth default site 12345
+Default site set.
+
+>bandwidth default site
+12345
+
+>bandwidth default site -d
+Default site deleted
+
+>bandwidth default
+sippeer: 837494
+application: 48e92ba2-20a7-9f8a-9e85-a1944fc5ad4c
+```
+
+
 ### delete
 Delete sites(also known as sub-accounts), sip peers (also known as locations), applications.
 
@@ -329,7 +372,7 @@ switches/options
 ┌──────────────────────────────────────┬────────────────┬───────────────────────────────┐
 │               (index)                │  serviceType   │            appName            │
 ├──────────────────────────────────────┼────────────────┼───────────────────────────────┤
-│ 77762e2e-59ff-4fb4-8586-fee69f073ed9 │ 'Messaging-V2' │   'my great messaging apps'   │
+│ 77762e2e-59ff-4fb4-8586-fee69f073ed9 │ 'Messaging-V2' │   'your cool messaging app'   │
 │ ecbba874-6be3-41b9-a63f-20bbb1c9dc95 │   'Voice-V2'   │            'name'             │
 └──────────────────────────────────────┴────────────────┴───────────────────────────────┘
 ```
