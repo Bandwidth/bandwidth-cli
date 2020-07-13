@@ -43,8 +43,8 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   delete query.peerId;
   const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
   let selected;
-  if (results.resultCount === 0) {
-    printer.custom('yellow', 1, 'warn')('No numbers were found. Check your query parameters.')
+  if (results.resultCount === 0 || Object.entries(results).length === 0) {
+    printer.custom('yellow', 1, 'warn')('No numbers were found. Check your query parameters for typos or try other parameters.')
   } else if (results.resultCount === 1) {
     selected = [results.telephoneNumberList.telephoneNumber]
   } else {
