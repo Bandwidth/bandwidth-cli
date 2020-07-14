@@ -220,7 +220,8 @@ const checkOrderStatus = async(order) => {
  * only step 7 will be carried out if force delete is off.
  */
 const delPeer = async(peer, force, verbose) => {
-  const tns = await peer.getTnsAsync().catch((err) => {throw new ApiError(err)}); //TODO delete all TNs
+  const tns = await peer.getTnsAsync().then(res => res.map(entry => entry.fullNumber))
+    .catch((err) => {throw new ApiError(err)}); //TODO delete all TNs
   return console.log(tns);
   await numbers.Disconnect.createAsync("Disconnect Order", ["9195551212", "9195551213"], callback);
   await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
