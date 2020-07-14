@@ -118,7 +118,7 @@ address:
   plusFour: 5177
   country: United States
   addressType: Billing
->create site --address-type serviec "my site name"
+>create site --address-type service "my site name"
 Site created. See details of your created Site below.
 
 id: 37391
