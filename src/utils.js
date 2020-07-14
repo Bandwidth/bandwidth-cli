@@ -219,13 +219,14 @@ const checkOrderStatus = async(order) => {
  * 7. Delete location.
  * only step 7 will be carried out if force delete is off.
  */
-const delPeer = async(peer, force, verbose) => {
+const delPeer = async(peer, force, verbose=true) => {
   const tns = await peer.getTnsAsync().then(res => res.map(entry => entry.fullNumber))
     .catch((err) => {throw new ApiError(err)}); //TODO delete all TNs
-  return console.log(tns);
-  await numbers.Disconnect.createAsync("Disconnect Order", ["9195551212", "9195551213"], callback);
+  await numbers.Disconnect.createAsync("Disconnect Order", tns);
   await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
   printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)
+  await peer.deleteMmsSettingsAsync().catch((err) => {throw new ApiError(err)});
+  printer.printIf(verbose, `MMS deleted from sip peer ${peer.id}`);
   await peer.deleteSmsSettingsAsync().catch((err) => {throw new ApiError(err)});
   printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);
   await peer.deleteAsync().catch((err) => {throw new ApiError(err)});
