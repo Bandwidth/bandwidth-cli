@@ -16,5 +16,6 @@ module.exports.loginAction = async () => {
   await utils.saveDashboardCredentials({
     username: username,
     password: password});
-  printer.success('Your credentials have been saved. You can now start using the CLI.')
+  printer.success("Your credentials have been saved.");
+  printer.print('First time using Bandwidth? Try to "bandwidth quickstart" command to quickly get set up.')
 }
