@@ -6,7 +6,7 @@ your first number with Bandwidth.
 These quick-setup configurations are stored in the CLI and automatically used in any
 orders that are placed through the CLI.
 
-This CLI allows you to order phone numbers and create [Bandwidth applications](https://dev.bandwidth.com/account/applications/about.html) to quickly setup your development environment with Bandwidth.
+Expected workflow: [setup](#installationsetup), then [quickly set up your account](#gettingstarted). 
 
 ## Table of Contents
 - [table of contents](#table-of-contents)
