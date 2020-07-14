@@ -417,9 +417,9 @@ Your credentials have been saved. You can now start using the CLI.
 
 ### order
 Order phone numbers in three ways
-- [Order a list of specific numbers](#order-number)
-- [Order a given quantity of numbers with a criteria](#order-category)
-- [Search for numbers with a criteria and select those that you want to order](#order-search)
+- [`order number`](#order-number): Order a list of specific numbers
+- [`order category`](#order-category): Order a given quantity of numbers with a criteria
+- [`order search`](#order-search): Search for numbers with a criteria and select those that you want to order
 
 
 #### order number
@@ -448,7 +448,7 @@ status: COMPLETE
 usage: `bandwidth order category [order-parameters] <quantity>`
 
 Orders a specified quantity of numbers based on a set of query parameters. At least one
-query parameter is required.
+query parameter is required. Use the switches/options below to specify query parameters.
 
 
 switches/options
@@ -509,6 +509,8 @@ usage: `bandwidth order search [order-parameters] <quantity>`
 
 Finds a specified quantity of numbers based on a set of query parameters. At least one
 query parameter is required. You may choose to order any number of the orders found.
+
+Use the switches/options below to specify query parameters.
 
 
 switches/options
