@@ -7,10 +7,7 @@ const utils = require('../utils');
 module.exports.quickstartAction = async (cmdObj) => {
   const opts = cmdObj.opts();
   const verbose = opts.verbose;
-  printer.print('An address is required for this quickstart.');
   const quickstartPrompts = [
-    'addressLine1',
-    'addressLine2',
     'msgCallbackUrl'
   ]
   const answers = await printer.prompt(quickstartPrompts);
@@ -20,15 +17,11 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }
   const setupNo = await utils.incrementSetupNo(); //used to avoid name clash errors, if for some reason they run it multiple times.
-  const line2 = answers.addressLine2.split(', ');
-  if (line2.length !== 3) {
-    throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')
-  }
   const address = await numbers.Geocode.requestAsync({
-    addressLine1: answers.addressLine1,
-    city: line2[0],
-    stateCode: line2[1],
-    zip: line2[2]
+    addressLine1: '900 Main Campus Dr',
+    city: 'Raleigh',
+    stateCode: "NC",
+    zip: '27606'
   }).catch((err) => {throw new ApiError(err)});
   printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
@@ -79,10 +72,13 @@ module.exports.quickstartAction = async (cmdObj) => {
 
   let orderResponse = (await printer.prompt('initiateOrderNumber')).initiateOrderNumber
   if (orderResponse) {
+    //hand-tested list of states for which bandwidth has numbers
+    const states = [ 'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY' ];
+    const randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
     var query = {
       siteId: createdSite.id,
       peerId: createdPeer.id,
-      zip: address.zip,
+      state: randomState||'NC',
       quantity: 10
     };
     const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
@@ -95,9 +91,10 @@ module.exports.quickstartAction = async (cmdObj) => {
       selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
     }
     if (selected){
-      await utils.placeNumberOrder(selected, createdSite.id, createdPeer.id);
+      await utils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
     }
   }
   printer.print();
-  printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"`)
+  printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"`);
+  printer.custom('brightCyan')(`The site id ${createdSite.id} has been saved in the CLI config and will be used by the CLI to order numbers. When ordering numbers outside of the CLI, you may place the order under the site id ${createdSite.id}.`);
 }
