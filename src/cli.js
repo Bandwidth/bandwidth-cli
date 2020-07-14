@@ -36,7 +36,7 @@ const createAppCmd = createCmd.command('app <name>')
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
-  .requiredOption('-t, --addressType <type>', 'A site must be a billing(b) or service(s) application')
+  .requiredOption('-t, --address-type <type>', 'A site must be a billing(b) or service(s) application')
   .action(actions.createSiteAction)
 
 const createSipPeerCmd = createCmd.command('sippeer <name>')

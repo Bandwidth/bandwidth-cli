@@ -62,7 +62,7 @@ module.exports = {
   'initiateOrderNumber': {
     type: 'confirm',
     name: 'initiateOrderNumber',
-    message: 'order a phone number?',
+    message: 'Order phone numbers?',
     default: true
   }
 }

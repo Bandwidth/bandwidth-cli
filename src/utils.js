@@ -148,7 +148,7 @@ const deriveOrderType = (numberAttributes) => {
 }
 
 const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
-  if (!phoneNumbers.length) {return printer.error('You did not select any numbers and the order has been aborted.')}
+  if (!phoneNumbers.length) {return printer.warn('You did not select any numbers and the order has been aborted.')}
   const truncated = (phoneNumbers.length - 20);
   phoneNumbers.slice(0, 20).forEach((phoneNumber) => {
     printer.print(phoneNumber)
@@ -169,7 +169,7 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   };
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
-  checkOrderStatus(createdOrder);
+  await checkOrderStatus(createdOrder);
 }
 
 const placeCategoryOrder = async(quantity, orderType, query, siteId, peerId) => {

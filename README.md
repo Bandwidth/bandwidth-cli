@@ -11,11 +11,11 @@ Expected workflow: [setup](#installationsetup), then [quickly set up your accoun
 ## Table of Contents
 - [table of contents](#table-of-contents)
 - [setup](#installationsetup)
-- [getting started with Bandwidth](#gettingstarted)
+- [getting started with Bandwidth](#getting-started-with-bandwidth)
 - [commands](#commands)
 
 ## Installation/Setup
-This Bandwidth CLI uses nodeJs version X.X.X. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node.
+This Bandwidth CLI uses nodeJs version 12. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node. If you have node, check your version with `node -v`
 
 With node on your machine, install the package globally through npm (or yarn)
 ```
@@ -44,16 +44,13 @@ setup, or simply setup your account (and order numbers later).
 
 ```
 >bandwidth quickstart
-An address is required for this quickstart.
-? Please enter address line 1. (example: 900 Main Campus Dr)
->900 Main Campus Dr
-? Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)
->Raleigh, NC, 27606
 ? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
 >http://example.com
+
 Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
 Site created with id 37390
 Sip Peer created with id 624642
+
 ? order a phone number?
 >Yes
 ? Found 10 numbers. Choose which to order.
@@ -95,7 +92,6 @@ the 10 that were offered, you can order more numbers using [`bandwidth order`](#
 
 ### create
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
-<!---FIXME: addressType should be address-type -->
 #### create site
 
 usage: `bandwidth create site <sitename>`
@@ -578,16 +574,13 @@ switches/options
 
 ```
 >bandwidth quickstart
-An address is required for this quickstart.
-? Please enter address line 1. (example: 900 Main Campus Dr)
->900 Main Campus Dr
-? Please enter the city, state, and ZIP, each seperated by a comma and a space. (example: Raleigh, NC, 27606)
->Raleigh, NC, 27606
 ? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
 >http://example.com
+
 Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
 Site created with id 37390
 Sip Peer created with id 624642
+
 ? order a phone number?
 >Yes
 ? Found 10 numbers. Choose which to order.
@@ -611,4 +604,5 @@ telephoneNumbers:
   - "9195182893"
 
 setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
+
 ```
