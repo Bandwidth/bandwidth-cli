@@ -66,17 +66,21 @@ const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
   .alias('applicatiion')
   .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteAppAction)
 
 const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .alias('s')
-  .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
+  .option('-f, --force', 'Forcefully delete the site and all sip peers associated with the site')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteSiteAction)
 
 const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('p')
   .alias('peer')
   .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .option('-f, --force', 'Force delete the peer and associated numbers.')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteSipPeerAction);
 
 

@@ -233,38 +233,40 @@ const checkDisconnectStatus = async(order) => { //TODO: merge all the checkStatu
  * 7. Delete location.
  * only step 7 will be carried out if force delete is off.
  */
-const delPeer = async(peer, force, verbose=true) => {
-  const tns = await peer.getTnsAsync().then((res) =>(res?res.map(entry => entry.fullNumber):null))
+const delPeer = async(peer, force, verbose=false) => {
+  if (force) {
+    const tns = await peer.getTnsAsync().then((res) =>(res?res.map(entry => entry.fullNumber):null))
     .catch((err) => {throw new ApiError(err)});
-  if (tns) {
-    const deleteOrder = await numbers.Disconnect.createAsync("Disconnect Order", tns)
-      .catch((err) => {throw new ApiError(err)});
-      await checkDisconnectStatus(deleteOrder.orderRequest)
-      printer.printIf(verbose, `Phone numbers associated with sip peer ${peer.id} have been disconnected`);
-  }
-  await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
-  printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)
-  await peer.deleteMmsSettingsAsync()
-    .then(()=> {printer.printIf(verbose, `MMS deleted from sip peer ${peer.id}`);})
-    .catch((err) => {
+    if (tns) {
+      const deleteOrder = await numbers.Disconnect.createAsync("Disconnect Order", tns)
+        .catch((err) => {throw new ApiError(err)});
+        await checkDisconnectStatus(deleteOrder.orderRequest)
+        printer.printIf(verbose, `Phone numbers associated with sip peer ${peer.id} have been disconnected`);
+    }
+    await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
+    printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)
+    await peer.deleteMmsSettingsAsync()
+      .then(()=> {printer.printIf(verbose, `MMS deleted from sip peer ${peer.id}`);})
+      .catch((err) => {
+        if (err.status === 404) {
+          return; //no mms settings found, nothing to delete.
+        }
+        throw new ApiError(err)
+      });
+    await peer.deleteSmsSettingsAsync()
+      .then(()=> {printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);})
+      .catch((err) => {
       if (err.status === 404) {
-        return; //no mms settings found, nothing to delete.
+        return;
       }
       throw new ApiError(err)
     });
-  await peer.deleteSmsSettingsAsync()
-    .then(()=> {printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);})
-    .catch((err) => {
-    if (err.status === 404) {
-      return;
-    }
-    throw new ApiError(err)
-  });
+  }
   await peer.deleteAsync().catch((err) => {throw new ApiError(err)});
   printer.warn(`Sip peer ${peer.id} deleted.`);
 }
 
-const delApp = async (app, force) => {
+const delApp = async (app, force, verbose=false) => {
   const associatedSipPeers = await app.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
   if (force && associatedSipPeers) {
     for await (sipPeerData of associatedSipPeers) {
@@ -272,8 +274,8 @@ const delApp = async (app, force) => {
       peer.id = sipPeerData.peerId;
       peer.siteId = sipPeerData.siteId;
       peer.client = new numbers.Client();
-      printer.warn(`Unlinking your application ${app.applicationId} with Sip Peer ${peer.id}`);
-      await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
+      printer.printIf(verbose, `Unlinking your application ${app.applicationId} with Sip Peer ${peer.id}`); //TODO add ___If function to printer and make this warnIf
+      await delPeer(peer, force, verbose)
     }
     printer.print();
   }
@@ -281,13 +283,12 @@ const delApp = async (app, force) => {
 }
 
 
-const delSite = async(site, force) => {
+const delSite = async(site, force, verbose=false) => {
   if (force) {
     const associatedSipPeers = await site.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
     associatedSipPeers.sort((peerA, peerB) => peerA.isDefaultPeer - peerB.isDefaultPeer)//delete default peer last
     for await (sipPeer of associatedSipPeers) {
-      await delPeer(sipPeer, force) //Rewrite with Promise.all if speed becomes an issue.
-      printer.warn(`Deleting Sip Peer ${sipPeer.id}`)
+      await delPeer(sipPeer, force, verbose) //Rewrite with Promise.all if speed becomes an issue.
     }
   }
   await site.deleteAsync().catch((err) => {throw new ApiError(err)});
