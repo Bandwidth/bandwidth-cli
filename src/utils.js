@@ -148,7 +148,7 @@ const deriveOrderType = (numberAttributes) => {
 }
 
 const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
-  if (!phoneNumbers.length) {return printer.error('You did not select any numbers and the order has been aborted.')}
+  if (!phoneNumbers.length) {return printer.warn('You did not select any numbers and the order has been aborted.')}
   const truncated = (phoneNumbers.length - 20);
   phoneNumbers.slice(0, 20).forEach((phoneNumber) => {
     printer.print(phoneNumber)
