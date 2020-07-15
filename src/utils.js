@@ -1,6 +1,6 @@
 const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
-const { BadInputError, ApiError } = require('./errors');
+const { BadInputError, ApiError, CliError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
@@ -187,7 +187,7 @@ const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) =>
   order[orderType] = query
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
-  await checkOrderStatus(createdOrder);
+  printer.removeClient(await checkOrderStatus(createdOrder));
 }
 
 /**
@@ -202,11 +202,11 @@ const checkOrderStatus = async(order) => {
       delete orderStatus.author
       const tns = await order.getTnsAsync();
       orderStatus.telephoneNumbers = tns.telephoneNumber
-      printer.removeClient(orderStatus);
-      return
+      return orderStatus;
     }
   }
-  return printer.warn('Unable to retrieve your order status.')
+  printer.warn('Order placed but not complete.')
+  return orderStatus
 }
 
 /**
@@ -215,12 +215,17 @@ const checkOrderStatus = async(order) => {
  */
 const checkDisconnectStatus = async(order) => { //TODO: merge all the checkStatus functions.
   let orderStatus
-  for await (_ of [...Array(50).keys()]) {
-    orderStatus = (await numbers.Disconnect.getAsync(order.id, {tnDetail:false}).catch((err) => {console.log}));
+  for await (_ of [...Array(10).keys()]) {
+    orderStatus = (await numbers.Disconnect.getAsync(order.id, {tnDetail:false}).catch((err) => {
+      if (err.status) {
+        throw new ApiError(err);
+      }
+    }));
     if (orderStatus) {
       return orderStatus;
     }
   }
+  return null;
 }
 
 /**
@@ -241,8 +246,10 @@ const delPeer = async(peer, force, verbose=false) => {
     if (tns) {
       const deleteOrder = await numbers.Disconnect.createAsync("Disconnect Order", tns)
         .catch((err) => {throw new ApiError(err)});
-        await checkDisconnectStatus(deleteOrder.orderRequest)
-        printer.printIf(verbose, `Phone numbers associated with sip peer ${peer.id} have been disconnected`);
+      if (!(await checkDisconnectStatus(deleteOrder.orderRequest))) {
+        throw new CliError('No confirmation after placing phone number disconnect order.')
+      }
+      printer.printIf(verbose, `Phone numbers associated with sip peer ${peer.id} have been disconnected`);
     }
     await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
     printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)

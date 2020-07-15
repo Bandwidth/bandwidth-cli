@@ -67,7 +67,7 @@ const errorHandler = (action) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
         printer.custom('brightRed')(err.name + ":", err.message)
-        return printer.custom('white', true)(err.suggestion||'')
+        return printer.custom('yellow', true)(err.suggestion||'')
       }
       if (err instanceof ApiError) {
         printer.custom('red')(err.name + ":", err.message);

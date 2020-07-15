@@ -248,7 +248,7 @@ bandwidth default <default-field>                       //print the value of a p
 bandwidth default <default-field> <default-value>       //set a new default
 bandwidth default -d <default-field>                    //delete a default
 ```
-Current accepted `<default-field>`s include `site`, `sippeer`, and `application`. 
+Current accepted `default-field`s include `site`, `sippeer`, and `application`. 
 
 switches/options
 | name      | Description | required |
@@ -302,16 +302,16 @@ Site successfully deleted.
 #### delete sippeer
 Delete a sippeer
 
-usage: `bandwidth delete peer [--force] <peer-id>`
+usage: `bandwidth delete sippeer [--force] <peer-id>`
 
 
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --siteId, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
+| --site-id, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
 
 ```
->bandwidth delete sippeer --siteId 37397 624651
+>bandwidth delete sippeer --site-id 37397 624651
 Sip Peer successfully deleted.
 ```
 
@@ -356,7 +356,7 @@ switches/options
 ```
 #### list peer
 
-usage: `bandwidth list peer [site-id]`
+usage: `bandwidth list sippeer [site-id]`
 
 Siteid is required unless a default site id is set, in which case the peers under the default
 site will be listed instead.

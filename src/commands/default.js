@@ -34,7 +34,7 @@ module.exports.defaultAction = async (defaultField, defaultValue, cmdObj) => {
     if (retrievedDefault) {
       return printer.print(await utils.readDefault(defaultField));
     }
-    return printer.warn(`Default ${defaultValue} not set.`)
+    return printer.warn(`Default ${defaultField} not set.`)
   }
   //set default value
   const setName = await utils.setDefault(defaultField, defaultValue);
