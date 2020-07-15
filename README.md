@@ -149,10 +149,10 @@ switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
 | --site-id, -s| A valid site Id to put the peer under.| no (yes if no default site is configured.)
-| --default, -d| Make this a default sip peer under the site. This is stored in your account and is *not* the same as the `bandwidth default` command.| no
+| --default, -d| Make this a default sip peer under the site. This is stored in your account and is **not** the same as the `bandwidth default` command.| no
 
 ```
->bandwidth create peer "my peer name"
+>bandwidth create sippeer "my peer name"
 Using default site 37397
 Peer created successfully...
 enabled SMS by default.
@@ -173,7 +173,7 @@ siteId: 37397
 or, manually specify site Id
 
 ```
->bandwidth create peer --site-id mysiteId peername
+>bandwidth create sippeer --site-id mysiteId peername
 Peer created successfully...
 enabled SMS by default.
 Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
@@ -239,7 +239,7 @@ Set, view, and manage a default site(subaccount), sip peer (location), and appli
 used automatically for required fields if none are specified. For example, when [ordering](#order) a
 number, the default site and sip peer will be used if none are specified.
 
-*Note that defaults, as referred to in this CLI, is different from the default sip peer of a site, as referred to in the rest of the bandwidth API docs*
+**Note that defaults, as referred to in this CLI, is different from the default sip peer of a site, as referred to in the rest of the bandwidth API docs**
 
 usage:
 ```
@@ -311,7 +311,7 @@ switches/options
 | --siteId, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
 
 ```
->bandwidth delete peer --siteId 37397 624651
+>bandwidth delete sippeer --siteId 37397 624651
 Sip Peer successfully deleted.
 ```
 

@@ -203,7 +203,7 @@ const checkOrderStatus = async(order) => {
       const tns = await order.getTnsAsync();
       orderStatus.telephoneNumbers = tns.telephoneNumber
       printer.removeClient(orderStatus);
-      break;
+      return
     }
   }
   return printer.warn('Unable to retrieve your order status.')
