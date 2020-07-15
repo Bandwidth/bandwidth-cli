@@ -282,8 +282,8 @@ const delApp = async (app, force, verbose=false) => {
       peer.id = sipPeerData.peerId;
       peer.siteId = sipPeerData.siteId;
       peer.client = new numbers.Client();
+      await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
       printer.printIf(verbose, `Unlinking your application ${app.applicationId} with Sip Peer ${peer.id}`); //TODO add ___If function to printer and make this warnIf
-      await delPeer(peer, force, verbose)
     }
     printer.print();
   }
@@ -303,7 +303,7 @@ const delSite = async(site, force, verbose=false) => {
 }
 
 
-module.exports = {
+module.exports = { //TODO: move the API related utils to a sperate folder to avoid clutter
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
