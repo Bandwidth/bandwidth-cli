@@ -1,5 +1,5 @@
 {
-  "name": "bw-cli",
+  "name": "@bandwidth/cli",
   "version": "0.0.1",
   "description": "A CLI to help developers new to Bandwidth to get set up and order phone numbers.",
   "main": "cli.js",
