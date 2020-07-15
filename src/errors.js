@@ -71,7 +71,7 @@ const errorHandler = (action) => {
       }
       if (err instanceof ApiError) {
         printer.custom('red')(err.name + ":", err.message);
-        return printer.custom('white', true)(err.suggestion||'')
+        return printer.custom('yellow', true)(err.suggestion||'')
       }
       if (err instanceof CliError) {
         return printer.error("An unknown internal error has occured. See the stack trace below.\n\n", err)

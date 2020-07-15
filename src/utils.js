@@ -69,7 +69,7 @@ const readAccountId = async () => {
  */
 const incrementSetupNo = async() => {
   let setupNo = readConfig(setupNumberKey);
-  setupNo = setupNo?setupNo+=1:0;
+  setupNo = (typeof setupNo === 'number')?setupNo+=1:0;
   writeConfig(setupNumberKey, setupNo);
   return setupNo || ''; //if 0, then nothing
 }
@@ -206,6 +206,7 @@ const checkOrderStatus = async(order) => {
       break;
     }
   }
+  return printer.warn('Unable to retrieve your order status.')
 }
 
 /**
@@ -214,7 +215,7 @@ const checkOrderStatus = async(order) => {
  */
 const checkDisconnectStatus = async(order) => { //TODO: merge all the checkStatus functions.
   let orderStatus
-  for await (_ of [...Array(10).keys()]) {
+  for await (_ of [...Array(50).keys()]) {
     orderStatus = (await numbers.Disconnect.getAsync(order.id, {tnDetail:false}).catch((err) => {console.log}));
     if (orderStatus) {
       return orderStatus;

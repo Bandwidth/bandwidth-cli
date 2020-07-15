@@ -103,7 +103,7 @@ switches/options
 | --address-type, -t| must be either billing or service.| yes
 
 ```
->create site --address-type billing "my site name"
+>bandwidth create site --address-type billing "my site name"
 Site created. See details of your created Site below.
 
 id: 37390
@@ -118,7 +118,7 @@ address:
   plusFour: 5177
   country: United States
   addressType: Billing
->create site --address-type service "my site name"
+>bandwidth create site --address-type service "my site name"
 Site created. See details of your created Site below.
 
 id: 37391
@@ -139,8 +139,8 @@ address:
 Create a sip peer (also known as location). Since all sip peers are nested under sub-accounts/sites,
 a siteId must be specified if no default site is set.
 
-This command will automatically turn on sms and link the default application to the site as a messaging application. If the
-default application is a voice application, there will be an error.
+This command will automatically turn on sms and link the default application to the site as a messaging application. 
+Automatic voice application linking is not yet supported by this CLI and will result in an error.
 
 usage: `bandwidth create sippeer <peername>`
 
@@ -148,11 +148,11 @@ usage: `bandwidth create sippeer <peername>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --site-id, -s| A valid siteId to put the peer under.| no (yes if no default site is configured.)
-| --default, -d| Make this a default sip peer under the site.| no
+| --site-id, -s| A valid site Id to put the peer under.| no (yes if no default site is configured.)
+| --default, -d| Make this a default sip peer under the site. This is stored in your account and is *not* the same as the `bandwidth default` command.| no
 
 ```
->create peer "my peer name"
+>bandwidth create peer "my peer name"
 Using default site 37397
 Peer created successfully...
 enabled SMS by default.
@@ -170,10 +170,10 @@ id: 624651
 siteId: 37397
 ```
 
-or, manually specify siteId
+or, manually specify site Id
 
 ```
->create peer --site-id mysiteId peername
+>bandwidth create peer --site-id mysiteId peername
 Peer created successfully...
 enabled SMS by default.
 Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
@@ -239,13 +239,16 @@ Set, view, and manage a default site(subaccount), sip peer (location), and appli
 used automatically for required fields if none are specified. For example, when [ordering](#order) a
 number, the default site and sip peer will be used if none are specified.
 
+*Note that defaults, as referred to in this CLI, is different from the default sip peer of a site, as referred to in the rest of the bandwidth API docs*
+
 usage:
 ```
-bandwidth default                                 //list all defaults
-bandwidth default <default-name>                  //print the value of a particular default
-bandwidth default <default-name> <default value>  //set a new default
-bandwidth default -d <default-name>               //delete a default
+bandwidth default                                       //list all defaults
+bandwidth default <default-field>                       //print the value of a particular default
+bandwidth default <default-field> <default-value>       //set a new default
+bandwidth default -d <default-field>                    //delete a default
 ```
+Current accepted `<default-field>`s include `site`, `sippeer`, and `application`. 
 
 switches/options
 | name      | Description | required |
