@@ -196,7 +196,7 @@ const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) =>
  */
 const checkOrderStatus = async(order) => {
   let orderStatus
-  for await (areaCode of [...Array(10).keys()]) {
+  for await (_ of [...Array(10).keys()]) {
     orderStatus = (await order.getHistoryAsync()).pop();
     if (orderStatus) {
       delete orderStatus.author
@@ -204,6 +204,20 @@ const checkOrderStatus = async(order) => {
       orderStatus.telephoneNumbers = tns.telephoneNumber
       printer.removeClient(orderStatus);
       break;
+    }
+  }
+}
+
+/**
+ * Continuously checks the status of the order until the order is complete, or
+ * until 10 attempts have been made with no response.
+ */
+const checkDisconnectStatus = async(order) => { //TODO: merge all the checkStatus functions.
+  let orderStatus
+  for await (_ of [...Array(10).keys()]) {
+    orderStatus = (await numbers.Disconnect.getAsync(order.id, {tnDetail:false}).catch((err) => {console.log}));
+    if (orderStatus) {
+      return orderStatus;
     }
   }
 }
@@ -220,15 +234,32 @@ const checkOrderStatus = async(order) => {
  * only step 7 will be carried out if force delete is off.
  */
 const delPeer = async(peer, force, verbose=true) => {
-  const tns = await peer.getTnsAsync().then(res => res.map(entry => entry.fullNumber))
-    .catch((err) => {throw new ApiError(err)}); //TODO delete all TNs
-  await numbers.Disconnect.createAsync("Disconnect Order", tns);
+  const tns = await peer.getTnsAsync().then((res) =>(res?res.map(entry => entry.fullNumber):null))
+    .catch((err) => {throw new ApiError(err)});
+  if (tns) {
+    const deleteOrder = await numbers.Disconnect.createAsync("Disconnect Order", tns)
+      .catch((err) => {throw new ApiError(err)});
+      await checkDisconnectStatus(deleteOrder.orderRequest)
+      printer.printIf(verbose, `Phone numbers associated with sip peer ${peer.id} have been disconnected`);
+  }
   await peer.removeApplicationAsync().catch((err) => {throw new ApiError(err)});
   printer.printIf(verbose, `Application unlinked from sip peer ${peer.id}`)
-  await peer.deleteMmsSettingsAsync().catch((err) => {throw new ApiError(err)});
-  printer.printIf(verbose, `MMS deleted from sip peer ${peer.id}`);
-  await peer.deleteSmsSettingsAsync().catch((err) => {throw new ApiError(err)});
-  printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);
+  await peer.deleteMmsSettingsAsync()
+    .then(()=> {printer.printIf(verbose, `MMS deleted from sip peer ${peer.id}`);})
+    .catch((err) => {
+      if (err.status === 404) {
+        return; //no mms settings found, nothing to delete.
+      }
+      throw new ApiError(err)
+    });
+  await peer.deleteSmsSettingsAsync()
+    .then(()=> {printer.printIf(verbose, `SMS deleted from sip peer ${peer.id}`);})
+    .catch((err) => {
+    if (err.status === 404) {
+      return;
+    }
+    throw new ApiError(err)
+  });
   await peer.deleteAsync().catch((err) => {throw new ApiError(err)});
   printer.warn(`Sip peer ${peer.id} deleted.`);
 }
