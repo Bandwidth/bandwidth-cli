@@ -170,6 +170,7 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
   await checkOrderStatus(createdOrder);
+  printer.print(`Phone numbers can be found under sip peer ${peerId}`)
 }
 
 const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) => {
@@ -188,6 +189,7 @@ const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) =>
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
   printer.success('Your order was placed. Awaiting order completion...')
   printer.removeClient(await checkOrderStatus(createdOrder));
+  printer.print(`Phone numbers can be found under sip peer ${peerId}`)
 }
 
 /**

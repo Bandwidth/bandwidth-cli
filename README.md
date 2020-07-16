@@ -26,7 +26,8 @@ or
 yarn global add @bandwidth/cli
 ```
 
-log into your bandwidth account by specifying your account id, and your dashboard username and password.
+log into your bandwidth account by specifying your account id, and your dashboard username and password. 
+**The account should be a messaging account. Other account types, such as voice or 911, are currently not supported.**
 
 
 ```
@@ -286,7 +287,7 @@ Delete sites(also known as sub-accounts), sip peers (also known as locations), a
 #### delete site
 Delete a site
 
-usage: `bandwidth delete site [--force] <site-id>`
+usage: `bandwidth delete site <site-id>`
 
 
 switches/options
@@ -302,13 +303,14 @@ Site successfully deleted.
 #### delete sippeer
 Delete a sippeer
 
-usage: `bandwidth delete sippeer [--force] <peer-id>`
+usage: `bandwidth delete sippeer <peer-id>`
 
 
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
 | --site-id, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
+| --force, -f| Force delete by removing all numbers and settings.| no 
 
 ```
 >bandwidth delete sippeer --site-id 37397 624651
@@ -318,7 +320,7 @@ Sip Peer successfully deleted.
 #### delete application
 Delete an application
 
-usage: `bandwidth delete app [--force] <app-id>`
+usage: `bandwidth delete app <app-id>`
 
 
 switches/options
@@ -415,7 +417,7 @@ Your credentials have been saved. You can now start using the CLI.
 ```
 
 ### order
-Order phone numbers in three ways
+Order phone numbers in three ways. Orders will be found under the specified sip peer. 
 - [`order number`](#order-number): Order a list of specific numbers
 - [`order category`](#order-category): Order a given quantity of numbers with a criteria
 - [`order search`](#order-search): Search for numbers with a criteria and select those that you want to order
