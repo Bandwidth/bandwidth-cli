@@ -31,18 +31,22 @@ const createCmd = program.command('create')
 
 const createAppCmd = createCmd.command('app <name>')
   .alias('a')
+  .alias('application')
   .requiredOption('-t, --type <type>', 'An application must be a voice(v) or messaging(m) application')
   .action(actions.createAppAction)
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
+  .alias('subaccount')
+  .alias('sub-account')
   .requiredOption('-t, --address-type <type>', 'A site must be a billing(b) or service(s) application')
   .action(actions.createSiteAction)
 
 const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('p')
   .alias('peer')
-  .option('-s, --siteId <siteId>', 'The id of the site to create a sippeer under')
+  .alias('location')
+  .option('-s, --site-id <site-id>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
   .action(actions.createSipPeerAction)
 
@@ -66,17 +70,21 @@ const deleteAppCmd = deleteCmd.command('app <app-id>')
   .alias('a')
   .alias('applicatiion')
   .option('-f, --force', 'Delete the application even if it has sippeers by automatically unlinking all sip peers associated with the application')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteAppAction)
 
 const deleteSiteCmd = deleteCmd.command('site <site-id>')
   .alias('s')
-  .option('-f, --force', 'Delete the site even if it has sippeers by automatically delete all sip peers associated with the site')
+  .option('-f, --force', 'Forcefully delete the site and all sip peers associated with the site')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteSiteAction)
 
 const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
   .alias('p')
   .alias('peer')
-  .option('-s, --siteId <siteId>', 'The id of the site under which a sip peer is located')
+  .option('-s, --site-id <site-id>', 'The id of the site under which a sip peer is located')
+  .option('-f, --force', 'Force delete the peer and associated numbers.')
+  .option('-v, --verbose', 'Increase output verbosity.')
   .action(actions.deleteSipPeerAction);
 
 

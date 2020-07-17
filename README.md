@@ -26,7 +26,8 @@ or
 yarn global add @bandwidth/cli
 ```
 
-log into your bandwidth account by specifying your account id, and your dashboard username and password.
+log into your bandwidth account by specifying your account id, and your dashboard username and password. 
+**The account should be a messaging account. Other account types, such as voice or 911, are currently not supported.**
 
 
 ```
@@ -40,7 +41,7 @@ Your credentials have been saved. You can now start using the CLI.
 
 ## Getting Started With Bandwidth
 First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number without prior
-setup, or simply setup your account (and order numbers later).
+setup, or simply setup your account (and order numbers later). `quickstart` can be used as many times as needed, and will automatically set up a new site, sippeer, and application without interacting with or influencing existing account settings. 
 
 ```
 >bandwidth quickstart
@@ -103,7 +104,7 @@ switches/options
 | --address-type, -t| must be either billing or service.| yes
 
 ```
->create site --address-type billing "my site name"
+>bandwidth create site --address-type billing "my site name"
 Site created. See details of your created Site below.
 
 id: 37390
@@ -118,7 +119,7 @@ address:
   plusFour: 5177
   country: United States
   addressType: Billing
->create site --address-type service "my site name"
+>bandwidth create site --address-type service "my site name"
 Site created. See details of your created Site below.
 
 id: 37391
@@ -139,8 +140,8 @@ address:
 Create a sip peer (also known as location). Since all sip peers are nested under sub-accounts/sites,
 a siteId must be specified if no default site is set.
 
-This command will automatically turn on sms and link the default application to the site as a messaging application. If the
-default application is a voice application, there will be an error.
+This command will automatically turn on sms and link the default application to the site as a messaging application. 
+Automatic voice application linking is not yet supported by this CLI and will result in an error.
 
 usage: `bandwidth create sippeer <peername>`
 
@@ -148,11 +149,11 @@ usage: `bandwidth create sippeer <peername>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --site-id, -s| A valid siteId to put the peer under.| no (yes if no default site is configured.)
-| --default, -d| Make this a default sip peer under the site.| no
+| --site-id, -s| A valid site Id to put the peer under.| no (yes if no default site is configured.)
+| --default, -d| Make this a default sip peer under the site. This is stored in your account and is **not** the same as the `bandwidth default` command.| no
 
 ```
->create peer "my peer name"
+>bandwidth create sippeer "my peer name"
 Using default site 37397
 Peer created successfully...
 enabled SMS by default.
@@ -170,10 +171,10 @@ id: 624651
 siteId: 37397
 ```
 
-or, manually specify siteId
+or, manually specify site Id
 
 ```
->create peer --site-id mysiteId peername
+>bandwidth create sippeer --site-id mysiteId peername
 Peer created successfully...
 enabled SMS by default.
 Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
@@ -239,13 +240,16 @@ Set, view, and manage a default site(subaccount), sip peer (location), and appli
 used automatically for required fields if none are specified. For example, when [ordering](#order) a
 number, the default site and sip peer will be used if none are specified.
 
+**Note that defaults, as referred to in this CLI, is different from the default sip peer of a site, as referred to in the rest of the bandwidth API docs**
+
 usage:
 ```
-bandwidth default                                 //list all defaults
-bandwidth default <default-name>                  //print the value of a particular default
-bandwidth default <default-name> <default value>  //set a new default
-bandwidth default -d <default-name>               //delete a default
+bandwidth default                                       //list all defaults
+bandwidth default <default-field>                       //print the value of a particular default
+bandwidth default <default-field> <default-value>       //set a new default
+bandwidth default -d <default-field>                    //delete a default
 ```
+Current accepted `default-field`s include `site`, `sippeer`, and `application`. 
 
 switches/options
 | name      | Description | required |
@@ -283,7 +287,7 @@ Delete sites(also known as sub-accounts), sip peers (also known as locations), a
 #### delete site
 Delete a site
 
-usage: `bandwidth delete site [--force] <site-id>`
+usage: `bandwidth delete site <site-id>`
 
 
 switches/options
@@ -299,23 +303,24 @@ Site successfully deleted.
 #### delete sippeer
 Delete a sippeer
 
-usage: `bandwidth delete peer [--force] <peer-id>`
+usage: `bandwidth delete sippeer <peer-id>`
 
 
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --siteId, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
+| --site-id, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
+| --force, -f| Force delete by removing all numbers and settings.| no 
 
 ```
->bandwidth delete peer --siteId 37397 624651
+>bandwidth delete sippeer --site-id 37397 624651
 Sip Peer successfully deleted.
 ```
 
 #### delete application
 Delete an application
 
-usage: `bandwidth delete app [--force] <app-id>`
+usage: `bandwidth delete app <app-id>`
 
 
 switches/options
@@ -353,7 +358,7 @@ switches/options
 ```
 #### list peer
 
-usage: `bandwidth list peer [site-id]`
+usage: `bandwidth list sippeer [site-id]`
 
 Siteid is required unless a default site id is set, in which case the peers under the default
 site will be listed instead.
@@ -433,7 +438,7 @@ Your credentials have been saved. You can now start using the CLI.
 ```
 
 ### order
-Order phone numbers in three ways
+Order phone numbers in three ways. Orders will be found under the specified sip peer. 
 - [`order number`](#order-number): Order a list of specific numbers
 - [`order category`](#order-category): Order a given quantity of numbers with a criteria
 - [`order search`](#order-search): Search for numbers with a criteria and select those that you want to order

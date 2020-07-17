@@ -1,6 +1,6 @@
 const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
-const { BadInputError, ApiError } = require('./errors');
+const { BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
@@ -69,7 +69,7 @@ const readAccountId = async () => {
  */
 const incrementSetupNo = async() => {
   let setupNo = readConfig(setupNumberKey);
-  setupNo = setupNo?setupNo+=1:0;
+  setupNo = (typeof setupNo === 'number')?setupNo+=1:0;
   writeConfig(setupNumberKey, setupNo);
   return setupNo || ''; //if 0, then nothing
 }
@@ -147,7 +147,12 @@ const deriveOrderType = (numberAttributes) => {
   return 'combinedSearchAndOrderType'
 }
 
-module.exports = {
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+module.exports = { //TODO: move the API related utils to a sperate folder to avoid clutter
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
@@ -159,4 +164,5 @@ module.exports = {
   processDefault,
   incrementSetupNo,
   deriveOrderType,
+  sleep
 }

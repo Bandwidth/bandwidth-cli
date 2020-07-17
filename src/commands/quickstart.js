@@ -2,6 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
+const apiutils = require("../apiutils");
 
 
 module.exports.quickstartAction = async (cmdObj) => {
@@ -91,7 +92,7 @@ module.exports.quickstartAction = async (cmdObj) => {
       selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
     }
     if (selected){
-      await utils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
+      await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
     }
   }
   printer.print();
