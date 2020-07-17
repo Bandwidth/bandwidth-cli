@@ -3,7 +3,7 @@ const printer = require('../printer')
 const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
 const fs = require('fs')
-const stringify = require('csv-stringify');
+const stringify = require('csv-stringify/lib/sync');
 
 module.exports.listAppAction = async () => {
   const appList = await numbers.Application.listAsync().catch(throwApiErr);;
@@ -100,8 +100,20 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   if (out === true) { //must be boolean
     printer.table(tnsList)
   } else if (out === 'stdout') { 
-    printer.print(tnsList)
+    printer.print(stringify(tnsList, {header: true}))
   } else if (out) { 
-    console.log(stringify());
+    data = stringify(tnsList, {header: true});
+    fs.writeFileSync(out, data);
+  } else {
+    data = stringify(tnsList, {header: true});
+    if (fs.existsSync('./bandwidth-numbers.csv')) {
+      let count = 0;
+      while (fs.existsSync(`./bandwidth-numbers${count}.csv`)) {
+        count++;
+      }
+      fs.writeFileSync(`./bandwidth-numbers${count}.csv`, data);
+    } else {
+      fs.writeFileSync('./bandwidth-numbers.csv', data);
+    }
   }
 }
