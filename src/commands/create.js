@@ -38,8 +38,9 @@ module.exports.createAppAction = async (name, cmdObj) => {
 module.exports.createSiteAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   let addressType;
-  if (options.addressType === 's') {addressType = 'service'}
-  if (options.addressType === 'b') {addressType = 'billing'}
+  addressType = options.addressType;
+  if (addressType === 's') {addressType = 'service'}
+  if (addressType === 'b') {addressType = 'billing'}
   if (addressType !== 'service' && addressType !== 'billing') {
     throw new BadInputError('addressType must be either service(s) or billing(b)');
   }
@@ -69,7 +70,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
   const siteId = await utils.processDefault('site', options.siteId);
   if (!siteId) {
-    throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
+    throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --site-id switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: name,
