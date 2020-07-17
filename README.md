@@ -417,8 +417,39 @@ switches/options
 | ----------- | ----------- | ----------- |
 |--out, -o [relative-path]|specify the output's relative path. Prints a table to console if `relative-path` is not specified. Prints csv-formatted output to console if `relative-path` is `stdout`. Otherwise, saves the output to the file specified.|no
 ```
->bandwidth list numbers *
-//FIXME
+//get all numbers from the account
+>bandwidth list numbers * 
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//get all numbers from the site 48259
+>bandwidth list numbers 48259 
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//get all numbers from the site 48259, sip peer 342594
+>bandwidth list numbers 48259 342594
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//Print to console as a table using --out
+>bandwidth list numbers 37656 --out
+┌─────────┬──────────────┬─────────┬───────┐
+│ (index) │    number    │ sippeer │ site  │
+├─────────┼──────────────┼─────────┼───────┤
+│    0    │ '5754041393' │ 625216  │ 37656 │
+│    1    │ '5754894272' │ 625216  │ 37656 │
+│    2    │ '5754895124' │ 625428  │ 37656 │
+└─────────┴──────────────┴─────────┴───────┘
+
+//print to console as raw csv data for piping
+>bandwidth list numbers 37656 --out stdout
+number,sippeer,site
+5754041393,625216,37656
+5754894272,625216,37656
+5754895124,625216,37656
+
+//save to a different file. 
+>bandwidth list numbers 37656 --out my_file.csv
+Telephone number data successfully written to users/your-name/your-cwd/my_file.csv
+
 ```
 ### login
 usage: `bandwidth login`
