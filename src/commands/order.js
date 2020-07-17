@@ -1,6 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
-const { ApiError, BadInputError } = require('../errors');
+const { BadInputError, throwApiErr } = require('../errors');
 const utils = require('../utils');
 const apiutils = require('../apiutils');
 
@@ -42,7 +42,7 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   const query = {...options, quantity}
   delete query.siteId;
   delete query.peerId;
-  const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
+  const results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
   let selected;
   if (results.resultCount === 0 || Object.entries(results).length === 0) {
     printer.custom('yellow', 1, 'warn')('No numbers were found. Check your query parameters for typos or try other parameters.')

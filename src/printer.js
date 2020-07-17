@@ -29,7 +29,7 @@ module.exports.warn = (...warnings) => {
 /**
  * Print the given array of js objects as a table.
  * @param {Object[]} data An array of objects with the same fields
- * @param options Specify maxCols, the fields to print, and the field to use as keys in an array.
+ * @param options Specify maxCols, fields (the fields of the data to print), keys (the field to use as keys in an array).
  */
 module.exports.table = (data, options) => {
   if (options) {

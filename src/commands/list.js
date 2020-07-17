@@ -1,10 +1,10 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
-const { ApiError, BadInputError } = require('../errors');
+const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
 
 module.exports.listAppAction = async () => {
-  const appList = await numbers.Application.listAsync().catch((err) => {throw new ApiError(err)});;
+  const appList = await numbers.Application.listAsync().catch(throwApiErr);;
   printer.table(appList, {
     fields: ['applicationId', 'serviceType', 'appName'],
     key: 'applicationId'
@@ -12,7 +12,7 @@ module.exports.listAppAction = async () => {
 }
 
 module.exports.listSiteAction = async () => {
-  const sitesList = await numbers.Site.listAsync().catch((err) => {throw new ApiError(err)});
+  const sitesList = await numbers.Site.listAsync().catch(throwApiErr);
   printer.table(sitesList, {
     fields: ['id', 'name', 'sipPeerCount'],
     key: 'id'
@@ -24,7 +24,7 @@ module.exports.listSipPeerAction = async (siteId, cmdObj) => {
   if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --siteId switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
-  const sipPeerList = await numbers.SipPeer.listAsync(siteId).catch((err) => {throw new ApiError(err)});
+  const sipPeerList = await numbers.SipPeer.listAsync(siteId).catch(throwApiErr);
   printer.table(sipPeerList, {
     fields: ['peerId', 'peerName', 'isDefaultPeer'],
     key: 'peerId'
@@ -36,7 +36,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   const out = opts.out
   let tnsList = [];
   const getAllTns = async () => {
-    const sites = await numbers.Site.listAsync().catch((err) => {throw new ApiError(err)});;
+    const sites = await numbers.Site.listAsync().catch(throwApiErr);;
     const promises = [];
     for await (site of sites) {
       promises.push(getSiteTns(site));
@@ -44,7 +44,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
     return (await Promise.all(promises)).flat()
   }
   const getSiteTns = async (site) => {
-    const sipPeers = await site.getSipPeersAsync().catch((err) => {throw new ApiError(err)});
+    const sipPeers = await site.getSipPeersAsync().catch(throwApiErr);
     const promises = [];
     for await (peer of sipPeers) {
       promises.push(getPeerTns(peer));
@@ -95,5 +95,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
     tnsList = await getPeerTns(peer);
   }
   tnsList = tnsList.filter(numberEntry => numberEntry&&numberEntry.number);
-  
+  if (out === true) { //must be boolean
+    printer.table(tnsList)
+  }
 }

@@ -1,6 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
-const { ApiError, BadInputError } = require('../errors');
+const { BadInputError, throwApiErr } = require('../errors');
 const utils = require('../utils');
 const apiutils = require("../apiutils");
 
@@ -23,12 +23,12 @@ module.exports.quickstartAction = async (cmdObj) => {
     city: 'Raleigh',
     stateCode: "NC",
     zip: '27606'
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
     appName: `My Messaging Application ${setupNo}`,
     msgCallbackUrl: answers.msgCallbackUrl
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const createdSite = await numbers.Site.createAsync({
     name: `My Site ${setupNo}`,
@@ -36,13 +36,13 @@ module.exports.quickstartAction = async (cmdObj) => {
       ...address,
       addressType: 'billing',//billing/service have no functional differences but is required.
     }
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.success(`Site created with id ${createdSite.id}`)
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: `My Sip Peer ${setupNo}`,
     isDefaultPeer: true,
     siteId: createdSite.id,
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.success(`Sip Peer created with id ${createdPeer.id}`)
   const smsSettings = {
     tollFree: true,
@@ -56,17 +56,12 @@ module.exports.quickstartAction = async (cmdObj) => {
   const httpSettings = {
     v2Messaging: true
   }
-  await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings}).catch((err) => {
-    if (err) {
-      throw new ApiError(err);
-    }
-  })
+  await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings})
+    .catch(throwApiErr)
   printer.printIf(verbose, "enabled SMS in sip peer.");
-  await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId}).catch((err) => {
-    if (err) {
-      throw new ApiError(err);
-    }
-  }).then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
+  await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId})
+    .catch(throwApiErr)
+    .then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
   await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
   await utils.setDefault('application', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
@@ -82,7 +77,7 @@ module.exports.quickstartAction = async (cmdObj) => {
       state: randomState||'NC',
       quantity: 10
     };
-    const results = await numbers.AvailableNumbers.listAsync(query).catch(err => {throw new ApiError(err)});
+    const results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
     let selected;
     if (results.resultCount === 0) {
       printer.warn('No numbers were found in the zip code of your address.')
