@@ -110,7 +110,7 @@ const listSipPeerCmd = listCmd.command('sippeer [site-id]')
   .alias('peer')
   .action(actions.listSipPeerAction);
 
-const listNumberCmd = listCmd.command('number [site-id] [peer-id]')
+const listNumberCmd = listCmd.command('number <site-id> [peer-id]')
   .alias('n')
   .alias('tn')
   .alias('numbers')

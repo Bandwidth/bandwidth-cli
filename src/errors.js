@@ -81,9 +81,12 @@ const errorHandler = (action) => {
   }
 }
 
+const throwApiErr = (err) => {throw new ApiError(err)}
+
 module.exports = {
   CliError: CliError,
   ApiError: ApiError,
   BadInputError: BadInputError,
-  errorHandler: errorHandler
+  errorHandler,
+  throwApiErr,
 }

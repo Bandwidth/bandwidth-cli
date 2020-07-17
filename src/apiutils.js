@@ -2,6 +2,7 @@ const { ApiError, CliError } = require('./errors');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
 
+/**************************ORDER PHONE NUMBERS**************************/
 const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   if (!phoneNumbers.length) { return printer.warn('You did not select any numbers and the order has been aborted.') }
   const truncated = (phoneNumbers.length - 20);
@@ -47,6 +48,8 @@ const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) =>
   printer.print(`Phone numbers can be found under sip peer ${peerId}`)
 }
 
+
+/**************************CHECK THE STATUS OF AN ORDER**************************/
 /**
  * Continuously checks the status of the order until the order is complete, or
  * until 10 attempts have been made with no response.
@@ -87,6 +90,8 @@ const checkDisconnectStatus = async (order) => { //TODO: merge all the checkStat
   return null;
 }
 
+
+/**************************DELETE MANY THINGS**************************/
 /**
  * Force deleting a peer will do the following in order:
  * 1. Delete port orders
