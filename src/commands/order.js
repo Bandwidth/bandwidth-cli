@@ -2,6 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
+const apiutils = require('/apiutils');
 
 module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
   const options = cmdObj.opts();
@@ -28,7 +29,7 @@ module.exports.orderCategoryAction = async (quantity, cmdObj) => {
   if (!orderType) {
     throw new BadInputError('Order parameters are required. Please specify at least one order, such as area code or zip.', 'orderType', 'To set an areacode or state, try "bandwidth order category --state [state-code] --area-code [area code] [quantity]"')
   }
-  await utils.placeCategoryOrder(quantity, orderType, query, siteId, peerId)
+  await apiutils.placeCategoryOrder(quantity, orderType, query, siteId, peerId)
 }
 
 module.exports.orderSearchAction = async (quantity, cmdObj) => {
@@ -50,5 +51,5 @@ module.exports.orderSearchAction = async (quantity, cmdObj) => {
   } else {
     selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
   }
-  await utils.placeNumberOrder(selected, siteId, peerId);
+  await apiutils.placeNumberOrder(selected, siteId, peerId);
 }
