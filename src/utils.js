@@ -206,6 +206,7 @@ const checkOrderStatus = async(order) => {
       orderStatus.telephoneNumbers = tns.telephoneNumber
       return orderStatus;
     }
+    await sleep(250);
   }
   printer.warn('Order placed but not complete.')
   return orderStatus
@@ -226,6 +227,7 @@ const checkDisconnectStatus = async(order) => { //TODO: merge all the checkStatu
     if (orderStatus) {
       return orderStatus;
     }
+    await sleep(250);
   }
   return null;
 }
@@ -304,6 +306,10 @@ const delSite = async(site, force, verbose=false) => {
   await site.deleteAsync().catch((err) => {throw new ApiError(err)});
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 module.exports = { //TODO: move the API related utils to a sperate folder to avoid clutter
   saveDashboardCredentials,
@@ -321,5 +327,6 @@ module.exports = { //TODO: move the API related utils to a sperate folder to avo
   placeCategoryOrder,
   delSite,
   delApp,
-  delPeer
+  delPeer,
+  sleep
 }
