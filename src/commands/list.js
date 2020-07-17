@@ -30,3 +30,16 @@ module.exports.listSipPeerAction = async (siteId, cmdObj) => {
     key: 'peerId'
   })
 }
+
+module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
+  const opts = cmdObj.opts();
+  const out = opts.out
+  console.log(out);
+  if (siteId === "*") {
+    //something
+  } else if (!peerId){
+    //something
+  } else {
+    //something
+  }
+}

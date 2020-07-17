@@ -394,6 +394,27 @@ switches/options
 └──────────────────────────────────────┴────────────────┴───────────────────────────────┘
 ```
 
+#### list numbers
+List all numbers and their associated siteId and sip peer id. You can search numbers globally, at the site level, or at the sip peer level. By default, the numbers will be turned into a csv and stored in the cwd under a `bandwidth-numbers.csv`. 
+
+CLI-level defaults are not used, so `*` or a `site-id` is required. 
+
+usage:
+```
+bandwidth list numbers *                        //list all numbers under your account
+bandwidth list numbers <site-id>                //list all numbers under a particular site
+bandwidth list numbers <site-id> <peer-id>      //list all numbers under a specific peer
+```
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|--out, -o [relative-path]|specify the output's relative path. Prints to console if the switch is used bu no relative path is specified|no
+```
+>bandwidth list numbers *
+//FIXME
+```
 ### login
 usage: `bandwidth login`
 
