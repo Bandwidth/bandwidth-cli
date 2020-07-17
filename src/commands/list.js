@@ -4,6 +4,7 @@ const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
 const fs = require('fs')
 const stringify = require('csv-stringify/lib/sync');
+const path = require('path')
 
 module.exports.listAppAction = async () => {
   const appList = await numbers.Application.listAsync().catch(throwApiErr);;
@@ -97,6 +98,9 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
     tnsList = await getPeerTns(peer);
   }
   tnsList = tnsList.filter(numberEntry => numberEntry&&numberEntry.number);
+  if (tnsList.length === 0) {
+    printer.custom('yellow', 1, 'warn')('No numbers were found. Please vary your search parameters.')
+  }
   if (out === true) { //must be boolean
     printer.table(tnsList)
   } else if (out === 'stdout') { 
@@ -104,6 +108,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   } else if (out) { 
     data = stringify(tnsList, {header: true});
     fs.writeFileSync(out, data);
+    printer.success(`Telephone number data successfully written to ${path.join(process.cwd(), out)}`);
   } else {
     data = stringify(tnsList, {header: true});
     if (fs.existsSync('./bandwidth-numbers.csv')) {
@@ -112,8 +117,10 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
         count++;
       }
       fs.writeFileSync(`./bandwidth-numbers${count}.csv`, data);
+      printer.success(`Telephone number data successfully written to ${path.join(process.cwd(), `./bandwidth-numbers${count}.csv`)}`);
     } else {
       fs.writeFileSync('./bandwidth-numbers.csv', data);
+      printer.success(`Telephone number data successfully written to ${path.join(process.cwd(), `./bandwidth-numbers.csv`)}`);
     }
   }
 }

@@ -415,7 +415,7 @@ bandwidth list numbers <site-id> <peer-id>      //list all numbers under a speci
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|--out, -o [relative-path]|specify the output's relative path. Prints to console if the switch is used bu no relative path is specified|no
+|--out, -o [relative-path]|specify the output's relative path. Prints a table to console if `relative-path` is not specified. Prints csv-formatted output to console if `relative-path` is `stdout`. Otherwise, saves the output to the file specified.|no
 ```
 >bandwidth list numbers *
 //FIXME
