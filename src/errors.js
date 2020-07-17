@@ -1,11 +1,11 @@
 const printer = require('./printer');
 
 class CliError extends Error {
-  constructor(message, name, suggestion='', context={}) {
+  constructor(message, name, suggestion = '', context = {}) {
     super(message)
     this.name = name;
     this.suggestion = suggestion;
-    this.context=context;
+    this.context = context;
     Error.captureStackTrace(this, CliError);
   }
 }
@@ -21,11 +21,11 @@ class ApiError extends CliError {
       printer.error(packet.toString())
     }
     const defaultSuggest = ApiError.errorCodeSuggest(packet.status)
-    const message = (packet.response.res.text.indexOf('<Description>') >= 0)?
-      packet.response.res.text.split('<Description>').pop().split('</Description>')[0]:
+    const message = (packet.response.res.text.indexOf('<Description>') >= 0) ?
+      packet.response.res.text.split('<Description>').pop().split('</Description>')[0] :
       "An unknown error occured."
     const suggestion = defaultSuggest;
-    super(message, 'Error Code ' + packet.status.toString(), suggestion, {res: packet});
+    super(message, 'Error Code ' + packet.status.toString(), suggestion, { res: packet });
     Error.captureStackTrace(this, ApiError);
   }
 
@@ -51,7 +51,7 @@ class BadInputError extends CliError {
    * @param field the name of the input field which is malformed.
    * @param context optional debugging context, not used during production.
    */
-  constructor(message, field, suggestion='', context={}) {
+  constructor(message, field, suggestion = '', context = {}) {
     super(message, 'Bad Input', suggestion, context);
     this.field = field;
     Error.captureStackTrace(this, BadInputError);
@@ -67,11 +67,11 @@ const errorHandler = (action) => {
     await action(...args).catch((err) => {
       if (err instanceof BadInputError) {
         printer.custom('brightRed')(err.name + ":", err.message)
-        return printer.custom('yellow', true)(err.suggestion||'')
+        return printer.custom('yellow', true)(err.suggestion || '')
       }
       if (err instanceof ApiError) {
         printer.custom('red')(err.name + ":", err.message);
-        return printer.custom('yellow', true)(err.suggestion||'')
+        return printer.custom('yellow', true)(err.suggestion || '')
       }
       if (err instanceof CliError) {
         return printer.error("An unknown internal error has occured. See the stack trace below.\n\n", err)
