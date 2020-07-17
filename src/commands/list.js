@@ -2,6 +2,8 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
+const fs = require('fs')
+const stringify = require('csv-stringify');
 
 module.exports.listAppAction = async () => {
   const appList = await numbers.Application.listAsync().catch(throwApiErr);;
@@ -97,5 +99,9 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   tnsList = tnsList.filter(numberEntry => numberEntry&&numberEntry.number);
   if (out === true) { //must be boolean
     printer.table(tnsList)
+  } else if (out === 'stdout') { 
+    printer.print(tnsList)
+  } else if (out) { 
+    console.log(stringify());
   }
 }
