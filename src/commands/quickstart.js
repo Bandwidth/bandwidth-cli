@@ -70,17 +70,20 @@ module.exports.quickstartAction = async (cmdObj) => {
   if (orderResponse) {
     //hand-tested list of states for which bandwidth has numbers
     const states = [ 'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY' ];
-    const randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
-    var query = {
-      siteId: createdSite.id,
-      peerId: createdPeer.id,
-      state: randomState||'NC',
-      quantity: 10
-    };
-    const results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
-    let selected;
-    if (results.resultCount === 0) {
-      printer.warn('No numbers were found in the zip code of your address.')
+    let results = null;
+    let retries = 10;
+    while (!(results && results.resultCount && retries--)) {
+      const randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
+      var query = {
+        siteId: createdSite.id,
+        peerId: createdPeer.id,
+        state: randomState||'NC',
+        quantity: 10
+      };
+      results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
+    }
+    if (!(results && results.resultCount)) {
+      printer.warn('Unable to find a number at this time.');
     } else if (results.resultCount === 1) {
       selected = results.telephoneNumberList.telephoneNumber
     } else {

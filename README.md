@@ -294,9 +294,19 @@ switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
 | --force, -f| Force-delete the site and remove sip peers| no
+| --verbose, -v| Increase verbosity of output when force deleting| no
 
 ```
 >bandwidth delete site 37397
+Site successfully deleted.
+```
+
+```
+>bandwidth delete site 37731 --force --verbose
+Phone numbers associated with sip peer 625370 have been disconnected        //applications are disconnected but not deleted.
+Application unlinked from sip peer 625370
+SMS deleted from sip peer 625370
+Sip peer 625370 deleted.                                                    //Force deleting a site automatically removes all sip peers.
 Site successfully deleted.
 ```
 
@@ -311,10 +321,20 @@ switches/options
 | ----------- | ----------- | ----------- |
 | --site-id, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
 | --force, -f| Force delete by removing all numbers and settings.| no 
+| --verbose, -v| Increase verbosity of output when force deleting| no
 
 ```
 >bandwidth delete sippeer --site-id 37397 624651
 Sip Peer successfully deleted.
+```
+
+Or force delete all necessary components to delete the peer.
+```
+>bandwidth delete peer --force --verbose --site-id 37731 625370
+Phone numbers associated with sip peer 625370 have been disconnected        //applications are disconnected but not deleted.
+Application unlinked from sip peer 625370
+SMS deleted from sip peer 625370
+Sip peer 625370 deleted.
 ```
 
 #### delete application
@@ -480,8 +500,8 @@ usage: `bandwidth order number <phone-numbers...>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 
 ```
 >bandwidth order numbers 4242064432 4242064617
@@ -507,8 +527,8 @@ query parameter is required. Use the switches/options below to specify query par
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 |zip | the zip code of the number | no
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
@@ -569,8 +589,8 @@ Use the switches/options below to specify query parameters.
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 |zip | the zip code of the number | no
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
