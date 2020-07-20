@@ -86,7 +86,7 @@ the 10 that were offered, you can order more numbers using [`bandwidth order`](#
 |[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
 |[default](#default)|Manage default sip peers/locations, sites/sub-accounts, and applications.
 |[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications.
-|[list](#list)| List sip peers/locations, sites/sub-accounts, and applications.
+|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers.
 |[login](#login)| login to your bandwidth account to use this tool
 |[order](#order)|order phone numbers
 |[quickstart](#quickstart)|set up your account quickly and process details automatically
@@ -334,7 +334,7 @@ Application successfully deleted
 ```
 
 ### list
-List sites(subaccounts), sip peers(locations), or applications. Also list numbers associated with each.
+List [sites](#list-site)(subaccounts), [sip peers](#list-peer)(locations), [applications](#list-application), or [numbers](#list-numbers) associated with certain sites/subaccounts. 
 
 #### list site
 
