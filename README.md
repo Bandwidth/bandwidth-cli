@@ -81,6 +81,11 @@ At this point, you can now use the number for messages. Should you need more (or
 the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
+notes:
+- `bandwidth <command> --help` is available in the cli for usage and flag notes. 
+- `bw` is an alias for bandwidth. `bw order number 123456789` is a valid syntax for the cli.
+
+
 | command   | Description |
 | ----------- | ----------- |
 |[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
@@ -389,7 +394,7 @@ switches/options
 |none|
 
 ```
->bw l p 45928
+>bandwidth list sippeer 45928
 ┌─────────┬──────────────────┬───────────────┐
 │ (index) │     peerName     │ isDefaultPeer │
 ├─────────┼──────────────────┼───────────────┤
