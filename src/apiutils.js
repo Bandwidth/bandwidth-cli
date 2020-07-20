@@ -1,6 +1,7 @@
 const { ApiError, CliError, throwApiErr } = require('./errors');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
+const utils = require('./utils')
 
 /**************************ORDER PHONE NUMBERS**************************/
 const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
@@ -25,7 +26,10 @@ const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
   };
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => { throw new ApiError(err) });
   printer.success('Your order was placed. Awaiting order completion...')
-  await checkOrderStatus(createdOrder);
+  const orderStatus = await checkOrderStatus(createdOrder);
+  if (orderStatus) {
+    printer.removeClient(orderStatus);
+  }
   printer.print(`Phone numbers can be found under sip peer ${peerId}`)
 }
 
@@ -44,7 +48,10 @@ const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) =>
   order[orderType] = query
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => { throw new ApiError(err) });
   printer.success('Your order was placed. Awaiting order completion...')
-  printer.removeClient(await checkOrderStatus(createdOrder));
+  const orderStatus = await checkOrderStatus(createdOrder);
+  if (orderStatus) {
+    printer.removeClient(orderStatus);
+  }
   printer.print(`Phone numbers can be found under sip peer ${peerId}`)
 }
 
@@ -64,7 +71,7 @@ const checkOrderStatus = async (order) => {
       orderStatus.telephoneNumbers = tns.telephoneNumber
       return orderStatus;
     }
-    await sleep(250);
+    await utils.sleep(250);
   }
   printer.warn('Order placed but not complete.')
   return orderStatus
@@ -85,7 +92,7 @@ const checkDisconnectStatus = async (order) => { //TODO: merge all the checkStat
     if (orderStatus) {
       return orderStatus;
     }
-    await sleep(250);
+    await utils.sleep(250);
   }
   return null;
 }

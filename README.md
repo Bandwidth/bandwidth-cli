@@ -334,7 +334,7 @@ Application successfully deleted
 ```
 
 ### list
-List sites(subaccounts), sip peers(locations), or applications
+List sites(subaccounts), sip peers(locations), or applications. Also list numbers associated with each.
 
 #### list site
 

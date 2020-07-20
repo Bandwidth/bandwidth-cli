@@ -7,7 +7,7 @@ const apiutils = require('../apiutils');
 module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
   const options = cmdObj.opts();
   const siteId = options.siteId || await utils.readDefault('site');
-  const peerId = options.peerId || (!options.siteId)?await utils.readDefault('sippeer'):undefined; //defined siteId but not peer means that the default peer won't work, since it's linked to a site.
+  const peerId = options.peerId || (!options.siteId) ? await utils.readDefault('sippeer') : undefined; //defined siteId but not peer means that the default peer won't work, since it's linked to a site.
   if (!siteId) { //a lot of this violates DRY.
     throw new BadInputError('A site id is required to create a number order', 'siteId', 'Specify a siteId using the --site-id option, eg "bandwidth order search --site-id=<siteId> <quantity>, or set a default using "bandwidth default site [siteId]"')
   }
@@ -17,11 +17,11 @@ module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
 module.exports.orderCategoryAction = async (quantity, cmdObj) => {
   const options = cmdObj.opts();
   const siteId = options.siteId || await utils.readDefault('site');
-  const peerId = options.peerId || (!options.siteId)?await utils.readDefault('sippeer'):undefined;
+  const peerId = options.peerId || (!options.siteId) ? await utils.readDefault('sippeer') : undefined;
   if (!siteId) {
     throw new BadInputError('A site id is required to create a number order', 'siteId', 'Specify a siteId using the --site-id option, eg "bandwidth order category --site-id=<siteId> <quantity>", or set a default using "bandwidth default site [siteId]"')
   }
-  const query = {...options}
+  const query = { ...options }
   delete query.siteId;
   delete query.peerId;
   const numberAttributes = Object.entries(query).filter(([key, value]) => value).map(([key, value]) => key);//keys with truthy values
@@ -35,11 +35,11 @@ module.exports.orderCategoryAction = async (quantity, cmdObj) => {
 module.exports.orderSearchAction = async (quantity, cmdObj) => {
   const options = cmdObj.opts();
   const siteId = options.siteId || await utils.readDefault('site');
-  const peerId = options.peerId || (!options.siteId)?await utils.readDefault('sippeer'):undefined;
+  const peerId = options.peerId || (!options.siteId) ? await utils.readDefault('sippeer') : undefined;
   if (!siteId) {
     throw new BadInputError('A site id is required to create a number order', 'siteId', 'Specify a siteId using the --site-id option, eg "bandwidth order search --site-id=<siteId> <quantity>", or set a default using "bandwidth default site [siteId]"');
   }
-  const query = {...options, quantity}
+  const query = { ...options, quantity }
   delete query.siteId;
   delete query.peerId;
   const results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
