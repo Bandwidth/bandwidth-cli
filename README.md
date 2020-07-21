@@ -306,6 +306,8 @@ switches/options
 Site successfully deleted.
 ```
 
+Or force delete all necessary components to delete the site, including all nested sip peers..
+
 ```
 >bandwidth delete site 37731 --force --verbose
 Phone numbers associated with sip peer 625370 have been disconnected        //applications are disconnected but not deleted.
