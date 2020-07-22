@@ -58,22 +58,20 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   }).catch(throwApiErr);
   let optionalAnswers = {};
   if (options.custom) {
-    optionalAnswers = await printer.prompt(['description','siteCustomerProvidedID', 'siteCustomerName'], ['site']);
+    optionalAnswers = await printer.prompt(['optionalInput','optionalInput', 'optionalInput'], 'description', 'customerProvidedID', 'customerName');
   } 
+  //Note: it seems that customerprovidedId is being ignored by the API.
   const siteRequest = {
     name: name,
     address: {
       ...address,
       addressType: addressType,
     },
-    description: optionalAnswers.description,
-    customerProvidedID: optionalAnswers.siteCustomerProvidedID,
-    customerName: optionalAnswers.siteCustomerName
+    ...optionalAnswers
   };
-  Object.keys(siteRequest).forEach(key => !siteRequest[key] && delete siteRequest[key])
-  console.log(siteRequest);
+  Object.keys(siteRequest).forEach(key => !siteRequest[key] && delete siteRequest[key]);
   const createdSite = await numbers.Site.createAsync(siteRequest).catch(throwApiErr);
-  printer.success('Site created. See details of your created Site below.')
+  printer.success('Site created. See details of your created Site below.');
   printer.removeClient(createdSite);
 }
 

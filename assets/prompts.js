@@ -65,26 +65,11 @@ module.exports = {
     message: 'Order phone numbers?',
     default: true
   },
-  'description': (itemName) => {
-    console.log({
-      'type': 'input',
-      'name': 'description',
-      'message': `(Optional) Enter a description for your ${itemName}, or skip by leaving this blank.`
-    });
+  'optionalInput': (itemName) => {
     return {
       'type': 'input',
-      'name': 'description',
-      'message': `(Optional) Enter a description for your ${itemName}, or skip by leaving this blank.`
+      'name': itemName,
+      'message': `(Optional) Enter a ${itemName}, or leave this blank to skip.`
     }
-  },
-  'siteCustomerProvidedID': {
-    'type': 'input',
-    'name': 'siteCustomerProvidedID',
-    'message': '(Optional) Provide an identifier for your site, or skip by leaving this blank.'
-  },
-  'siteCustomerName': {
-    'type': 'input',
-    'name': 'siteCustomerName',
-    'message': '(Optional) Provide a customer name to be associated with your site.'
-  },
+  }
 }
