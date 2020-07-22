@@ -58,7 +58,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   }).catch(throwApiErr);
   let optionalAnswers = {};
   if (options.custom) {
-    optionalAnswers = await printer.prompt(['optionalInput','optionalInput', 'optionalInput'], 'description', 'customerProvidedID', 'customerName');
+    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description', 'customerProvidedID', 'customerName');
   } 
   //Note: it seems that customerprovidedId is being ignored by the API.
   const siteRequest = {
@@ -87,7 +87,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     siteId: siteId,
   }
   if (options.custom) {
-    optionalAnswers = await printer.prompt(['description'], ['sip peer']);
+    optionalAnswers = await printer.prompt(Array(5).fill('optionalInput'), ['a','b','c','d','e']);
   }
   const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
