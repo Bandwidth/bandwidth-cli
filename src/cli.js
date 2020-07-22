@@ -110,6 +110,12 @@ const listSipPeerCmd = listCmd.command('sippeer [site-id]')
   .alias('peer')
   .action(actions.listSipPeerAction);
 
+const listNumberCmd = listCmd.command('number <site-id> [peer-id]')
+  .alias('n')
+  .alias('tn')
+  .alias('numbers')
+  .option('-o, --out [site-id] [peer-id]', "Specify a site id to order a number with, using its id.")
+  .action(actions.listNumberAction);
 
 /**************************'LOGIN' COMMAND**************************/
 const loginCmd = program.command('login')

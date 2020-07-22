@@ -2,6 +2,7 @@ const numbers = require('@bandwidth/numbers');
 const printer = require('../printer');
 const { ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
+const apiutils = require('../apiutils');
 
 module.exports.deleteAppAction = async (appId, cmdObj) => {
   const opts = cmdObj.opts();
@@ -13,7 +14,7 @@ module.exports.deleteAppAction = async (appId, cmdObj) => {
     }
     throw new ApiError(err)
   });
-  await utils.delApp(app, force, verbose);
+  await apiutils.delApp(app, force, verbose);
   printer.print('Application successfully deleted')
 }
 
@@ -27,7 +28,7 @@ module.exports.deleteSiteAction = async (siteId, cmdObj) => {
     }
     throw new ApiError(err)
   });
-  await utils.delSite(site, force, verbose);
+  await apiutils.delSite(site, force, verbose);
   printer.print('Site successfully deleted.'); //IDEA: I can also just create a new Site(), site.id = id, and then site.deleteAsync. Decide which is better.
 }
 
@@ -42,7 +43,7 @@ module.exports.deleteSipPeerAction = async (peerId, cmdObj) => {
     }
     throw new ApiError(err)
   });
-  await utils.delPeer(sipPeer, force, verbose);
+  await apiutils.delPeer(sipPeer, force, verbose);
   
   printer.print('Sip Peer successfully deleted.');
 }

@@ -1,6 +1,6 @@
 const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
-const { ApiError, BadInputError } = require('../errors');
+const { BadInputError, throwApiErr } = require('../errors');
 const utils = require('../utils');
 
 module.exports.createAppAction = async (name, cmdObj) => {
@@ -13,7 +13,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createVoiceApplicationAsync({
           appName: name,
           callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        }).catch((err) => {throw new ApiError(err)});
+        }).catch(throwApiErr);
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -25,7 +25,7 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const createdApp = await numbers.Application.createMessagingApplicationAsync({
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
-        }).catch((err) => {throw new ApiError(err)});
+        }).catch(throwApiErr);
         printer.success('Messaging application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -54,14 +54,14 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     city: line2[0],
     stateCode: line2[1],
     zip: line2[2]
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   const createdSite = await numbers.Site.createAsync({
     name: name,
     address: {
       ...address,
       addressType: addressType,
     }
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.success('Site created. See details of your created Site below.')
   printer.removeClient(createdSite);
 }
@@ -76,7 +76,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch((err) => {throw new ApiError(err)});
+  }).catch(throwApiErr);
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
   //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
@@ -93,16 +93,12 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     const httpSettings = {
       v2Messaging: true
     }
-    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings}).catch((err) => {
-      if (err) {
-        throw new ApiError(err);
-      }
-    }).then(()=>{printer.print("enabled SMS by default.")}); //TODO: option to disable SMS or customize peer creation
-    await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp}).catch((err) => {
-      if (err) {
-        throw new ApiError(err);
-      }
-    }).then(()=>{printer.print(`Linked created Sip Peer to default application ${defaultApp}`)});
+    await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings})
+      .catch(throwApiErr)
+      .then(()=>{printer.print("enabled SMS by default.")}); //TODO: option to disable SMS or customize peer creation
+    await createdPeer.editApplicationAsync({httpMessagingV2AppId: defaultApp})
+      .catch(throwApiErr)
+      .then(()=>{printer.print(`Linked created Sip Peer to default application ${defaultApp}`)});
   }
   printer.success('Sip Peer created. See details of your created Peer below.');
   printer.removeClient(createdPeer);

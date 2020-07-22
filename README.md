@@ -81,12 +81,17 @@ At this point, you can now use the number for messages. Should you need more (or
 the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
+notes:
+- `bandwidth <command> --help` is available in the cli for usage and flag notes. 
+- `bw` is an alias for bandwidth. `bw order number 123456789` is a valid syntax for the cli.
+
+
 | command   | Description |
 | ----------- | ----------- |
 |[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
 |[default](#default)|Manage default sip peers/locations, sites/sub-accounts, and applications.
 |[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications.
-|[list](#list)| List sip peers/locations, sites/sub-accounts, and applications.
+|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers.
 |[login](#login)| login to your bandwidth account to use this tool
 |[order](#order)|order phone numbers
 |[quickstart](#quickstart)|set up your account quickly and process details automatically
@@ -294,9 +299,21 @@ switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
 | --force, -f| Force-delete the site and remove sip peers| no
+| --verbose, -v| Increase verbosity of output when force deleting| no
 
 ```
 >bandwidth delete site 37397
+Site successfully deleted.
+```
+
+Or force delete all necessary components to delete the site, including all nested sip peers..
+
+```
+>bandwidth delete site 37731 --force --verbose
+Phone numbers associated with sip peer 625370 have been disconnected        //applications are disconnected but not deleted.
+Application unlinked from sip peer 625370
+SMS deleted from sip peer 625370
+Sip peer 625370 deleted.                                                    //Force deleting a site automatically removes all sip peers.
 Site successfully deleted.
 ```
 
@@ -311,10 +328,20 @@ switches/options
 | ----------- | ----------- | ----------- |
 | --site-id, -s| Specify the ID of the site that the peer is in| no (yes if no default site is configured.)
 | --force, -f| Force delete by removing all numbers and settings.| no 
+| --verbose, -v| Increase verbosity of output when force deleting| no
 
 ```
 >bandwidth delete sippeer --site-id 37397 624651
 Sip Peer successfully deleted.
+```
+
+Or force delete all necessary components to delete the peer.
+```
+>bandwidth delete peer --force --verbose --site-id 37731 625370
+Phone numbers associated with sip peer 625370 have been disconnected        //applications are disconnected but not deleted.
+Application unlinked from sip peer 625370
+SMS deleted from sip peer 625370
+Sip peer 625370 deleted.
 ```
 
 #### delete application
@@ -334,7 +361,7 @@ Application successfully deleted
 ```
 
 ### list
-List sites(subaccounts), sip peers(locations), or applications
+List [sites](#list-site)(subaccounts), [sip peers](#list-peer)(locations), [applications](#list-application), or [numbers](#list-numbers) associated with certain sites/subaccounts. 
 
 #### list site
 
@@ -369,7 +396,7 @@ switches/options
 |none|
 
 ```
->bw l p 45928
+>bandwidth list sippeer 45928
 ┌─────────┬──────────────────┬───────────────┐
 │ (index) │     peerName     │ isDefaultPeer │
 ├─────────┼──────────────────┼───────────────┤
@@ -399,6 +426,58 @@ switches/options
 └──────────────────────────────────────┴────────────────┴───────────────────────────────┘
 ```
 
+#### list numbers
+List all numbers and their associated siteId and sip peer id. You can search numbers globally, at the site level, or at the sip peer level. By default, the numbers will be turned into a csv and stored in the current working directory (cwd) under `bandwidth-numbers.csv`. 
+
+CLI-level defaults are not used, so `*` or a `site-id` is required. 
+
+usage:
+```
+bandwidth list numbers *                        //list all numbers under your account
+bandwidth list numbers <site-id>                //list all numbers under a particular site
+bandwidth list numbers <site-id> <peer-id>      //list all numbers under a specific peer
+```
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|--out, -o [relative-path]|specify the output's relative path. Prints a table to console if `relative-path` is not specified. Prints csv-formatted output to console if `relative-path` is `stdout`. Otherwise, saves the output to the file specified.|no
+```
+//get all numbers from the account
+>bandwidth list numbers * 
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//get all numbers from the site 48259
+>bandwidth list numbers 48259 
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//get all numbers from the site 48259, sip peer 342594
+>bandwidth list numbers 48259 342594
+Telephone number data successfully written to users/yourName/bandwidth-numbers.csv
+
+//Print to console as a table using --out
+>bandwidth list numbers 37656 --out
+┌─────────┬──────────────┬─────────┬───────┐
+│ (index) │    number    │ sippeer │ site  │
+├─────────┼──────────────┼─────────┼───────┤
+│    0    │ '5754041393' │ 625216  │ 37656 │
+│    1    │ '5754894272' │ 625216  │ 37656 │
+│    2    │ '5754895124' │ 625428  │ 37656 │
+└─────────┴──────────────┴─────────┴───────┘
+
+//print to console as raw csv data for piping
+>bandwidth list numbers 37656 --out stdout
+number,sippeer,site
+5754041393,625216,37656
+5754894272,625216,37656
+5754895124,625216,37656
+
+//save to a different file. 
+>bandwidth list numbers 37656 --out my_file.csv
+Telephone number data successfully written to users/your-name/your-cwd/my_file.csv
+
+```
 ### login
 usage: `bandwidth login`
 
@@ -428,8 +507,8 @@ usage: `bandwidth order number <phone-numbers...>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 
 ```
 >bandwidth order numbers 4242064432 4242064617
@@ -455,8 +534,8 @@ query parameter is required. Use the switches/options below to specify query par
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 |zip | the zip code of the number | no
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
@@ -517,8 +596,8 @@ Use the switches/options below to specify query parameters.
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|site-id| the site of the number being ordered|no (yes if no default site is configured.)
-|peer-id| the peer of the number being ordered. if not specified, will use the site's built in default peer|no
+|site-id| the site that the number will be tied to|no (yes if no default site is configured.)
+|peer-id| the sip peer that the number will be tied to. if not specified, will use the site's built in default peer|no
 |zip | the zip code of the number | no
 |area-code| the area code of the number | no
 |npa-nxx| the first 6 digits of the phone number | no
