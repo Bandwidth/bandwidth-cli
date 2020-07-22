@@ -10,10 +10,23 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'voice':
       {
         const answers = await printer.prompt('callInitiatedCallbackUrl')
-        const createdApp = await numbers.Application.createVoiceApplicationAsync({
+        let optionalAnswers = {}
+        if (options.custom) {
+          optionalAnswers = await printer.prompt(Array(6).fill('optionalInput'), 'callInitiatedMethod','callStatusCallbackUrl','callStatusMethod','CallInitiatedFallbackUrl','CallInitiatedFallbackMethod','CallbackTimeout');
+          if (await printer.confirm('Add callback creds?')) {
+            optionalAnswers.callbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          }
+          if (await printer.confirm('Add call initiated fallback creds?')) {
+            optionalAnswers.callInitiatedFallbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          }
+        }
+        const appRequest= {
           appName: name,
-          callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        }).catch(throwApiErr);
+          callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl,
+          ...optionalAnswers
+        }
+        Object.keys(appRequest).forEach(key => !appRequest[key] && delete appRequest[key]);
+        const createdApp = await numbers.Application.createVoiceApplicationAsync(appRequest).catch(throwApiErr);
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -21,11 +34,17 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'm':
     case 'messaging':
       {
-        const answers = await printer.prompt('msgCallbackUrl')
-        const createdApp = await numbers.Application.createMessagingApplicationAsync({
+        const answers = await printer.prompt('msgCallbackUrl');
+        const appRequest = {
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
-        }).catch(throwApiErr);
+        }
+        if (options.custom) {
+          appRequest.callbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          const cbCreds = appRequest.callbackCreds;
+          Object.keys(cbCreds).forEach(key => !cbCreds[key] && delete cbCreds[key]);
+        }
+        const createdApp = await numbers.Application.createMessagingApplicationAsync(appRequest).catch(throwApiErr);
         printer.success('Messaging application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -109,7 +128,6 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
     ...optionalAnswers
   }
   Object.keys(peerRequest).forEach(key => !peerRequest[key] && delete peerRequest[key]);
-  console.log(peerRequest);
   const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');

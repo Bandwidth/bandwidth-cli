@@ -33,6 +33,7 @@ const createAppCmd = createCmd.command('app <name>')
   .alias('a')
   .alias('application')
   .requiredOption('-t, --type <type>', 'An application must be a voice(v) or messaging(m) application')
+  .option('-c, --custom', 'Customize and specify optional details about your application.')
   .action(actions.createAppAction)
 
 const createSiteCmd = createCmd.command('site <name>')
