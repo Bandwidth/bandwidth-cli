@@ -1,6 +1,6 @@
 const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
-const { BadInputError, ApiError } = require('./errors');
+const { BadInputError } = require('./errors');
 const fs = require('fs');
 const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
@@ -69,7 +69,7 @@ const readAccountId = async () => {
  */
 const incrementSetupNo = async() => {
   let setupNo = readConfig(setupNumberKey);
-  setupNo = setupNo?setupNo+=1:0;
+  setupNo = (typeof setupNo === 'number')?setupNo+=1:0;
   writeConfig(setupNumberKey, setupNo);
   return setupNo || ''; //if 0, then nothing
 }
@@ -147,68 +147,12 @@ const deriveOrderType = (numberAttributes) => {
   return 'combinedSearchAndOrderType'
 }
 
-const placeNumberOrder = async (phoneNumbers, siteId, peerId) => {
-  if (!phoneNumbers.length) {return printer.warn('You did not select any numbers and the order has been aborted.')}
-  const truncated = (phoneNumbers.length - 20);
-  phoneNumbers.slice(0, 20).forEach((phoneNumber) => {
-    printer.print(phoneNumber)
-  });
-  printer.printIf(truncated > 0, `[and ${truncated} more]`)
-  const answer = (await printer.prompt('confirmNumberOrder', phoneNumbers)).confirmNumberOrder;
-  if (!answer){return;}
-  var order = {
-    name:"Bandwidth Cli Order",
-    siteId: siteId,
-    existingTelephoneNumberOrderType: {
-      telephoneNumberList:[
-        {
-          telephoneNumber:phoneNumbers
-        }
-      ]
-    }
-  };
-  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. Awaiting order completion...')
-  await checkOrderStatus(createdOrder);
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const placeCategoryOrder = async (quantity, orderType, query, siteId, peerId) => {
-  var order = {
-    name:"Bandwidth Quickstart Order",
-    siteId: siteId,
-    peerId: peerId
-  };
-  printer.print('You have selected the following:')
-  const displayedQuery = Object.entries(query).reduce((a,[k,v]) => (v ? (a[k]=v, a) : a), {})
-  printer.printObj(displayedQuery)
-  query.quantity = quantity;
-  const answer = (await printer.prompt('confirmCategoryOrder', query)).confirmCategoryOrder;
-  if (!answer){return;}
-  order[orderType] = query
-  const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {throw new ApiError(err)});
-  printer.success('Your order was placed. Awaiting order completion...')
-  await checkOrderStatus(createdOrder);
-}
 
-/**
- * Continuously checks the status of the order until the order is complete, or
- * until 10 attempts have been made with no response.
- */
-const checkOrderStatus = async(order) => {
-  let orderStatus
-  for await (areaCode of [...Array(10).keys()]) {
-    orderStatus = (await order.getHistoryAsync()).pop();
-    if (orderStatus) {
-      delete orderStatus.author
-      const tns = await order.getTnsAsync();
-      orderStatus.telephoneNumbers = tns.telephoneNumber
-      printer.removeClient(orderStatus);
-      break;
-    }
-  }
-}
-
-module.exports = {
+module.exports = { //TODO: move the API related utils to a sperate folder to avoid clutter
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
@@ -220,6 +164,5 @@ module.exports = {
   processDefault,
   incrementSetupNo,
   deriveOrderType,
-  placeNumberOrder,
-  placeCategoryOrder
+  sleep
 }
