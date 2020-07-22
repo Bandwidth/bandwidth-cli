@@ -2,7 +2,6 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { BadInputError, throwApiErr } = require('../errors');
 const utils = require('../utils');
-const { description } = require("commander");
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -81,14 +80,36 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --site-id switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
+  let optionalAnswers = {};
+  if (options.custom) {
+    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description','finalDestinationUri','PremiseTrunks');
+    if (await printer.confirm('Add a callingName to this peer?')) {
+      optionalAnswers.callingName = {
+        display: await printer.confirm('display this calling name?'),
+        enforced: await printer.confirm('enforce this calling name?')
+      }
+    }
+    if (await printer.confirm('Add voice hosts to this peer?')) {
+      optionalAnswers.voiceHosts = {host:[]};
+      const hosts = optionalAnswers.voiceHosts.host;
+      hosts.push(await printer.prompt('hostName'));
+      while (await printer.confirm('Add another voice host to this peer?')) {
+        hosts.push(await printer.prompt('hostName'));
+      }
+    }
+    // if ((await printer.prompt('generalConfirm', 'Add a terminationHosts to this peer?')).confirm) {
+    //   //Add calling name
+    // }
+    //TODO: terminationHost functionality seems complicated and also not a feature people will. Decide if this is worth even attempting.
+  }
   const peerRequest = {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
+    ...optionalAnswers
   }
-  if (options.custom) {
-    optionalAnswers = await printer.prompt(Array(5).fill('optionalInput'), ['a','b','c','d','e']);
-  }
+  Object.keys(peerRequest).forEach(key => !peerRequest[key] && delete peerRequest[key]);
+  console.log(peerRequest);
   const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
