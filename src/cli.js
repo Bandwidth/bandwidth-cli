@@ -18,7 +18,7 @@ Object.keys(actions).map(function(key, index) {
 
 module.exports.program = program = new Command();
 
-const description = 'A descriptive description to describe something worth describing with a description.';
+const description = 'A CLI tool which fast-tracks first time users of bandwidth to be able to order numbers immediately with some setup.';
 program
   .name('bandwidth')
   .version('0.0.1')
@@ -56,7 +56,7 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .alias('def')
   .usage('[[-d] <default-name> [<default-value>]]')
   .option('-d, --delete', 'Delete specified defaultName.')
-  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
+  .description('Manage which default items will be used by the CLI. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)
 
 
@@ -91,12 +91,13 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
 /**************************'LIST' COMMAND**************************/
 const listCmd = program.command('list')
   .alias('l')
-  .description('List the sip peers, sites, and applications associated with your account.');
+  .description('List the sip peers, sites, and applications associated with your account, or phone numebrs in the account.');
 
 
 const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
+  .alias('application')
   .action(actions.listAppAction);
 
 const listSiteCmd = listCmd.command('site')
