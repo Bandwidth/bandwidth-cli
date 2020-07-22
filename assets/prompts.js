@@ -65,10 +65,17 @@ module.exports = {
     message: 'Order phone numbers?',
     default: true
   },
-  'siteDescription': {
-    'type': 'input',
-    'name': 'siteDescription',
-    'message': '(Optional) Enter a description for your site, or skip by leaving this blank.'
+  'description': (itemName) => {
+    console.log({
+      'type': 'input',
+      'name': 'description',
+      'message': `(Optional) Enter a description for your ${itemName}, or skip by leaving this blank.`
+    });
+    return {
+      'type': 'input',
+      'name': 'description',
+      'message': `(Optional) Enter a description for your ${itemName}, or skip by leaving this blank.`
+    }
   },
   'siteCustomerProvidedID': {
     'type': 'input',
@@ -78,6 +85,6 @@ module.exports = {
   'siteCustomerName': {
     'type': 'input',
     'name': 'siteCustomerName',
-    'message': '(Optional) Provide a name to be associated with your site.'
+    'message': '(Optional) Provide a customer name to be associated with your site.'
   },
 }

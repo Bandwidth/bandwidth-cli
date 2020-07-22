@@ -58,7 +58,7 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   }).catch(throwApiErr);
   let optionalAnswers = {};
   if (options.custom) {
-    optionalAnswers = await printer.prompt(['siteDescription','siteCustomerProvidedID', 'siteCustomerName']);
+    optionalAnswers = await printer.prompt(['description','siteCustomerProvidedID', 'siteCustomerName'], ['site']);
   } 
   const siteRequest = {
     name: name,
@@ -66,11 +66,12 @@ module.exports.createSiteAction = async (name, cmdObj) => {
       ...address,
       addressType: addressType,
     },
-    description: optionalAnswers.siteDescription,
+    description: optionalAnswers.description,
     customerProvidedID: optionalAnswers.siteCustomerProvidedID,
     customerName: optionalAnswers.siteCustomerName
   };
-  Object.keys(siteRequest).forEach(key => siteRequest[key] === undefined && delete obj[key])
+  Object.keys(siteRequest).forEach(key => !siteRequest[key] && delete siteRequest[key])
+  console.log(siteRequest);
   const createdSite = await numbers.Site.createAsync(siteRequest).catch(throwApiErr);
   printer.success('Site created. See details of your created Site below.')
   printer.removeClient(createdSite);
