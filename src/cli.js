@@ -49,6 +49,7 @@ const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('location')
   .option('-s, --site-id <site-id>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
+  .option('-c, --custom', 'Customize and specify optional details about your sip peer.')
   .action(actions.createSipPeerAction)
 
 

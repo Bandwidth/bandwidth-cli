@@ -83,11 +83,15 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --site-id switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
-  const createdPeer = await numbers.SipPeer.createAsync({
+  const peerRequest = {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch(throwApiErr);
+  }
+  if (options.custom) {
+    optionalAnswers = await printer.prompt(['description'], ['sip peer']);
+  }
+  const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
   //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
