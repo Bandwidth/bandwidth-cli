@@ -427,7 +427,7 @@ switches/options
 ```
 
 #### list numbers
-List all numbers and their associated siteId and sip peer id. You can search numbers globally, at the site level, or at the sip peer level. By default, the numbers will be turned into a csv and stored in the cwd under a `bandwidth-numbers.csv`. 
+List all numbers and their associated siteId and sip peer id. You can search numbers globally, at the site level, or at the sip peer level. By default, the numbers will be turned into a csv and stored in the current working directory (cwd) under `bandwidth-numbers.csv`. 
 
 CLI-level defaults are not used, so `*` or a `site-id` is required. 
 

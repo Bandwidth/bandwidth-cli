@@ -91,7 +91,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   } else { //numbers under a peer
     const peer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
       if (err.status === 404) {
-        throw new BadInputError('An the Sip Peer was not found under a the specified site.', 'siteId/peerId', 'Check for typos in the site or sippeer IDs.', {res:err})
+        throw new BadInputError('The Sip Peer was not found under a the specified site.', 'siteId/peerId', 'Check for typos in the site or sippeer IDs.', {res:err})
       }
       throw new ApiError(err)
     });
