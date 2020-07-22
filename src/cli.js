@@ -39,6 +39,7 @@ const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
   .alias('subaccount')
   .alias('sub-account')
+  .option('-c, --custom', 'Customize and specify optional details about your site, such as a customer name or a customer provided ID.')
   .requiredOption('-t, --address-type <type>', 'A site must be a billing(b) or service(s) application')
   .action(actions.createSiteAction)
 

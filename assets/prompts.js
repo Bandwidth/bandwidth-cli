@@ -64,5 +64,20 @@ module.exports = {
     name: 'initiateOrderNumber',
     message: 'Order phone numbers?',
     default: true
-  }
+  },
+  'siteDescription': {
+    'type': 'input',
+    'name': 'siteDescription',
+    'message': '(Optional) Enter a description for your site, or skip by leaving this blank.'
+  },
+  'siteCustomerProvidedID': {
+    'type': 'input',
+    'name': 'siteCustomerProvidedID',
+    'message': '(Optional) Provide an identifier for your site, or skip by leaving this blank.'
+  },
+  'siteCustomerName': {
+    'type': 'input',
+    'name': 'siteCustomerName',
+    'message': '(Optional) Provide a name to be associated with your site.'
+  },
 }

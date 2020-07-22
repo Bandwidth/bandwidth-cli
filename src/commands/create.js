@@ -2,6 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer');
 const { BadInputError, throwApiErr } = require('../errors');
 const utils = require('../utils');
+const { description } = require("commander");
 
 module.exports.createAppAction = async (name, cmdObj) => {
   const options = cmdObj.opts();
@@ -55,13 +56,22 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     stateCode: line2[1],
     zip: line2[2]
   }).catch(throwApiErr);
-  const createdSite = await numbers.Site.createAsync({
+  let optionalAnswers = {};
+  if (options.custom) {
+    optionalAnswers = await printer.prompt(['siteDescription','siteCustomerProvidedID', 'siteCustomerName']);
+  } 
+  const siteRequest = {
     name: name,
     address: {
       ...address,
       addressType: addressType,
-    }
-  }).catch(throwApiErr);
+    },
+    description: optionalAnswers.siteDescription,
+    customerProvidedID: optionalAnswers.siteCustomerProvidedID,
+    customerName: optionalAnswers.siteCustomerName
+  };
+  Object.keys(siteRequest).forEach(key => siteRequest[key] === undefined && delete obj[key])
+  const createdSite = await numbers.Site.createAsync(siteRequest).catch(throwApiErr);
   printer.success('Site created. See details of your created Site below.')
   printer.removeClient(createdSite);
 }
