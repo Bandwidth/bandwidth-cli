@@ -94,13 +94,14 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
 /**************************'LIST' COMMAND**************************/
 const listCmd = program.command('list')
   .alias('l')
-  .description('List the sip peers, sites, and applications associated with your account, or phone numebrs in the account.');
+  .description('List the sip peers, sites, and applications associated with your account, or phone numebers in the account.');
 
 
 const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
   .alias('application')
+  .alias('applications')
   .action(actions.listAppAction);
 
 const listSiteCmd = listCmd.command('site')

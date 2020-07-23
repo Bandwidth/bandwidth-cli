@@ -12,6 +12,8 @@ module.exports.createAppAction = async (name, cmdObj) => {
         const answers = await printer.prompt('callInitiatedCallbackUrl')
         let optionalAnswers = {}
         if (options.custom) {
+          //Currently offer no explanations of how these work/what they are.
+          //Those who use custom are expected to have some level of competency and familiarity with the API.
           optionalAnswers = await printer.prompt(Array(6).fill('optionalInput'), 'callInitiatedMethod','callStatusCallbackUrl','callStatusMethod','CallInitiatedFallbackUrl','CallInitiatedFallbackMethod','CallbackTimeout');
           if (await printer.confirm('Add callback creds?')) {
             optionalAnswers.callbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
@@ -117,9 +119,9 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
       }
     }
     // if ((await printer.prompt('generalConfirm', 'Add a terminationHosts to this peer?')).confirm) {
-    //   //Add calling name
+    //   //Termination host
     // }
-    //TODO: terminationHost functionality seems complicated and also not a feature people will. Decide if this is worth even attempting.
+    //TODO: terminationHost functionality seems complicated and also not a feature people will use. Decide if this is worth even attempting.
   }
   const peerRequest = {
     peerName: name,

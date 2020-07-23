@@ -91,7 +91,7 @@ module.exports.quickstartAction = async (cmdObj) => {
         siteId: createdSite.id,
         peerId: createdPeer.id,
         state: randomState||'NC',
-        quantity: (custom && (await printer.prompt('optionalInput', 'number of telephone numbers to order'))['number of telephone numbers to order']) || 10
+        quantity: (custom && (await printer.prompt('optionalInput', 'phone number search quantity'))['phone number search quantity']) || 10
       };
       results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
     }
