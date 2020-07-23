@@ -2,6 +2,7 @@ const { Command } = require('commander');
 const numbers = require("@bandwidth/numbers");
 const inquirer = require('inquirer');
 const actions = {
+  ...require('./commands/code'),
   ...require('./commands/create'),
   ...require('./commands/default'),
   ...require('./commands/delete'),
@@ -23,6 +24,17 @@ program
   .name('bandwidth')
   .version('0.0.1')
   .description(description);
+
+
+/**************************'CODE' COMMAND**************************/
+const setupCmd = program.command('code')
+  .description('Generate pluggable sample programs that fit right into existing code.');
+
+const sampleCallbackServerCmd = setupCmd.command('callback-server')
+  .alias('server')
+  .description('Set up a server to receive callbacks on messages.')
+  .option('-o, --out <destination>', "The relative path to write the file to.")
+  .action(actions.codeCallbackServerAction)
 
 /**************************'CREATE' COMMAND**************************/
 const createCmd = program.command('create')
@@ -114,7 +126,7 @@ const listNumberCmd = listCmd.command('number <site-id> [peer-id]')
   .alias('n')
   .alias('tn')
   .alias('numbers')
-  .option('-o, --out [site-id] [peer-id]', "Specify a site id to order a number with, using its id.")
+  .option('-o, --out [destination]', "If no destination specified, prints to console. Otherwise, writes to the destination file (or 'stdout').")
   .action(actions.listNumberAction);
 
 /**************************'LOGIN' COMMAND**************************/
