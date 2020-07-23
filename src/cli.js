@@ -175,4 +175,5 @@ const orderSearchCmd = orderCmd.command('search <quantity>')
 /**************************'QUICKSTART' COMMAND**************************/
 const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
+  .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
   .action(actions.quickstartAction);
