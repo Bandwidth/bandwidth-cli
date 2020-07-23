@@ -43,6 +43,8 @@ Your credentials have been saved. You can now start using the CLI.
 First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number without prior
 setup, or simply setup your account (and order numbers later). `quickstart` can be used as many times as needed, and will automatically set up a new site, sippeer, and application without interacting with or influencing existing account settings. 
 
+More information about callback urls can be found at https://dev.bandwidth.com/guides/callbacks/callbacks.html
+
 ```
 >bandwidth quickstart
 ? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
@@ -77,8 +79,7 @@ telephoneNumbers:
 setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
 
 ```
-At this point, you can now use the number for messages. Should you need more (or different) numbers than
-the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
+At this point, you can now use the number for [messages](#https://dev.bandwidth.com/messaging/about.html) via the API or SDKs. Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
 notes:
