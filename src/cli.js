@@ -18,7 +18,7 @@ Object.keys(actions).map(function(key, index) {
 
 module.exports.program = program = new Command();
 
-const description = 'A descriptive description to describe something worth describing with a description.';
+const description = 'A CLI tool which fast-tracks first time users of bandwidth to be able to order numbers immediately with some setup.';
 program
   .name('bandwidth')
   .version('0.0.1')
@@ -33,12 +33,14 @@ const createAppCmd = createCmd.command('app <name>')
   .alias('a')
   .alias('application')
   .requiredOption('-t, --type <type>', 'An application must be a voice(v) or messaging(m) application')
+  .option('-c, --custom', 'Customize and specify optional details about your application.')
   .action(actions.createAppAction)
 
 const createSiteCmd = createCmd.command('site <name>')
   .alias('s')
   .alias('subaccount')
   .alias('sub-account')
+  .option('-c, --custom', 'Customize and specify optional details about your site, such as a customer name or a customer provided ID.')
   .requiredOption('-t, --address-type <type>', 'A site must be a billing(b) or service(s) application')
   .action(actions.createSiteAction)
 
@@ -48,6 +50,7 @@ const createSipPeerCmd = createCmd.command('sippeer <name>')
   .alias('location')
   .option('-s, --site-id <site-id>', 'The id of the site to create a sippeer under')
   .option('-d, --default', "Specify that the peer is not the default peer of the sub account.")
+  .option('-c, --custom', 'Customize and specify optional details about your sip peer.')
   .action(actions.createSipPeerAction)
 
 
@@ -56,7 +59,7 @@ const defaultCmd = program.command('default [default-name] [default-value]')
   .alias('def')
   .usage('[[-d] <default-name> [<default-value>]]')
   .option('-d, --delete', 'Delete specified defaultName.')
-  .description('Manage default API items. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
+  .description('Manage which default items will be used by the CLI. If no arguments are called, then list all default items. If the name of a default item is given try to set that default to the new defaultValue.')
   .action(actions.defaultAction)
 
 
@@ -91,12 +94,14 @@ const deleteSipPeerCmd = deleteCmd.command('sippeer <peer-id>')
 /**************************'LIST' COMMAND**************************/
 const listCmd = program.command('list')
   .alias('l')
-  .description('List the sip peers, sites, and applications associated with your account.');
+  .description('List the sip peers, sites, and applications associated with your account, or phone numebers in the account.');
 
 
 const listAppCmd = listCmd.command('app')
   .alias('a')
   .alias('apps')
+  .alias('application')
+  .alias('applications')
   .action(actions.listAppAction);
 
 const listSiteCmd = listCmd.command('site')
@@ -171,4 +176,5 @@ const orderSearchCmd = orderCmd.command('search <quantity>')
 /**************************'QUICKSTART' COMMAND**************************/
 const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
+  .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
   .action(actions.quickstartAction);
