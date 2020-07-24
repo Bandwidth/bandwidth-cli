@@ -8,7 +8,7 @@
     "start": "npm install&&node index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@bandwidth/numbers": "^1.5.0",
     "express": "^4.17.1",

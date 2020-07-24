@@ -3,7 +3,7 @@ const utils = require('../utils');
 const { BadInputError } = require('../errors');
 const path = require('path');
 const fs = require('fs'); 
-const copydir = require('copy-dir'); //fse is almost double the size of this entire CLI.
+const copydir = require('copy-dir'); //fse is almost double the size of this entire CLI, apparently.
 
 module.exports.codeCallbackServerAction = async (cmdObj) => {
   const opts = cmdObj.opts();

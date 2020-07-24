@@ -27,10 +27,10 @@ program
 
 
 /**************************'CODE' COMMAND**************************/
-const setupCmd = program.command('code')
+const codeCmd = program.command('code')
   .description('Generate pluggable sample programs that fit right into existing code.');
 
-const sampleCallbackServerCmd = setupCmd.command('callback-server')
+const codeCallbackServerCmd = codeCmd.command('callback-server')
   .alias('server')
   .description('Set up a server to receive callbacks on messages.')
   .option('-o, --out <destination>', "The relative path to write the file to.")

@@ -12,7 +12,7 @@ numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
 
 
 
-const main = async (args) => {
+const main = async () => {
   //===================use ngrok to port into localhost=================
   const onStatusChange = (status) => {
     status === 'closed'?console.log('ngrok connection is lost'):console.log('ngrok connected');
@@ -58,4 +58,4 @@ const main = async (args) => {
   })
   console.log(`Express server listening on localhost port ${port}. Access it non-locally by making requests to ${url}`);
 }
-main(process.argv.slice(2))
+main()
