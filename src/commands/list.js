@@ -2,7 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
-const fs = require('fs')
+const fs = require('fs');
 const stringify = require('csv-stringify/lib/sync');
 const path = require('path')
 
