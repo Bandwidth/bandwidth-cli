@@ -8,6 +8,7 @@ const apiutils = require("../apiutils");
 module.exports.quickstartAction = async (cmdObj) => {
   const opts = cmdObj.opts();
   const verbose = opts.verbose;
+  const custom = opts.custom;
   const quickstartPrompts = [
     'msgCallbackUrl'
   ]
@@ -18,20 +19,32 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }
   const setupNo = await utils.incrementSetupNo(); //used to avoid name clash errors, if for some reason they run it multiple times.
-  const address = await numbers.Geocode.requestAsync({
+  const rawAddress = {
     addressLine1: '900 Main Campus Dr',
     city: 'Raleigh',
     stateCode: "NC",
     zip: '27606'
-  }).catch(throwApiErr);
+  }
+  if (custom) {
+    const addressInput = await printer.prompt(['addressLine1', 'addressLine2']);
+    const line2 = addressInput.addressLine2.split(', ');
+    if (line2.length !== 3) {
+      throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')
+    }
+    rawAddress.addressLine1 = addressInput.addressLine1;
+    rawAddress.city = line2[0];
+    rawAddress.stateCode = line2[1];
+    rawAddress.zip = line2[2];
+  }
+  const address = await numbers.Geocode.requestAsync(rawAddress).catch(throwApiErr);
   printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
-    appName: `My Messaging Application ${setupNo}`,
+    appName: (custom&&(await printer.prompt('optionalInput', 'appName')).appName) ||`My Messaging Application ${setupNo}`,
     msgCallbackUrl: answers.msgCallbackUrl
   }).catch(throwApiErr);
   printer.success(`Messaging application created with id ${createdApp.applicationId}`);
   const createdSite = await numbers.Site.createAsync({
-    name: `My Site ${setupNo}`,
+    name: (custom&&(await printer.prompt('optionalInput', 'siteName')).siteName) ||`My Site ${setupNo}`,
     address: {
       ...address,
       addressType: 'billing',//billing/service have no functional differences but is required.
@@ -39,7 +52,7 @@ module.exports.quickstartAction = async (cmdObj) => {
   }).catch(throwApiErr);
   printer.success(`Site created with id ${createdSite.id}`)
   const createdPeer = await numbers.SipPeer.createAsync({
-    peerName: `My Sip Peer ${setupNo}`,
+    peerName: (custom&&(await printer.prompt('optionalInput', 'sippeerName')).sippeerName) ||`My Sip Peer ${setupNo}`,
     isDefaultPeer: true,
     siteId: createdSite.id,
   }).catch(throwApiErr);
@@ -78,7 +91,7 @@ module.exports.quickstartAction = async (cmdObj) => {
         siteId: createdSite.id,
         peerId: createdPeer.id,
         state: randomState||'NC',
-        quantity: 10
+        quantity: (custom && (await printer.prompt('optionalInput', 'phone number search quantity'))['phone number search quantity']) || 10
       };
       results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
     }

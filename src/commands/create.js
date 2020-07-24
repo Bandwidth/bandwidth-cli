@@ -10,10 +10,25 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'voice':
       {
         const answers = await printer.prompt('callInitiatedCallbackUrl')
-        const createdApp = await numbers.Application.createVoiceApplicationAsync({
+        let optionalAnswers = {}
+        if (options.custom) {
+          //Currently offer no explanations of how these work/what they are.
+          //Those who use custom are expected to have some level of competency and familiarity with the API.
+          optionalAnswers = await printer.prompt(Array(6).fill('optionalInput'), 'callInitiatedMethod','callStatusCallbackUrl','callStatusMethod','CallInitiatedFallbackUrl','CallInitiatedFallbackMethod','CallbackTimeout');
+          if (await printer.confirm('Add callback creds?')) {
+            optionalAnswers.callbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          }
+          if (await printer.confirm('Add call initiated fallback creds?')) {
+            optionalAnswers.callInitiatedFallbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          }
+        }
+        const appRequest= {
           appName: name,
-          callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl
-        }).catch(throwApiErr);
+          callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl,
+          ...optionalAnswers
+        }
+        Object.keys(appRequest).forEach(key => !appRequest[key] && delete appRequest[key]);
+        const createdApp = await numbers.Application.createVoiceApplicationAsync(appRequest).catch(throwApiErr);
         printer.success('Voice application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -21,11 +36,17 @@ module.exports.createAppAction = async (name, cmdObj) => {
     case 'm':
     case 'messaging':
       {
-        const answers = await printer.prompt('msgCallbackUrl')
-        const createdApp = await numbers.Application.createMessagingApplicationAsync({
+        const answers = await printer.prompt('msgCallbackUrl');
+        const appRequest = {
           appName: name,
           msgCallbackUrl: answers.msgCallbackUrl
-        }).catch(throwApiErr);
+        }
+        if (options.custom) {
+          appRequest.callbackCreds = await printer.prompt(Array(2).fill('optionalInput'), 'userId', 'password')
+          const cbCreds = appRequest.callbackCreds;
+          Object.keys(cbCreds).forEach(key => !cbCreds[key] && delete cbCreds[key]);
+        }
+        const createdApp = await numbers.Application.createMessagingApplicationAsync(appRequest).catch(throwApiErr);
         printer.success('Messaging application created. See details of your created application below.')
         printer.removeClient(createdApp);
       }
@@ -55,14 +76,21 @@ module.exports.createSiteAction = async (name, cmdObj) => {
     stateCode: line2[1],
     zip: line2[2]
   }).catch(throwApiErr);
-  const createdSite = await numbers.Site.createAsync({
+  let optionalAnswers = {};
+  if (options.custom) {
+    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description', 'customerProvidedId', 'customerName');
+  } 
+  const siteRequest = {
     name: name,
     address: {
       ...address,
       addressType: addressType,
-    }
-  }).catch(throwApiErr);
-  printer.success('Site created. See details of your created Site below.')
+    },
+    ...optionalAnswers
+  };
+  Object.keys(siteRequest).forEach(key => !siteRequest[key] && delete siteRequest[key]);
+  const createdSite = await numbers.Site.createAsync(siteRequest).catch(throwApiErr);
+  printer.success('Site created. See details of your created Site below.');
   printer.removeClient(createdSite);
 }
 
@@ -72,11 +100,36 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   if (!siteId) {
     throw new BadInputError('Missing a Site ID', "siteId", "Specify a siteId using the --site-id switch, or set a default site using \"bandwidth default site <siteId>\"");
   }
-  const createdPeer = await numbers.SipPeer.createAsync({
+  let optionalAnswers = {};
+  if (options.custom) {
+    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description','finalDestinationUri','PremiseTrunks');
+    if (await printer.confirm('Add a callingName to this peer?')) {
+      optionalAnswers.callingName = {
+        display: await printer.confirm('display this calling name?'),
+        enforced: await printer.confirm('enforce this calling name?')
+      }
+    }
+    if (await printer.confirm('Add voice hosts to this peer?')) {
+      optionalAnswers.voiceHosts = {host:[]};
+      const hosts = optionalAnswers.voiceHosts.host;
+      hosts.push(await printer.prompt('hostName'));
+      while (await printer.confirm('Add another voice host to this peer?')) {
+        hosts.push(await printer.prompt('hostName'));
+      }
+    }
+    // if ((await printer.prompt('generalConfirm', 'Add a terminationHosts to this peer?')).confirm) {
+    //   //Termination host
+    // }
+    //TODO: terminationHost functionality seems complicated and also not a feature people will use. Decide if this is worth even attempting.
+  }
+  const peerRequest = {
     peerName: name,
     isDefaultPeer: options.default,
     siteId: siteId,
-  }).catch(throwApiErr);
+    ...optionalAnswers
+  }
+  Object.keys(peerRequest).forEach(key => !peerRequest[key] && delete peerRequest[key]);
+  const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
   const defaultApp = await utils.readDefault('application');
   //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
