@@ -1,12 +1,17 @@
 const express = require('express');
 const ngrok = require('ngrok');
 const numbers = require('@bandwidth/numbers');
+//====================INPUTS==========================
+const port = 80;
+const messagingApplicationId = 'INSERT YOUR MESSAGING APPLICATION ID HERE.';
+numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
+numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
+numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
+
+
+
 
 const main = async (args) => {
-  const port = 80;
-  const messagingApplicationId = 'INSERT YOUR MESSAGING APPLICATION ID HERE.';
-
-
   //===================use ngrok to port into localhost=================
   const onStatusChange = (status) => {
     status === 'closed'?console.log('ngrok connection is lost'):console.log('ngrok reconnected');
@@ -29,7 +34,6 @@ const main = async (args) => {
   await messagingApplication.updateAsync(messagingApplication);
   console.log("Server started. The following url has been set as your application URL:", url);
   //See https://dev.bandwidth.com/messaging/callbacks/messageEvents.html for information about messaging callbacks
-  //server.get()
 
   //==================Handle Bandwidth webhook/callback==============
   server.get('*', (req, res) => {
