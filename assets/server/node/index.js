@@ -1,6 +1,7 @@
 const express = require('express');
 const ngrok = require('ngrok');
 const numbers = require('@bandwidth/numbers');
+const readline = require('readline');
 //====================INPUTS==========================
 const port = 80;
 const messagingApplicationId = 'INSERT YOUR MESSAGING APPLICATION ID HERE.';
@@ -14,7 +15,7 @@ numbers.Client.globalOptions.password = process.env.BANDWIDTH_API_PASSWORD;
 const main = async (args) => {
   //===================use ngrok to port into localhost=================
   const onStatusChange = (status) => {
-    status === 'closed'?console.log('ngrok connection is lost'):console.log('ngrok reconnected');
+    status === 'closed'?console.log('ngrok connection is lost'):console.log('ngrok connected');
   }
   const onLogEvent = data => {
     //console.log(data);
@@ -26,19 +27,23 @@ const main = async (args) => {
     onLogEvent: onLogEvent
   });
   const server = express();
-  server.use(express.json())
-  server.listen(port)
+  server.use(express.json());
+  server.listen(port);
 
   //===================Set message callback url to ngrok url=================
   const messagingApplication = await numbers.Application.getAsync(messagingApplicationId).catch((err) => {
     if (err.status === 404) {
       console.error(`Server returned 404. Please double check the value of your application ID, which is currently ${messagingApplicationId}, or your account id, ${numbers.Client.globalOptions.accountId}.`);
+    } else {
+      console.error(err.message);
     }
-    console.error(err.message);
-    process.exit(1)
+    process.exit(1);
   });
-  messagingApplication.callbackUrl = url;
-  messagingApplication.msgCallbackUrl = url;
+  console.warn(`This operation will overwrite the callback url of your application ${messagingApplicationId}("${messagingApplication.appName}"). Press enter to continue, or Ctrl+C to quit.` );
+  await new Promise(resolve => {
+    process.stdin.once('data', function () {resolve()});
+  })
+  messagingApplication.callbackUrl = messagingApplication.msgCallbackUrl = url;
   await messagingApplication.updateAsync(messagingApplication).catch(err => {
     console.error(err)
   });

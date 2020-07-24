@@ -15,7 +15,7 @@ module.exports.codeCallbackServerAction = async (cmdObj) => {
     throw new BadInputError(`The destination folder, ${destPath}, alraedy exists.`, 'out', 'Write to a new directory, or use --force to overwrite the existing directory.')
   }
   copydir.sync(sourcePath, destPath)
-  printer.success(`Server generated successfully. Find the it in ${destPath}`)
+  printer.success(`Server generated successfully in ${destPath}`)
   const indexFileLocation = path.join(destPath, `index.js`) //TODO add support for other languages
   const defaultAppId = await utils.readDefault('application');
   if (defaultAppId){
@@ -23,5 +23,7 @@ module.exports.codeCallbackServerAction = async (cmdObj) => {
     result = result.toString();
     result = result.replace(/INSERT YOUR MESSAGING APPLICATION ID HERE./g, defaultAppId);
     fs.writeFileSync(indexFileLocation, result)
+  } else {
+    printer.warn(`No default messaging application detected. You will need to change the application ID inside ${out}/index.js to send message callbacks to the appropriate location.`)
   }
 }
