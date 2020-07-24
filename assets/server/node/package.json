@@ -1,0 +1,15 @@
+{
+  "name": "my-bandwidth-messaging-server",
+  "version": "1.0.0",
+  "description": "A server for handling messaging callbacks from bandwidth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ngrok": "^3.2.7"
+  }
+}
