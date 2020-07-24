@@ -26,18 +26,29 @@ const main = async (args) => {
     onLogEvent: onLogEvent
   });
   const server = express();
+  server.use(express.json())
   server.listen(port)
 
   //===================Set message callback url to ngrok url=================
-  const messagingApplication = await numbers.Application.getAsync(messagingApplicationId);
+  const messagingApplication = await numbers.Application.getAsync(messagingApplicationId).catch((err) => {
+    if (err.status === 404) {
+      console.error(`Server returned 404. Please double check the value of your application ID, which is currently ${messagingApplicationId}, or your account id, ${numbers.Client.globalOptions.accountId}.`);
+    }
+    console.error(err.message);
+    process.exit(1)
+  });
+  messagingApplication.callbackUrl = url;
   messagingApplication.msgCallbackUrl = url;
-  await messagingApplication.updateAsync(messagingApplication);
+  await messagingApplication.updateAsync(messagingApplication).catch(err => {
+    console.error(err)
+  });
   console.log("Server started. The following url has been set as your application URL:", url);
   //See https://dev.bandwidth.com/messaging/callbacks/messageEvents.html for information about messaging callbacks
 
   //==================Handle Bandwidth webhook/callback==============
-  server.get('*', (req, res) => {
-    console.log(req);
+  server.post('*', (req, res) => {
+    console.log('Callback received:');
+    console.log(req.body);
     res.status(200)
   })
   console.log(`Express server listening on localhost port ${port}. Access it non-locally by making requests to ${url}`);
