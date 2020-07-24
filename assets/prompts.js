@@ -64,5 +64,17 @@ module.exports = {
     name: 'initiateOrderNumber',
     message: 'Order phone numbers?',
     default: true
+  },
+  'optionalInput': (itemName) => {
+    return {
+      'type': 'input',
+      'name': itemName,
+      'message': `(Optional) Enter a value for "${itemName}", or leave this blank to skip.`
+    }
+  },
+  hostName: {
+    type: 'input',
+    name: 'hostName',
+    message: 'Please enter a host name. (eg 10.10.10.1)'
   }
 }

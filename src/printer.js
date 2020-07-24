@@ -84,6 +84,15 @@ module.exports.prompt = async (promptNames, ...args) => {
   return await inquirer.prompt(prompts);
 }
 
+module.exports.confirm = async (message, defaultVal=true) => {
+  return (await inquirer.prompt({
+    type: 'confirm',
+    name: 'confirm',
+    message: message,
+    default: defaultVal
+  }) ).confirm
+}
+
 /**
  * Print out javascript object in a more readable yml format.
  */
