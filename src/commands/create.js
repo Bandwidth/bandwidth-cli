@@ -78,9 +78,8 @@ module.exports.createSiteAction = async (name, cmdObj) => {
   }).catch(throwApiErr);
   let optionalAnswers = {};
   if (options.custom) {
-    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description', 'customerProvidedID', 'customerName');
+    optionalAnswers = await printer.prompt(Array(3).fill('optionalInput'), 'description', 'customerProvidedId', 'customerName');
   } 
-  //Note: it seems that customerprovidedId is being ignored by the API.
   const siteRequest = {
     name: name,
     address: {
