@@ -146,6 +146,7 @@ const messageCmd = program.command('message <to-num...>')
   .description('Send a text message.')
   .option('-a, --app-id <id>', 'Send a message under this application id.')
   .option('-n, --from-num <num>', 'The number to send a message from.')
+  .option('-q, --quiet', 'Suppress console output.')
   .action(actions.messageAction)
 
 /**************************'ORDER' COMMAND**************************/
