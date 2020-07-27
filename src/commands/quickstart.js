@@ -77,7 +77,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     .then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
   await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
-  await utils.setDefault('application', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
+  await utils.setDefault('messageApp', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default messageApp set'))
 
   let orderResponse = (await printer.prompt('initiateOrderNumber')).initiateOrderNumber
   if (orderResponse) {

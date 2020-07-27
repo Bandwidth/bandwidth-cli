@@ -11,7 +11,7 @@ module.exports.messageAction = async (toNum, cmdObj) => {
   BandwidthMessaging.Configuration.basicAuthPassword = creds.password; 
   const accId = await utils.readAccountId();
   const fromNum = await utils.processDefault('number', opts.fromNum, quiet);
-  const application = await utils.processDefault('application', opts.application, quiet);
+  const application = await utils.processDefault('messageApp', opts.application, quiet);
   if (!fromNum) {
     throw new BadInputError('No "from" number was specified.', 'fromNum', 'Specify a number with "bandwidth message 12345678 --from-num 12345", or set a default with "bandwidth default number 12345"');
   }

@@ -2,7 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { BadInputError } = require('../errors');
 const utils = require('../utils');
-const validDefaults = ['sippeer', 'site', 'application', 'number']; //FIXME default voice and default messaging apps should be different.
+const validDefaults = ['sippeer', 'site', 'messageApp', 'number']; //FIXME default voice and default messaging apps should be different.
 
 
 module.exports.defaultAction = async (defaultField, defaultValue, cmdObj) => {
