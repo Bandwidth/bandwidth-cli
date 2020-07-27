@@ -3,7 +3,7 @@ const ngrok = require('ngrok');
 const numbers = require('@bandwidth/numbers');
 const readline = require('readline');
 //====================INPUTS==========================
-const port = 80;
+const port = 3000;
 const messagingApplicationId = 'INSERT YOUR MESSAGING APPLICATION ID HERE.';
 numbers.Client.globalOptions.accountId = process.env.BANDWIDTH_ACCOUNT_ID;
 numbers.Client.globalOptions.userName = process.env.BANDWIDTH_API_USER;
@@ -22,7 +22,7 @@ const main = async () => {
     //uncomment to see server status updates
   };
   const url = await ngrok.connect({
-    addr: port, // port or network address, defaults to 80
+    addr: port,
     onStatusChange: onStatusChange,
     onLogEvent: onLogEvent
   });

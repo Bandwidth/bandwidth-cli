@@ -9,7 +9,7 @@ set BANDWIDTH_API_PASSWORD myDashboardPassword
 ```
 Note that these are the same credentials you used to log into the CLI.
 
-After this, `npm start` will create the server and update the callback url of the listed application to this server
+After this, `npm start` in this directory will create the server and update the callback url of the specified application to this server. This application is initially set to the `default application` of your bandwidth CLI, but can be changed in line 7 of `index.js`. 
 
 ## what it does
 When run, this server will: 
