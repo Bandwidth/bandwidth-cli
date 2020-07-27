@@ -496,6 +496,40 @@ Leaving a field blank will keep it at its previous value.
 Your credentials have been saved. You can now start using the CLI.
 ```
 
+### message
+usage: `bandwidth message <to-num...>`
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|--app-id, -a| Specify the application id to send a message under. | no (yes if no default site is configured.)
+|--from-num, -n| Specify the number from which a number is sent. | no (yes if no default number is configured.)
+|--quiet, -q| Suppress output. | no
+```
+>bw message 123456789 -n7249200266
+Using default application 7d5f2e74-8488-458b-bb12-6df895ef6041
+? Enter the message you would like to send below:
+C:\Users\bwu>bw message 123456789 --from-num 7249200266
+Using default application 7d5f2e74-8488-458b-bb12-6df895ef6041
+? Enter the message you would like to send below: Hello!
+Message request placed. The following information passed to server:
+
+id: 1595885144985y3yyewnagcem5hws
+owner: "+17249200266"
+applicationId: 7d5f2e74-8488-458b-bb12-6df895ef6041
+time: 2020-07-27T21:25:44.985Z
+segmentCount: 1
+direction: out
+to:
+  - "123456789"
+from: "+17249200266"
+media: null
+text: Hello!
+tag: null
+
+Warning: The message is not necessarily delivered. Callback information about the text should be accessed via a server. Set up a server for your default application with "bandwidth code server".
+```
+
 ### order
 Order phone numbers in three ways. Orders will be found under the specified sip peer. 
 - [`order number`](#order-number): Order a list of specific numbers
