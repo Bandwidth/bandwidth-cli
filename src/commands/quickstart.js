@@ -102,6 +102,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     } else {
       selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
     }
+    await utils.setDefault('number', selected[0], !verbose)
     if (selected){
       await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
     }

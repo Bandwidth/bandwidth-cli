@@ -528,6 +528,13 @@ text: Hello!
 tag: null
 
 Warning: The message is not necessarily delivered. Callback information about the text should be accessed via a server. Set up a server for your default application with "bandwidth code server".
+
+
+//quietly
+>bw message 123456789 --from-num 7249200266 -q
+? Enter the message you would like to send below: Hello!
+Message request placed.
+
 ```
 
 ### order
