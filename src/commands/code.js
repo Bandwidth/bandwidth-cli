@@ -23,6 +23,7 @@ module.exports.codeCallbackServerAction = async (cmdObj) => {
   } else {
     printer.warn(`No default messaging application detected. You will need to change the application ID inside ${out}/index.js to send message callbacks to the appropriate location.`)
   }
+  printer.print('See the readme: https://github.com/Bandwidth/bandwidth-cli/blob/develop/assets/server/node/README.md')
 }
 
 module.exports.codeSampleAppAction = async (cmdObj) => { //FIXME: DRY violated.
@@ -49,4 +50,5 @@ module.exports.codeSampleAppAction = async (cmdObj) => { //FIXME: DRY violated.
   } else {
     printer.warn(`No default messaging application detected. You will need to change the application ID inside ${out}/index.js to send message callbacks to the appropriate location.`)
   }
+  printer.print('See the readme: https://github.com/Bandwidth/bandwidth-cli/blob/master/assets/sample-app/node/README.md')
 }
