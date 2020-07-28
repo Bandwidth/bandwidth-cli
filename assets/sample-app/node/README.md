@@ -1,21 +1,6 @@
 # my-bandwidth-messaging-app
-An app which, when a new user is reported, creates a phone number for them and automatically sends them a welcome text message.
-## Instructions
-Set the following environment variables:
-```
-set BANDWIDTH_ACCOUNT_ID myAccId
-set BANDWIDTH_API_USER myDashboardUser
-set BANDWIDTH_API_PASSWORD myDashboardPassword
-```
-Note that these are the same credentials you used to log into the CLI.
+A basic example app which, when a new user is reported, creates a phone number for them and automatically sends them a welcome text message.
 
-After this, `npm start` in this directory will create the server and update the callback url of the specified application to this server. This application is initially set to the `default application` of your bandwidth CLI, but can be changed in line 7 of `index.js`. 
+This is inteded to be a basic demonstration of a Bandwidth use case. Modify or copy/paste this code into your existing API. 
 
-## what it does
-When run, this server will: 
-* Create a server and expose it publicly via an ngrok url
-* Update an application's callback to the generated url
-* Print any message callbacks to console.
-
-
-## examples
+For SDK documentation, visit https://github.com/Bandwidth/bandwidth-sdks. For API documentation, visit https://github.com/Bandwidth/bandwidth-sdks. 

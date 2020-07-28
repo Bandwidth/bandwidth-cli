@@ -59,8 +59,4 @@ const addCustomer = async (customer) => {
   }
 }
 
-addCustomer({
-  name: 'bob',
-  phoneNumber: "1234567890",
-  state:'nc'
-})
+module.exports.addCustomer = addCustomer;
