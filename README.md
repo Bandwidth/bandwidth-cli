@@ -79,7 +79,7 @@ telephoneNumbers:
 setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
 
 ```
-At this point, you can now use the number for [messages](#https://dev.bandwidth.com/messaging/about.html) via the API or SDKs. Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
+At this point, you can now use the number for [messages](#https://dev.bandwidth.com/messaging/about.html) via the [API](#https://dev.bandwidth.com/numbers/apiReference.html) or [SDKs](#https://github.com/Bandwidth/bandwidth-sdks). Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
 notes:
@@ -198,7 +198,7 @@ siteId: 37397
 ```
 
 #### create application
-Create a voice or messaging application.
+Create a voice or messaging application. Note that messaging applications cannot have duplicate names. 
 
 usage: `bandwidth create app --type <type> <appname>`
 
@@ -206,7 +206,7 @@ usage: `bandwidth create app --type <type> <appname>`
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-| --type, -t| Specify whether the application is voice or messaging.| yes
+| --type, -t| Specify whether the application is `voice` or `messaging`.| yes
 
 ```
 create a messaging application
@@ -655,7 +655,7 @@ ordering and development.
 switches/options
 | name      | Description | required |
 | ----------- | ----------- | ----------- |
-|-v, verbose| Increase setup verbosity| no
+|-v, --verbose| Increase setup verbosity| no
 
 ```
 >bandwidth quickstart
