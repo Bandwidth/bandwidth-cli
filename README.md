@@ -90,7 +90,7 @@ notes:
 | command   | Description |
 | ----------- | ----------- |
 |[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications
-|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, and applications
+|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, messaging applications, and number
 |[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications
 |[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers
 |[login](#login)| Login to your bandwidth account to use this tool

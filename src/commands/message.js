@@ -28,5 +28,5 @@ module.exports.messageAction = async (toNum, cmdObj) => {
   }
   printer.success('Message request placed. The following information passed to server:');
   printer.printObj(response)
-  printer.warn('Warning: The message is not necessarily delivered. Callback information about the text should be accessed via a server. Set up a server for your default application with "bandwidth code server".')
+  printer.warn('Warning: This does not guaranteed delivery. Callback information about the text should be accessed via a server. Set up a server for your default application with "bandwidth code server".')
 }
