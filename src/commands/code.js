@@ -38,8 +38,14 @@ module.exports.codeSampleAppAction = async (cmdObj) => { //FIXME: DRY violated.
   printer.success(`Server generated successfully in ${destPath}`)
   const indexFileLocation = path.join(destPath, `index.js`) //TODO add support for other languages
   const defaultAppId = await utils.readDefault('application');
+  const defaultSiteId = await utils.readDefault('site');
+  const defaultPeerId = await utils.readDefault('sippeer');
   if (defaultAppId){
-    utils.replaceFile(indexFileLocation, [/INSERT YOUR MESSAGING APPLICATION ID HERE./g, defaultAppId]);
+    utils.replaceFile(indexFileLocation, [
+      [/INSERT YOUR MESSAGING APPLICATION ID HERE./g, defaultAppId],
+      [/INSERT YOUR SITE ID HERE./g, defaultSiteId],
+      [/INSERT YOUR SIP PEER ID HERE./g, defaultPeerId]
+    ]);
   } else {
     printer.warn(`No default messaging application detected. You will need to change the application ID inside ${out}/index.js to send message callbacks to the appropriate location.`)
   }

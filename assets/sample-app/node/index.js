@@ -1,5 +1,5 @@
 const numbers = require('@bandwidth/numbers');
-const messaging = require('@bandwidth/messaging');
+const BandwidthMessaging = require('@bandwidth/messaging');
 //====================INPUTS==========================
 const siteID = 'INSERT YOUR SITE ID HERE.';
 const sipPeerId = 'INSERT YOUR SIP PEER ID HERE.';
@@ -37,7 +37,7 @@ const addCustomer = async (customer) => {
   };
   const createdOrder = await numbers.Order.createAsync(order).then(orderResponse => orderResponse.order).catch(err => {console.error(err)});
   await sleep(5000); //Wait for order to complete. 
-  const tnResponse = await order.getTnsAsync();
+  const tnResponse = await createdOrder.getTnsAsync();
   const tn = tnResponse.telephoneNumber;
   
   //send message
@@ -52,4 +52,15 @@ const addCustomer = async (customer) => {
       console.error(err.errorMessage);
       process.exit(1);
     });
+
+  return {
+    ...customer,
+    marketingNumber: tn
+  }
 }
+
+addCustomer({
+  name: 'bob',
+  phoneNumber: "1234567890",
+  state:'nc'
+})

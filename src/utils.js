@@ -159,11 +159,11 @@ const sleep = (ms) => {
 const replaceFile = (file, patterns) => {
   let result = fs.readFileSync(file);
   result = result.toString();
-  if (!patterns.all(pair => Array.isArray(pair))) {
+  if (!patterns.every(pair => Array.isArray(pair))) {
     patterns = [patterns];
   }
   patterns.forEach(([from, to]) => {result = result.replace(from, to)});
-  fs.writeFileSync(indexFileLocation, result)
+  fs.writeFileSync(file, result)
 }
 
 module.exports = {
