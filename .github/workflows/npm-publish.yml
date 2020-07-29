@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - DX-1372/publish
 jobs:
   npm-publish:
     name: npm-publish
@@ -19,6 +18,6 @@ jobs:
     - name: Publish if version has been updated
       run: npm ci
     - name: Publish if version has been updated
-      run: npm publish --dry-run
+      run: npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
