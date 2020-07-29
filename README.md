@@ -498,7 +498,7 @@ Your credentials have been saved. You can now start using the CLI.
 ```
 
 ### message
-usage: `bandwidth message <to-num...>`
+usage: `bandwidth message <number1> <number2> <number3, etc...>`
 
 switches/options
 | name      | Description | required |
@@ -507,10 +507,7 @@ switches/options
 |--from-num, -n| Specify the number from which a number is sent. | no (yes if no default number is configured.)
 |--quiet, -q| Suppress output. | no
 ```
->bandwidth message 123456789 --from-num 7249200266
-Using default messageApp 7d5f2e74-8488-458b-bb12-6df895ef6041
-? Enter the message you would like to send below:
-C:\Users\bwu>bw message 123456789 --from-num 7249200266
+>bandwidth message +15554443333 --from-num +17249200266
 Using default messageApp 7d5f2e74-8488-458b-bb12-6df895ef6041
 ? Enter the message you would like to send below: Hello!
 Message request placed. The following information passed to server:
@@ -522,7 +519,7 @@ time: 2020-07-27T21:25:44.985Z
 segmentCount: 1
 direction: out
 to:
-  - "123456789"
+  - "+15554443333"
 from: "+17249200266"
 media: null
 text: Hello!
@@ -532,7 +529,7 @@ Warning: The message is not necessarily delivered. Callback information about th
 
 
 //quietly
->bw message 123456789 --from-num 7249200266 -q
+>bw message +15554443333 --from-num 7249200266 -q
 ? Enter the message you would like to send below: Hello!
 Message request placed.
 
