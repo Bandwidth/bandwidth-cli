@@ -107,11 +107,12 @@ const deleteDefault = async (defaultName) => {
 /**
  * Takes in a default value and a default field. If the value is null, uses the default
  * and alerts the user. Returns undefined if the default is not set.
+ * @param quiet an optional param which, if truthy, will suppress output.
  */
-const processDefault = async (field, value) => {
+const processDefault = async (field, value, quiet) => {
   if (value) {return value;}
   const defaultValue = await readDefault(field);
-  if (defaultValue) {
+  if (defaultValue&&!quiet) {
     printer.print(`Using default ${field} ${defaultValue}`);
   }
   return defaultValue;

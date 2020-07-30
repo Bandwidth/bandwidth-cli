@@ -89,13 +89,14 @@ notes:
 
 | command   | Description |
 | ----------- | ----------- |
-|[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications.
-|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, and applications.
-|[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications.
-|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers.
-|[login](#login)| login to your bandwidth account to use this tool
-|[order](#order)|order phone numbers
-|[quickstart](#quickstart)|set up your account quickly and process details automatically
+|[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications
+|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, messaging applications, and number
+|[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications
+|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers
+|[login](#login)| Login to your bandwidth account to use this tool
+|[message](#message)| Send a text message through Bandwidth
+|[order](#order)|Order phone numbers
+|[quickstart](#quickstart)|Set up your account quickly and process details automatically
 
 ### create
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
@@ -146,7 +147,7 @@ address:
 Create a sip peer (also known as location). Since all sip peers are nested under sub-accounts/sites,
 a siteId must be specified if no default site is set.
 
-This command will automatically turn on sms and link the default application to the site as a messaging application. 
+This command will automatically turn on sms and link the default messageApp to the site as a messaging application. 
 Automatic voice application linking is not yet supported by this CLI and will result in an error.
 
 usage: `bandwidth create sippeer <peername>`
@@ -163,7 +164,7 @@ switches/options
 Using default site 37397
 Peer created successfully...
 enabled SMS by default.
-Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
+Linked created Sip Peer to default messageApp 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
 Sip Peer created. See details of your created Peer below.
 
 peerId: 624651
@@ -183,7 +184,7 @@ or, manually specify site Id
 >bandwidth create sippeer --site-id mysiteId peername
 Peer created successfully...
 enabled SMS by default.
-Linked created Sip Peer to default application 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
+Linked created Sip Peer to default messageApp 2065a8e4-20a7-4ec7-9e85-a1944fc5ad4c
 Sip Peer created. See details of your created Peer below.
 
 peerId: 624651
@@ -255,7 +256,7 @@ bandwidth default <default-field>                       //print the value of a p
 bandwidth default <default-field> <default-value>       //set a new default
 bandwidth default -d <default-field>                    //delete a default
 ```
-Current accepted `default-field`s include `site`, `sippeer`, and `application`. 
+Current accepted `default-field`s include `site`, `sippeer`, `messageApp`, and `number`. 
 
 switches/options
 | name      | Description | required |
@@ -494,6 +495,44 @@ Leaving a field blank will keep it at its previous value.
 ? Please enter your Bandwidth dashboard password. This will be securely stored. **********
 ? Please enter your Bandwidth account ID. 1234567
 Your credentials have been saved. You can now start using the CLI.
+```
+
+### message
+usage: `bandwidth message <number1> <number2> <number3, etc...>`
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|--app-id, -a| Specify the application id to send a message under. | no (yes if no default site is configured.)
+|--from-num, -n| Specify the number from which a number is sent. | no (yes if no default number is configured.)
+|--quiet, -q| Suppress output. | no
+```
+>bandwidth message +15554443333 --from-num +17249200266
+Using default messageApp 7d5f2e74-8488-458b-bb12-6df895ef6041
+? Enter the message you would like to send below: Hello!
+Message request placed. The following information passed to server:
+
+id: 1595885144985y3yyewnagcem5hws
+owner: "+17249200266"
+applicationId: 7d5f2e74-8488-458b-bb12-6df895ef6041
+time: 2020-07-27T21:25:44.985Z
+segmentCount: 1
+direction: out
+to:
+  - "+15554443333"
+from: "+17249200266"
+media: null
+text: Hello!
+tag: null
+
+Warning: The message is not necessarily delivered. Callback information about the text should be accessed via a server. Set up a server for your default messageApp with "bandwidth code server".
+
+
+//quietly
+>bw message +15554443333 --from-num 7249200266 -q
+? Enter the message you would like to send below: Hello!
+Message request placed.
+
 ```
 
 ### order

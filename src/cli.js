@@ -8,6 +8,7 @@ const actions = {
   ...require('./commands/delete'),
   ...require('./commands/list'),
   ...require('./commands/login'),
+  ...require('./commands/message'),
   ...require('./commands/order'),
   ...require('./commands/quickstart')
 }
@@ -140,6 +141,13 @@ const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
   .action(actions.loginAction)
 
+/**************************'MESSAGE' COMMAND**************************/
+const messageCmd = program.command('message <to-num...>')
+  .description('Send a text message.')
+  .option('-a, --app-id <id>', 'Send a message under this application id.')
+  .option('-n, --from-num <num>', 'The number to send a message from.')
+  .option('-q, --quiet', 'Suppress console output.')
+  .action(actions.messageAction)
 
 /**************************'ORDER' COMMAND**************************/
 const orderCmd = program.command('order')
@@ -191,3 +199,5 @@ const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
   .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
   .action(actions.quickstartAction);
+
+

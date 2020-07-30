@@ -76,5 +76,10 @@ module.exports = {
     type: 'input',
     name: 'hostName',
     message: 'Please enter a host name. (eg 10.10.10.1)'
+  },
+  message: {
+    type: 'input',
+    name: 'message',
+    message: "Enter the message you would like to send below:"
   }
 }

@@ -17,7 +17,7 @@ module.exports.codeCallbackServerAction = async (cmdObj) => {
   copydir.sync(sourcePath, destPath)
   printer.success(`Server generated successfully in ${destPath}`)
   const indexFileLocation = path.join(destPath, `index.js`) //TODO add support for other languages
-  const defaultAppId = await utils.readDefault('application');
+  const defaultAppId = await utils.readDefault('messageApp');
   if (defaultAppId){
     let result = fs.readFileSync(indexFileLocation);
     result = result.toString();
