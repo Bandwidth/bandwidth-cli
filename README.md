@@ -79,7 +79,7 @@ telephoneNumbers:
 setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
 
 ```
-At this point, you can now use the number for [messages](https://dev.bandwidth.com/messaging/about.html) via the [API](https://dev.bandwidth.com/numbers/apiReference.html) or [SDKs](https://github.com/Bandwidth/bandwidth-sdks). Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
+At this point, you can now use the number for [messages](https://dev.bandwidth.com/messaging/methods/messages/createMessage.html) or [SDKs](https://dev.bandwidth.com/sdks/about.html). Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
 notes:

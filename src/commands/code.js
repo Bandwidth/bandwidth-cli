@@ -19,9 +19,9 @@ module.exports.codeCallbackServerAction = async (cmdObj) => {
   const indexFileLocation = path.join(destPath, `index.js`) //TODO add support for other languages
   const defaultAppId = await utils.readDefault('application');
   if (defaultAppId){
-    utils.replaceFile(indexFileLocation, [/INSERT YOUR MESSAGING APPLICATION ID HERE./g, defaultAppId]);
+    utils.replacePatternInFile(indexFileLocation, [/INSERT YOUR MESSAGING APPLICATION ID HERE./g, defaultAppId]);
   } else {
     printer.warn(`No default messaging application detected. You will need to change the application ID inside ${out}/index.js to send message callbacks to the appropriate location.`)
   }
-  printer.print('See the readme: https://github.com/Bandwidth/bandwidth-cli/blob/develop/assets/server/node/README.md')
+  printer.print('See the readme: https://github.com/Bandwidth/bandwidth-cli/blob/master/assets/server/node/README.md')
 }

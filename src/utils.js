@@ -156,7 +156,7 @@ const sleep = (ms) => {
  * @param {string} file The path to a non-binary file.
  * @param {[string|RegExp, string][]} patterns An array of arrays, each of which replace instances of the first element with the second. 
  */
-const replaceFile = (file, patterns) => {
+const replacePatternInFile = (file, patterns) => {
   let result = fs.readFileSync(file);
   result = result.toString();
   if (!patterns.every(pair => Array.isArray(pair))) {
@@ -179,5 +179,5 @@ module.exports = {
   incrementSetupNo,
   deriveOrderType,
   sleep,
-  replaceFile
+  replacePatternInFile
 }
