@@ -1,6 +1,4 @@
 const { Command } = require('commander');
-const numbers = require("@bandwidth/numbers");
-const inquirer = require('inquirer');
 const actions = {
   ...require('./commands/code'),
   ...require('./commands/create'),

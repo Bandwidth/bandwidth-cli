@@ -142,7 +142,7 @@ module.exports.createSipPeerAction = async (name, cmdObj) => {
   Object.keys(peerRequest).forEach(key => !peerRequest[key] && delete peerRequest[key]);
   const createdPeer = await numbers.SipPeer.createAsync(peerRequest).catch(throwApiErr);
   printer.print('Peer created successfully...')
-  const defaultApp = await utils.readDefault('messageApp');
+  const defaultApp = await utils.processDefault('messageApp');
   //Enable HTTP SMS (required to link app) and link default app (assuming it's a messaging app) if a default app is set.
   if (defaultApp){
     const smsSettings = {

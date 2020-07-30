@@ -16,8 +16,13 @@ module.exports.orderNumberAction = async (phoneNumbers, cmdObj) => {
 
 module.exports.orderCategoryAction = async (quantity, cmdObj) => {
   const options = cmdObj.opts();
-  const siteId = options.siteId || await utils.readDefault('site');
-  const peerId = options.peerId || (!options.siteId) ? await utils.readDefault('sippeer') : undefined;
+  const siteId = await utils.processDefault('site', options.siteId);
+  let peerId;
+  if (siteId === await utils.readDefault('site')) {
+    peerId = await utils.processDefault('sippeer', options.peerId);
+  } else { //If the site is different, cannot use the same peer under the default site. 
+    peerId = options.peerId;
+  }
   if (!siteId) {
     throw new BadInputError('A site id is required to create a number order', 'siteId', 'Specify a siteId using the --site-id option, eg "bandwidth order category --site-id=<siteId> <quantity>", or set a default using "bandwidth default site [siteId]"')
   }

@@ -2,8 +2,8 @@ const keytar = require('keytar');
 const configPath = require('os').homedir() + '/' + '.bandwidth_cli';
 const { BadInputError } = require('./errors');
 const fs = require('fs');
-const numbers = require('@bandwidth/numbers');
 const printer = require('./printer');
+const { confirmDefault } = require('../assets/prompts');
 
 const accIdKey = 'account_id';
 const dashboardUserKey = 'dashboard_username';
@@ -111,9 +111,12 @@ const deleteDefault = async (defaultName) => {
  */
 const processDefault = async (field, value, quiet) => {
   if (value) {return value;}
-  const defaultValue = await readDefault(field);
-  if (defaultValue&&!quiet) {
-    printer.print(`Using default ${field} ${defaultValue}`);
+  let defaultValue = await readDefault(field);
+  const promptResponse = (await printer.prompt('confirmDefault', field))[field]
+  if (promptResponse === 'NONE') {return undefined}
+  defaultValue =  promptResponse || defaultValue;  
+  if (!promptResponse&&!quiet) {
+    printer.print(`Using default ${field} "${defaultValue}"`);
   }
   return defaultValue;
 }

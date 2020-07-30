@@ -1,4 +1,3 @@
-const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { BadInputError } = require('../errors');
 const utils = require('../utils');

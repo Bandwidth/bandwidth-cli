@@ -117,4 +117,11 @@ module.exports = {
     name: 'postDirectional',
     message: 'postdirectional'
   },
+  confirmDefault: (defaultName) => {
+    return {
+      type: 'input',
+      name: defaultName,
+      message: `Use default ${defaultName}? Press enter to continue, or enter a ${defaultName} instead. To use neither, type "NONE" and hit enter.`
+    }
+  }
 }
