@@ -81,5 +81,40 @@ module.exports = {
     type: 'input',
     name: 'message',
     message: "Enter the message you would like to send below:"
-  }
+  },
+  housePrefix: {
+    type: 'input',
+    name: 'housePrefix',
+    message: 'House Prefix'
+  },
+  houseNumber: {
+    type: 'input',
+    name: 'houseNumber',
+    message: 'House Number'
+  },
+  houseSuffix: {
+    type: 'input',
+    name: 'houseSuffix',
+    message: 'House Suffix'
+  },
+  preDirectional: {
+    type: 'input',
+    name: 'preDirectional',
+    message: 'preDirectional'
+  },
+  streetName: {
+    type: 'input',
+    name: 'streetName',
+    message: 'Street Name'
+  },
+  streetSuffix: {
+    type: 'input',
+    name: 'streetSuffix',
+    message: 'Street Suffix'
+  },
+  postDirectional: {
+    type: 'input',
+    name: 'postDirectional',
+    message: 'postdirectional'
+  },
 }

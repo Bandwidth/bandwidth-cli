@@ -32,8 +32,21 @@ module.exports.quickstartAction = async (cmdObj) => {
       stateCode: line2[1],
       zip: line2[2]
     }
-    address = await numbers.Geocode.requestAsync(rawAddress).catch(throwApiErr); //TODO when caught, check for 403
-    printer.printIf(verbose, 'Address validated.');
+    address = await numbers.Geocode.requestAsync(rawAddress)
+      .then((result) => {
+        printer.printIf(verbose, 'Address validated.');
+        return result;
+      })
+      .catch(async (err) => {
+        if (err.status === 403) {
+          printer.warn('Geocoding not found in account. Please split your address Line 1 into its respective components.')
+          printer.warn('For example, 123 Main St would have houseNumber: 123, street name: Main, and street suffix: St.');
+          printer.print('Components include:');
+          printer.printObj(['House Prefix', 'House Number', 'House Suffix', 'pre Directional', 'Street Name', 'Street Suffix', 'post Directional'])
+          const manualLine1 = await printer.prompt(['housePrefix','houseNumber', 'houseSuffix', 'preDirectional', 'streetName', 'streetSuffix', 'postDirectional'])
+          return {...rawAddress, ...manualLine1}
+        } else (throwApiErr(err));
+      });
   } else {
     address = {
       addressLine1: '900 MAIN CAMPUS DR',
