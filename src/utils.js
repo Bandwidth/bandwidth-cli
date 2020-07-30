@@ -148,12 +148,26 @@ const deriveOrderType = (numberAttributes) => {
   return 'combinedSearchAndOrderType'
 }
 
-function sleep(ms) {
+const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+/**
+ * Takes a file replaces each occurance of each pattern in its contents with the corresponding new string. 
+ * @param {string} file The path to a non-binary file.
+ * @param {[string|RegExp, string][]} patterns An array of arrays, each of which replace instances of the first element with the second. 
+ */
+const replacePatternInFile = (file, patterns) => {
+  let result = fs.readFileSync(file);
+  result = result.toString();
+  if (!patterns.every(pair => Array.isArray(pair))) {
+    patterns = [patterns];
+  }
+  patterns.forEach(([from, to]) => {result = result.replace(from, to)});
+  fs.writeFileSync(file, result)
+}
 
-module.exports = { //TODO: move the API related utils to a sperate folder to avoid clutter
+module.exports = {
   saveDashboardCredentials,
   readDashboardCredentials,
   saveAccountId,
@@ -165,5 +179,6 @@ module.exports = { //TODO: move the API related utils to a sperate folder to avo
   processDefault,
   incrementSetupNo,
   deriveOrderType,
-  sleep
+  sleep,
+  replacePatternInFile
 }

@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bandwidth/band-cli.git"
+    "url": "git+https://github.com/Bandwidth/bandwidth-cli.git"
   },
   "bin": {
     "bandwidth": "./bin/run",
@@ -17,9 +17,9 @@
   "author": "Bryan Wu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Bandwidth/band-cli/issues"
+    "url": "https://github.com/Bandwidth/bandwidth-cli/issues"
   },
-  "homepage": "https://github.com/Bandwidth/band-cli#readme",
+  "homepage": "https://github.com/Bandwidth/bandwidth-cli#readme",
   "dependencies": {
     "@bandwidth/messaging": "^2.0.2",
     "@bandwidth/numbers": "^1.5.0",

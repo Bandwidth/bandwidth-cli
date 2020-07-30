@@ -34,9 +34,10 @@ const codeCmd = program.command('code')
 const codeCallbackServerCmd = codeCmd.command('callback-server')
   .alias('server')
   .description('Set up a server to receive callbacks on messages.')
-  .option('-o, --out <destination>', "The relative path to write the file to.")
-  .option('-f, --force', "Overwrite the existing file, if it exists.")
+  .option('-o, --out <destination>', 'The relative path to write the file to.')
+  .option('-f, --force', 'Overwrite the existing file, if it exists.')
   .action(actions.codeCallbackServerAction)
+  
 
 /**************************'CREATE' COMMAND**************************/
 const createCmd = program.command('create')
