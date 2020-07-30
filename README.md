@@ -54,6 +54,7 @@ Your credentials have been saved. You can now start using the CLI.
 First time users should use the `quickstart` command to get started. You can use `quickstart` to order a number without prior
 setup, or simply setup your account (and order numbers later). `quickstart` can be used as many times as needed, and will automatically set up a new site, sippeer, and application without interacting with or influencing existing account settings. 
 
+![Callbacks and bandwidth](https://dev.bandwidth.com/images/bandwidth_callbacks.png)
 More information about callback urls can be found at https://dev.bandwidth.com/guides/callbacks/callbacks.html
 
 ```
