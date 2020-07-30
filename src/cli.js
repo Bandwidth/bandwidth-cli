@@ -36,15 +36,7 @@ const codeCallbackServerCmd = codeCmd.command('callback-server')
   .option('-o, --out <destination>', 'The relative path to write the file to.')
   .option('-f, --force', 'Overwrite the existing file, if it exists.')
   .action(actions.codeCallbackServerAction)
-
-const codeSampleAppCmd = codeCmd.command('sample-app')
-  .alias('sample')
-  .alias('app')
-  .description('A sample application which orders a new number and sends a message to each new user.')
-  .option('-o, --out <destination>', 'The relative path to write the file to.')
-  .option('-f, --force', 'Overwrite the existing file, if it exists.')
-  .action(actions.codeSampleAppAction)
-
+  
 
 /**************************'CREATE' COMMAND**************************/
 const createCmd = program.command('create')
