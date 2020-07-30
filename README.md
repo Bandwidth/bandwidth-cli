@@ -12,7 +12,18 @@ Expected workflow: [setup](#installationsetup), then [quickly set up your accoun
 - [table of contents](#table-of-contents)
 - [setup](#installationsetup)
 - [getting started with Bandwidth](#getting-started-with-bandwidth)
-- [commands](#commands)
+
+### List of CLI Commands
+| command   | Description |
+| ----------- | ----------- |
+|[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications
+|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, messaging applications, and number
+|[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications
+|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers
+|[login](#login)| Login to your bandwidth account to use this tool
+|[message](#message)| Send a text message through Bandwidth
+|[order](#order)|Order phone numbers
+|[quickstart](#quickstart)|Set up your account quickly and process details automatically
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version 12. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node. If you have node, check your version with `node -v`
@@ -82,21 +93,12 @@ setup successful. To order more numbers using this setup, use "bandwidth order c
 At this point, you can now use the number for [messages](https://dev.bandwidth.com/messaging/methods/messages/createMessage.html) or [SDKs](https://dev.bandwidth.com/sdks/about.html). Should you need more (or different) numbers than the 10 that were offered, you can order more numbers using [`bandwidth order`](#order).
 
 ## commands
+[Commands Table of Contents](#list-of-cli-commands)
+
 notes:
 - `bandwidth <command> --help` is available in the cli for usage and flag notes. 
 - `bw` is an alias for bandwidth. `bw order number 123456789` is a valid syntax for the cli.
 
-
-| command   | Description |
-| ----------- | ----------- |
-|[create](#create)|Create sip peers/locations, sites/sub-accounts, and applications
-|[default](#default)|Manage default sip peers/locations, sites/sub-accounts, messaging applications, and number
-|[delete](#delete)| Delete sip peers/locations, sites/sub-accounts, and applications
-|[list](#list)| List sip peers/locations, sites/sub-accounts, applications, and numbers associated with sites and sip peers
-|[login](#login)| Login to your bandwidth account to use this tool
-|[message](#message)| Send a text message through Bandwidth
-|[order](#order)|Order phone numbers
-|[quickstart](#quickstart)|Set up your account quickly and process details automatically
 
 ### create
 used to create sites(also known as sub-accounts), sip peers (also known as locations), applications.
