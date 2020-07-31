@@ -21,7 +21,7 @@ module.exports.program = program = new Command();
 const description = 'A CLI tool which fast-tracks first time users of bandwidth to be able to order numbers immediately with some setup.';
 program
   .name('bandwidth')
-  .version('0.0.1')
+  .version('0.0.4')
   .description(description);
 
 
