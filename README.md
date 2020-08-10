@@ -691,3 +691,7 @@ telephoneNumbers:
 setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
 
 ```
+
+# Next Steps
+
+Todo: fill out
