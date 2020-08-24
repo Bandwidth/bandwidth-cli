@@ -64,7 +64,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     appName: (custom&&(await printer.prompt('optionalInput', 'appName')).appName) ||`My Messaging Application ${setupNo}`,
     msgCallbackUrl: answers.msgCallbackUrl
   }).catch(throwApiErr);
-  printer.success(`Messaging application created with id ${createdApp.applicationId}`);
+  printer.success(`Messaging application created with id ${createdApp.applicationId}. You will need this as your "applicationId" value to send a text message`);
   const createdSite = await numbers.Site.createAsync({
     name: (custom&&(await printer.prompt('optionalInput', 'siteName')).siteName) ||`My Site ${setupNo}`,
     address: {
@@ -127,6 +127,14 @@ module.exports.quickstartAction = async (cmdObj) => {
     await utils.setDefault('number', selected[0], !verbose)
     if (selected){
       await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
+      printer.print(`You can use any of your ordered numbers as the "from" value to send a text message. Numbers must be converted to E164 format`);
+      printer.print(`Ready to send a text message? You can ues the JSON body below as your request body on the Bandwidths Messaging API. Just fill in the appropriate values for "to" and "text"`);
+      printer.print(JSON.stringify({
+          "applicationId": createdApp.applicationId,
+          "from": "+1" + selected[0],
+          "to": ['<recipient phone number in E164 format ex: +15554443333>'],
+          "text": '<text message contents ex: Hello from Bandwidth!>'
+      }));
     }
   }
   printer.print();
