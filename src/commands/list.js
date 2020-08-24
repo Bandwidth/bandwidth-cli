@@ -2,7 +2,7 @@ const numbers = require("@bandwidth/numbers");
 const printer = require('../printer')
 const { throwApiErr, ApiError, BadInputError } = require('../errors');
 const utils = require('../utils');
-const fs = require('fs')
+const fs = require('fs');
 const stringify = require('csv-stringify/lib/sync');
 const path = require('path')
 
@@ -91,6 +91,7 @@ module.exports.listNumberAction = async (siteId, peerId, cmdObj) => {
   } else { //numbers under a peer
     const peer = await numbers.SipPeer.getAsync(siteId, peerId).catch((err) => {
       if (err.status === 404) {
+        console.log(err);
         throw new BadInputError('The Sip Peer was not found under a the specified site.', 'siteId/peerId', 'Check for typos in the site or sippeer IDs.', {res:err})
       }
       throw new ApiError(err)

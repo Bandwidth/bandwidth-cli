@@ -59,7 +59,7 @@ module.exports.reject = (...messages) => {
 
 /**
  * Inquire and asynchronously return the response.
- * @param promptNames a list of promptNames to be used by inquirer, found in prompts.js
+ * @param {string[]|string}promptNames a list of promptNames to be used by inquirer, found in prompts.js
  * @param args the arguments to each prompt, passed in as a list. args[0], for example, is the args for prompt 1.
  */
 module.exports.prompt = async (promptNames, ...args) => {

@@ -19,25 +19,47 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }
   const setupNo = await utils.incrementSetupNo(); //used to avoid name clash errors, if for some reason they run it multiple times.
-  const rawAddress = {
-    addressLine1: '900 Main Campus Dr',
-    city: 'Raleigh',
-    stateCode: "NC",
-    zip: '27606'
-  }
+  let address;
   if (custom) {
     const addressInput = await printer.prompt(['addressLine1', 'addressLine2']);
     const line2 = addressInput.addressLine2.split(', ');
     if (line2.length !== 3) {
       throw new BadInputError('Address line 2 was not parsed correctly', 'addressLine2', 'Ensure that you have seperated the City, statecode, and zip with a space and a comma. ", "')
     }
-    rawAddress.addressLine1 = addressInput.addressLine1;
-    rawAddress.city = line2[0];
-    rawAddress.stateCode = line2[1];
-    rawAddress.zip = line2[2];
+    const rawAddress = {
+      addressLine1: addressInput.addressLine1,
+      city: line2[0],
+      stateCode: line2[1],
+      zip: line2[2]
+    }
+    address = await numbers.Geocode.requestAsync(rawAddress)
+      .then((result) => {
+        printer.printIf(verbose, 'Address validated.');
+        return result;
+      })
+      .catch(async (err) => {
+        if (err.status === 403) {
+          printer.warn('Geocoding not found in account. Please split your address Line 1 into its respective components.')
+          printer.warn('For example, 123 Main St would have houseNumber: 123, street name: Main, and street suffix: St.');
+          printer.print('Components include:');
+          printer.printObj(['House Prefix', 'House Number', 'House Suffix', 'pre Directional', 'Street Name', 'Street Suffix', 'post Directional'])
+          const manualLine1 = await printer.prompt(['housePrefix','houseNumber', 'houseSuffix', 'preDirectional', 'streetName', 'streetSuffix', 'postDirectional'])
+          return {...rawAddress, ...manualLine1}
+        } else (throwApiErr(err));
+      });
+  } else {
+    address = {
+      addressLine1: '900 MAIN CAMPUS DR',
+      houseNumber: 900,
+      streetName: 'MAIN CAMPUS',
+      streetSuffix: 'DR',
+      city: 'RALEIGH',
+      stateCode: 'NC',
+      zip: 27606,
+      plusFour: 5177,
+      country: 'US'
+    }
   }
-  const address = await numbers.Geocode.requestAsync(rawAddress).catch(throwApiErr);
-  printer.printIf(verbose, 'Address validated.');
   const createdApp = await numbers.Application.createMessagingApplicationAsync({
     appName: (custom&&(await printer.prompt('optionalInput', 'appName')).appName) ||`My Messaging Application ${setupNo}`,
     msgCallbackUrl: answers.msgCallbackUrl
@@ -77,7 +99,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     .then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
   await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
-  await utils.setDefault('application', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default application set'))
+  await utils.setDefault('messageApp', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default messageApp set'))
 
   let orderResponse = (await printer.prompt('initiateOrderNumber')).initiateOrderNumber
   if (orderResponse) {
@@ -102,6 +124,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     } else {
       selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
     }
+    await utils.setDefault('number', selected[0], !verbose)
     if (selected){
       await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
     }

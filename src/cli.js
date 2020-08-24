@@ -1,12 +1,12 @@
 const { Command } = require('commander');
-const numbers = require("@bandwidth/numbers");
-const inquirer = require('inquirer');
 const actions = {
+  ...require('./commands/code'),
   ...require('./commands/create'),
   ...require('./commands/default'),
   ...require('./commands/delete'),
   ...require('./commands/list'),
   ...require('./commands/login'),
+  ...require('./commands/message'),
   ...require('./commands/order'),
   ...require('./commands/quickstart')
 }
@@ -21,8 +21,21 @@ module.exports.program = program = new Command();
 const description = 'A CLI tool which fast-tracks first time users of bandwidth to be able to order numbers immediately with some setup.';
 program
   .name('bandwidth')
-  .version('0.0.1')
+  .version('0.0.4')
   .description(description);
+
+
+/**************************'CODE' COMMAND**************************/
+const codeCmd = program.command('code')
+  .description('Generate pluggable sample programs that fit right into existing code.');
+
+const codeCallbackServerCmd = codeCmd.command('callback-server')
+  .alias('server')
+  .description('Set up a server to receive callbacks on messages.')
+  .option('-o, --out <destination>', 'The relative path to write the file to.')
+  .option('-f, --force', 'Overwrite the existing file, if it exists.')
+  .action(actions.codeCallbackServerAction)
+  
 
 /**************************'CREATE' COMMAND**************************/
 const createCmd = program.command('create')
@@ -119,7 +132,7 @@ const listNumberCmd = listCmd.command('number <site-id> [peer-id]')
   .alias('n')
   .alias('tn')
   .alias('numbers')
-  .option('-o, --out [site-id] [peer-id]', "Specify a site id to order a number with, using its id.")
+  .option('-o, --out [destination]', "If no destination specified, prints to console. Otherwise, writes to the destination file (or 'stdout').")
   .action(actions.listNumberAction);
 
 /**************************'LOGIN' COMMAND**************************/
@@ -127,6 +140,13 @@ const loginCmd = program.command('login')
   .description('Set up your Bandwidth cli by logging into your Bandwidth dashboard account.')
   .action(actions.loginAction)
 
+/**************************'MESSAGE' COMMAND**************************/
+const messageCmd = program.command('message <to-num...>')
+  .description('Send a text message.')
+  .option('-a, --app-id <id>', 'Send a message under this application id.')
+  .option('-n, --from-num <num>', 'The number to send a message from.')
+  .option('-q, --quiet', 'Suppress console output.')
+  .action(actions.messageAction)
 
 /**************************'ORDER' COMMAND**************************/
 const orderCmd = program.command('order')
@@ -178,3 +198,5 @@ const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
   .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
   .action(actions.quickstartAction);
+
+
