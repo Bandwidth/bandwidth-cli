@@ -6,7 +6,9 @@ your first number with Bandwidth.
 These quick-setup configurations are stored in the CLI and automatically used in any
 orders that are placed through the CLI.
 
-Expected workflow: [setup](#installationsetup), then [quickly set up your account](#gettingstarted). 
+Expected workflow for new account users: [setup](#installationsetup), then [quickly set up your account](#gettingstarted). 
+
+The CLI also allows existing account users that have previously set up their development environment to automate the setup of additional applications and place new number orders.
 
 ## Table of Contents
 - [table of contents](#table-of-contents)
