@@ -1,7 +1,7 @@
 module.exports = {
-  'msgCallbackUrl': {
+  'messagingCallbackUrl': {
     'type': 'input',
-    'name': 'msgCallbackUrl',
+    'name': 'messagingCallbackUrl',
     'message': 'Please enter a message callbackUrl. Information about sent messages will be sent here. Visit https://dev.bandwidth.com/guides/callbacks/callbacks.html for information on Bandwidth callbacks. (example: http://example.com)'
   },
   'callInitiatedCallbackUrl': {

@@ -10,7 +10,8 @@ module.exports.quickstartAction = async (cmdObj) => {
   const verbose = opts.verbose;
   const custom = opts.custom;
   const quickstartPrompts = [
-    'msgCallbackUrl'
+    'messagingCallbackUrl',
+    'callInitiatedCallbackUrl',
   ]
   const answers = await printer.prompt(quickstartPrompts);
   for (const [field, answer] of Object.entries(answers)) {
@@ -19,6 +20,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }
   const setupNo = await utils.incrementSetupNo(); //used to avoid name clash errors, if for some reason they run it multiple times.
+
   let address;
   if (custom) {
     const addressInput = await printer.prompt(['addressLine1', 'addressLine2']);
@@ -60,11 +62,20 @@ module.exports.quickstartAction = async (cmdObj) => {
       country: 'US'
     }
   }
-  const createdApp = await numbers.Application.createMessagingApplicationAsync({
+
+  const createdMessagingApp = await numbers.Application.createMessagingApplicationAsync({
     appName: (custom&&(await printer.prompt('optionalInput', 'appName')).appName) ||`My Messaging Application ${setupNo}`,
-    msgCallbackUrl: answers.msgCallbackUrl
+    msgCallbackUrl: answers.messagingCallbackUrl
   }).catch(throwApiErr);
-  printer.success(`Messaging application created with id ${createdApp.applicationId}. You will need this as your "applicationId" value to send a text message`);
+  printer.success(`Messaging application created with id ${createdMessagingApp.applicationId}. You will need this as your "applicationId" value to send a text message`);
+
+  const createdVoiceApp = await numbers.Application.createVoiceApplicationAsync({
+    appName: (custom&&(await printer.prompt('optionalInput', 'appName')).appName) ||`My Voice Application ${setupNo}`,
+    callInitiatedCallbackUrl: answers.callInitiatedCallbackUrl,
+    serviceType: 'Voice-V2'
+  }).catch(throwApiErr);
+  printer.success(`Voice application created with id ${createdVoiceApp.applicationId}. You will need this as your "applicationId" value to create phone calls`);
+
   const createdSite = await numbers.Site.createAsync({
     name: (custom&&(await printer.prompt('optionalInput', 'siteName')).siteName) ||`My Site ${setupNo}`,
     address: {
@@ -73,12 +84,14 @@ module.exports.quickstartAction = async (cmdObj) => {
     }
   }).catch(throwApiErr);
   printer.success(`Site created with id ${createdSite.id}`)
+
   const createdPeer = await numbers.SipPeer.createAsync({
     peerName: (custom&&(await printer.prompt('optionalInput', 'sippeerName')).sippeerName) ||`My Sip Peer ${setupNo}`,
     isDefaultPeer: true,
     siteId: createdSite.id,
   }).catch(throwApiErr);
   printer.success(`Sip Peer created with id ${createdPeer.id}`)
+
   const smsSettings = {
     tollFree: true,
     zone1: true,
@@ -94,12 +107,21 @@ module.exports.quickstartAction = async (cmdObj) => {
   await createdPeer.createSmsSettingsAsync({sipPeerSmsFeatureSettings: smsSettings, httpSettings: httpSettings})
     .catch(throwApiErr)
   printer.printIf(verbose, "enabled SMS in sip peer.");
-  await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdApp.applicationId})
+
+  await createdPeer.editApplicationAsync({httpMessagingV2AppId: createdMessagingApp.applicationId})
     .catch(throwApiErr)
-    .then(()=>{printer.printIf(verbose, `Sip Peer linked to application`)});
+    .then(()=>{printer.printIf(verbose, `Sip Peer linked to messaging application`)});
+
+  var voiceHttpSettings = {
+    httpVoiceV2AppId: createdVoiceApp.applicationId
+  }
+  await createdPeer.createOriginationSettingsAsync({voiceProtocol: "HTTP", httpSettings: voiceHttpSettings})
+    .catch(throwApiErr)
+    .then(()=>{printer.printIf(verbose, `Sip Peer linked to voice application`)});
+
   await utils.setDefault('sippeer', createdPeer.id, !verbose).then(()=> printer.printIf(verbose, 'Default Sip Peer set'))
   await utils.setDefault('site', createdSite.id, !verbose).then(()=> printer.printIf(verbose, 'Default site set'))
-  await utils.setDefault('messageApp', createdApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default messageApp set'))
+  await utils.setDefault('messageApp', createdMessagingApp.applicationId, !verbose).then(()=> printer.printIf(verbose, 'Default messageApp set'))
 
   let orderResponse = (await printer.prompt('initiateOrderNumber')).initiateOrderNumber
   if (orderResponse) {
@@ -117,6 +139,7 @@ module.exports.quickstartAction = async (cmdObj) => {
       };
       results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
     }
+
     if (!(results && results.resultCount)) {
       printer.warn('Unable to find a number at this time.');
     } else if (results.resultCount === 1) {
@@ -124,19 +147,33 @@ module.exports.quickstartAction = async (cmdObj) => {
     } else {
       selected = (await printer.prompt('orderNumberSelection', results.telephoneNumberList.telephoneNumber)).orderNumberSelection
     }
+
     await utils.setDefault('number', selected[0], !verbose)
+
     if (selected){
       await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
       printer.print(`You can use any of your ordered numbers as the "from" value to send a text message. Numbers must be converted to E164 format`);
-      printer.print(`Ready to send a text message? You can ues the JSON body below as your request body on the Bandwidths Messaging API. Just fill in the appropriate values for "to" and "text"`);
+      printer.print(`Ready to send a text message? You can use the JSON body below as your request body on the Bandwidth Messaging API. Just fill in the appropriate values for "to" and "text"`);
       printer.print(JSON.stringify({
-          "applicationId": createdApp.applicationId,
+          "applicationId": createdMessagingApp.applicationId,
           "from": "+1" + selected[0],
           "to": ['<recipient phone number in E164 format ex: +15554443333>'],
           "text": '<text message contents ex: Hello from Bandwidth!>'
       }));
+      printer.print(`You can also send a text message to your ordered numbers. When a message is sent to these numbers, Bandwidth will send a callback to your messaging callback url`);
+
+      printer.print(`You can use any of your ordered numbers as the "from" value to create a phone call. Numbers must be converted to E164 format`);
+      printer.print(`Ready to make a phone call? You can use the JSON body below as your request body on the Bandwidth Call API. Just fill in the appropriate values for "to" and "answerUrl"`);
+      printer.print(JSON.stringify({
+          "applicationId": createdVoiceApp.applicationId,
+          "from": "+1" + selected[0],
+          "to": "<recipient phone number in E164 format ex: +15554443333>",
+          "answerUrl": "<URL that Bandwidth will request BXML from when the call is answered ex: https://callback.com/answerBxml"
+      }));
+      printer.print(`You can also call your ordered numbers. When a call is made to these numbers, Bandwidth will send a callback to your voice callback url`);
     }
   }
+
   printer.print();
   printer.print(`setup successful. To order ${orderResponse?'more numbers':'a number'} using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"`);
   printer.custom('brightCyan')(`The site id ${createdSite.id} has been saved in the CLI config and will be used by the CLI to order numbers. When ordering numbers outside of the CLI, you may place the order under the site id ${createdSite.id}.`);
