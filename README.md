@@ -38,6 +38,7 @@ Information on Bandwidth's callback can be found [on our dev site](https://dev.b
 |[message](#message)| Send a text message through Bandwidth
 |[order](#order)|Order phone numbers
 |[quickstart](#quickstart)|Set up your account quickly and process details automatically
+|[accountInfo](#accountInfo)|View products enabled on your account
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version 12. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node. If you have node, check your version with `node -v`
@@ -747,6 +748,25 @@ status: COMPLETE
 telephoneNumbers:
   - "9198586910"
   - "9198586913"
+```
+
+## accountInfo
+
+Displays information regarding the enabled products and features for your account
+
+usage: `bandwidth accountInfo`
+
+```
+┌──────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│     (index)      │                                              features                                               │
+├──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  EdgeManagement  │                                              'SIPAuth'                                              │
+│    MESSAGING     │                        'ShortCode, HTTPV2, MMS, TollFree, SMS, A2pLongCode'                         │
+│ NumberManagement │ 'ExternalTNs, Reservation, PortOutPasscodeProtection, CSR, IMPORT_TNS, Ordering, ProtectedTNs, LNP' │
+│   Termination    │                                        'TermHttpVoice, Full'                                        │
+│   Origination    │                          'CNAM, LIDB, OrigHttpVoice, DlDa, CallForwarding'                          │
+│    Analytics     │                                        'MessagingAnalytics'                                         │
+└──────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### What's Next?
