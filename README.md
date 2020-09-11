@@ -752,6 +752,8 @@ telephoneNumbers:
 
 ## accountInfo
 
+Displays information regarding the enabled products and features for your account
+
 usage: `bandwidth accountInfo`
 
 ```
