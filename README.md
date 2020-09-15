@@ -45,11 +45,11 @@ This Bandwidth CLI uses nodeJs version 12. If node is not installed on your comp
 
 With node on your machine, install the package globally through npm (or yarn)
 ```
-npm install -g @bandwidth/cli
+npm install -g @bandwidth/quickstart-cli
 
 or
 
-yarn global add @bandwidth/cli
+yarn global add @bandwidth/quickstart-cli
 ```
 
 log into your bandwidth account by specifying your account id, and your dashboard username and password. 
