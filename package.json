@@ -1,5 +1,5 @@
 {
-  "name": "@bandwidth/cli",
+  "name": "@bandwidth/quickstart-cli",
   "version": "0.0.5",
   "description": "A CLI to help developers new to Bandwidth to get set up and order phone numbers.",
   "main": "cli.js",
