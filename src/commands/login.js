@@ -10,7 +10,7 @@ module.exports.loginAction = async () => {
     return printer.warn('No credentials were entered and the login has been aborted.')
   }
   const client = new numbers.Client(accountId, username, password);
-  numbers.Account.getAsync(client).catch((err) => {
+  await numbers.Account.getAsync(client).catch((err) => {
     if (err.status === 401) {
       throw new BadInputError('Account authentication failed and your credentials have not been saved. Please try again.')
     }
