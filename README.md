@@ -1,4 +1,4 @@
-# Bandwidth CLI
+# QuickStart CLI
 This CLI allows you to order phone numbers and create the necessary [Bandwidth applications](https://dev.bandwidth.com/account/applications/about.html) to quickly setup your development environment and callback
 settings with Bandwidth. In addition, this quick-setup automates the necessary steps required to order
 your first number with Bandwidth.
