@@ -1,4 +1,4 @@
-# Bandwidth CLI
+# QuickStart CLI
 This CLI allows you to order phone numbers and create the necessary [Bandwidth applications](https://dev.bandwidth.com/account/applications/about.html) to quickly setup your development environment and callback
 settings with Bandwidth. In addition, this quick-setup automates the necessary steps required to order
 your first number with Bandwidth.
@@ -6,12 +6,26 @@ your first number with Bandwidth.
 These quick-setup configurations are stored in the CLI and automatically used in any
 orders that are placed through the CLI.
 
-Expected workflow: [setup](#installationsetup), then [quickly set up your account](#gettingstarted). 
+Expected workflow for new account users: [setup](#installationsetup), then [quickly set up your account](#gettingstarted). 
+
+The CLI also allows existing account users that have previously set up their development environment to automate the setup of additional applications and place new number orders.
 
 ## Table of Contents
 - [table of contents](#table-of-contents)
 - [setup](#installationsetup)
 - [getting started with Bandwidth](#getting-started-with-bandwidth)
+
+### Reference Materials
+- [Bandwidth's Dev Docs](https://dev.bandwidth.com)
+- [Bandwidth Dashboard Homepage](https://dashboard.bandwidth.com)
+
+### Pre-Reqs
+
+You must have your Bandwidth Dashboard API credentials. These credentials are used to authenticate against the Dashboard, Voice, and Messaging APIs.
+
+In order to send text messages and create phone calls, you need a URL that accepts Bandwidth callbacks. [ngrok](https://ngrok.com/) can be used to start a server locally, or [request bin](https://requestbin.com/) can be used to set up a URL remote. Take note that callbacks do contain phone numbers, so be cautious when using any publicly accessible URLs.
+
+Information on Bandwidth's callback can be found [on our dev site](https://dev.bandwidth.com/guides/callbacks/callbacks.html).
 
 ### List of CLI Commands
 | command   | Description |
@@ -24,17 +38,18 @@ Expected workflow: [setup](#installationsetup), then [quickly set up your accoun
 |[message](#message)| Send a text message through Bandwidth
 |[order](#order)|Order phone numbers
 |[quickstart](#quickstart)|Set up your account quickly and process details automatically
+|[accountInfo](#accountInfo)|View products enabled on your account
 
 ## Installation/Setup
 This Bandwidth CLI uses nodeJs version 12. If node is not installed on your computer, visit https://nodejs.org/en/download/ for installation instructions for node. If you have node, check your version with `node -v`
 
 With node on your machine, install the package globally through npm (or yarn)
 ```
-npm install -g @bandwidth/cli
+npm install -g @bandwidth/quickstart-cli
 
 or
 
-yarn global add @bandwidth/cli
+yarn global add @bandwidth/quickstart-cli
 ```
 
 log into your bandwidth account by specifying your account id, and your dashboard username and password. 
@@ -61,7 +76,7 @@ More information about callback urls can be found at https://dev.bandwidth.com/g
 
 ```
 >bandwidth quickstart
-? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
+? Please enter a message callbackUrl. Information about sent messages will be sent here. Visit https://dev.bandwidth.com/guides/callbacks/callbacks.html for information on Bandwidth callbacks. (example: http://example.com)
 >http://example.com
 
 Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
@@ -101,6 +116,53 @@ At this point, you can now use the number for [messages](https://dev.bandwidth.c
 notes:
 - `bandwidth <command> --help` is available in the cli for usage and flag notes. 
 - `bw` is an alias for bandwidth. `bw order number 123456789` is a valid syntax for the cli.
+
+### quickstart
+usage: `bandwidth quickstart`
+
+Set up your account quickly and process details automatically to immediately enable number
+ordering and development.
+
+
+switches/options
+| name      | Description | required |
+| ----------- | ----------- | ----------- |
+|-v, --verbose| Increase setup verbosity| no
+
+```
+>bandwidth quickstart
+? Please enter a message callbackUrl. Information about sent messages will be sent here. Visit https://dev.bandwidth.com/guides/callbacks/callbacks.html for information on Bandwidth callbacks. (example: http://example.com)
+>http://example.com
+
+Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
+Site created with id 37390
+Sip Peer created with id 624642
+
+? order a phone number?
+>Yes
+? Found 10 numbers. Choose which to order.
+ (*) 9195007741
+ (*) 9195181224
+>(*) 9195182893
+ ( ) 9195182967
+ ( ) 9195784173
+ ( ) 9196703710
+ ( ) 9197060281
+(Move up and down to reveal more choices)
+? order 3 phone numbers? Yes
+Your order was placed. Awaiting order completion...
+
+orderDate: 2020-07-10T22:03:45.475Z
+note: Created a new number order for 3 numbers from RALEIGH, NC
+status: COMPLETE
+telephoneNumbers:
+  - "9195007741"
+  - "9195181224"
+  - "9195182893"
+
+setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
+
+```
 
 
 ### create
@@ -218,7 +280,7 @@ switches/options
 create a messaging application
 
 >bandwidth create application --type messaging appname
-? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
+? Please enter a message callbackUrl. Information about sent messages will be sent here. Visit https://dev.bandwidth.com/guides/callbacks/callbacks.html for information on Bandwidth callbacks. (example: http://example.com)
 >http://example.com
 Messaging application created. See details of your created application below.
 
@@ -688,50 +750,25 @@ telephoneNumbers:
   - "9198586913"
 ```
 
+## accountInfo
 
-### quickstart
-usage: `bandwidth quickstart`
+Displays information regarding the enabled products and features for your account
 
-Set up your account quickly and process details automatically to immediately enable number
-ordering and development.
-
-
-switches/options
-| name      | Description | required |
-| ----------- | ----------- | ----------- |
-|-v, --verbose| Increase setup verbosity| no
+usage: `bandwidth accountInfo`
 
 ```
->bandwidth quickstart
-? Please enter a message callbackUrl. Information about sent messages will be sent here. (example: http://example.com)
->http://example.com
-
-Messaging application created with id b01b1a3d-230a-467a-b143-3974fccc1ad0
-Site created with id 37390
-Sip Peer created with id 624642
-
-? order a phone number?
->Yes
-? Found 10 numbers. Choose which to order.
- (*) 9195007741
- (*) 9195181224
->(*) 9195182893
- ( ) 9195182967
- ( ) 9195784173
- ( ) 9196703710
- ( ) 9197060281
-(Move up and down to reveal more choices)
-? order 3 phone numbers? Yes
-Your order was placed. Awaiting order completion...
-
-orderDate: 2020-07-10T22:03:45.475Z
-note: Created a new number order for 3 numbers from RALEIGH, NC
-status: COMPLETE
-telephoneNumbers:
-  - "9195007741"
-  - "9195181224"
-  - "9195182893"
-
-setup successful. To order more numbers using this setup, use "bandwidth order category <quantity>" or "bandwidth order search <quantity>"
-
+┌──────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│     (index)      │                                              features                                               │
+├──────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  EdgeManagement  │                                              'SIPAuth'                                              │
+│    MESSAGING     │                        'ShortCode, HTTPV2, MMS, TollFree, SMS, A2pLongCode'                         │
+│ NumberManagement │ 'ExternalTNs, Reservation, PortOutPasscodeProtection, CSR, IMPORT_TNS, Ordering, ProtectedTNs, LNP' │
+│   Termination    │                                        'TermHttpVoice, Full'                                        │
+│   Origination    │                          'CNAM, LIDB, OrigHttpVoice, DlDa, CallForwarding'                          │
+│    Analytics     │                                        'MessagingAnalytics'                                         │
+└──────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### What's Next?
+
+After you have ordered some phone numbers and set up your applications, you can go to [Bandwidth's devsite](https://dev.bandwidth.com) for information on our APIs. Our [Messaging docs](https://dev.bandwidth.com/messaging/about.html) contains information on sending and receiving text messages, and our [Voice docs](https://dev.bandwidth.com/voice/about.html) contain information on how to create and manage phone calls.

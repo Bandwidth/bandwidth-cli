@@ -8,7 +8,8 @@ const actions = {
   ...require('./commands/login'),
   ...require('./commands/message'),
   ...require('./commands/order'),
-  ...require('./commands/quickstart')
+  ...require('./commands/quickstart'),
+  ...require('./commands/accountInfo')
 }
 const { errorHandler } = require('./errors');
 
@@ -199,4 +200,5 @@ const quickstartCmd = program.command('quickstart')
   .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
   .action(actions.quickstartAction);
 
-
+const accountInfoCmd = program.command('accountInfo')
+  .action(actions.accountInfoAction);
