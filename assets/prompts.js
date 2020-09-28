@@ -123,5 +123,11 @@ module.exports = {
       name: defaultName,
       message: `Use default ${defaultName}? Press enter to continue, or enter a ${defaultName} instead. To use neither, type "NONE" and hit enter.`
     }
-  }
+  },
+  'viewQuickstartFinalOutput': {
+    type: 'confirm',
+    name: 'viewQuickstartFinalOutput',
+    message: 'Would you like to view information on your newly created applications and ordered phone numbers?',
+    default: true
+  },
 }
