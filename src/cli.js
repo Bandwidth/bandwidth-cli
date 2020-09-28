@@ -202,5 +202,5 @@ const quickstartCmd = program.command('quickstart')
   .action(actions.quickstartAction);
 
 const accountInfoCmd = program.command('accountInfo')
-  .description("View your account information to see what functionality your account can perform")
+  .description("Displays information regarding the enabled products and features for your account.")
   .action(actions.accountInfoAction);
