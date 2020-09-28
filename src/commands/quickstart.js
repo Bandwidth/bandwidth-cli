@@ -152,25 +152,40 @@ module.exports.quickstartAction = async (cmdObj) => {
 
     if (selected){
       await apiutils.placeNumberOrder(selected, createdSite.id, createdPeer.id).catch();
-      printer.print(`You can use any of your ordered numbers as the "from" value to send a text message. Numbers must be converted to E164 format`);
-      printer.print(`Ready to send a text message? You can use the JSON body below as your request body on the Bandwidth Messaging API. Just fill in the appropriate values for "to" and "text"`);
-      printer.print(JSON.stringify({
+
+      let viewFinalOutput = (await printer.prompt('viewQuickstartFinalOutput')).viewQuickstartFinalOutput
+      if (viewFinalOutput) {
+        printer.print(`Messaging Information`);
+        printer.print(``);
+        printer.print(`You can use any of your ordered numbers as the "from" value to send a text message. Numbers must be converted to E164 format`);
+        printer.print(``);
+        printer.print(`Ready to send a text message? You can use the JSON body below as your request body on the Bandwidth Messaging API. Just fill in the appropriate values for "to" and "text"`);
+        printer.print(``);
+        printer.print(JSON.stringify({
           "applicationId": createdMessagingApp.applicationId,
           "from": "+1" + selected[0],
           "to": ['<recipient phone number in E164 format ex: +15554443333>'],
           "text": '<text message contents ex: Hello from Bandwidth!>'
-      }));
-      printer.print(`You can also send a text message to your ordered numbers. When a message is sent to these numbers, Bandwidth will send a callback to your messaging callback url`);
+        }, null, 4));
+        printer.print(``);
+        printer.print(`You can also send a text message to your ordered numbers. When a message is sent to these numbers, Bandwidth will send a callback to your messaging callback url`);
 
-      printer.print(`You can use any of your ordered numbers as the "from" value to create a phone call. Numbers must be converted to E164 format`);
-      printer.print(`Ready to make a phone call? You can use the JSON body below as your request body on the Bandwidth Call API. Just fill in the appropriate values for "to" and "answerUrl"`);
-      printer.print(JSON.stringify({
+        printer.print(``);
+        printer.print(`Voice Information`);
+        printer.print(``);
+        printer.print(`You can use any of your ordered numbers as the "from" value to create a phone call. Numbers must be converted to E164 format`);
+        printer.print(``);
+        printer.print(`Ready to make a phone call? You can use the JSON body below as your request body on the Bandwidth Call API. Just fill in the appropriate values for "to" and "answerUrl"`);
+        printer.print(``);
+        printer.print(JSON.stringify({
           "applicationId": createdVoiceApp.applicationId,
           "from": "+1" + selected[0],
           "to": "<recipient phone number in E164 format ex: +15554443333>",
           "answerUrl": "<URL that Bandwidth will request BXML from when the call is answered ex: https://callback.com/answerBxml"
-      }));
-      printer.print(`You can also call your ordered numbers. When a call is made to these numbers, Bandwidth will send a callback to your voice callback url`);
+        }, null, 4));
+        printer.print(``);
+        printer.print(`You can also call your ordered numbers. When a call is made to these numbers, Bandwidth will send a callback to your voice callback url`);
+      }
     }
   }
 
