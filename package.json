@@ -1,7 +1,7 @@
 {
   "name": "@bandwidth/quickstart-cli",
   "version": "0.0.2",
-  "description": "A CLI to help developers new to Bandwidth to get set up and order phone numbers.",
+  "description": "A CLI to help developers that are getting started with Bandwidth, set up their development environments and order phone numbers.",
   "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
