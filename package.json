@@ -1,6 +1,6 @@
 {
   "name": "@bandwidth/quickstart-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A CLI to help developers that are getting started with Bandwidth, set up their development environments and order phone numbers.",
   "main": "cli.js",
   "scripts": {
