@@ -129,7 +129,7 @@ module.exports.quickstartAction = async (cmdObj) => {
     const states = [ 'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY' ];
     let results = null;
     let retries = 10;
-    while (!(results && results.resultCount && retries--)) {
+    while (!results && retries > 0) {
       const randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
       var query = {
         siteId: createdSite.id,
@@ -137,11 +137,13 @@ module.exports.quickstartAction = async (cmdObj) => {
         state: randomState||'NC',
         quantity: (custom && (await printer.prompt('optionalInput', 'phone number search quantity'))['phone number search quantity']) || 10
       };
-      results = await numbers.AvailableNumbers.listAsync(query).catch(throwApiErr);
+      results = await numbers.AvailableNumbers.listAsync(query).catch(function(err, res) { return null });
+      retries--;
     }
 
-    if (!(results && results.resultCount)) {
+    if (!results) {
       printer.warn('Unable to find a number at this time.');
+      process.exit();
     } else if (results.resultCount === 1) {
       selected = results.telephoneNumberList.telephoneNumber
     } else {
