@@ -130,7 +130,12 @@ module.exports.quickstartAction = async (cmdObj) => {
     let results = null;
     let retries = 10;
     while (!results && retries > 0) {
-      const randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
+      var randomState;
+      if (retries == 1) {
+          randomState = 'NC'; //failsafe: default to NC on the last try
+      } else {
+          randomState = states[Math.floor(Math.random() * states.length)]; //number from a random state.
+      }
       var query = {
         siteId: createdSite.id,
         peerId: createdPeer.id,
