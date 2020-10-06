@@ -19,10 +19,10 @@ Object.keys(actions).map(function(key, index) {
 
 module.exports.program = program = new Command();
 
-const description = 'A CLI tool which fast-tracks first time users of bandwidth to be able to order numbers immediately with some setup.';
+const description = 'A CLI to help developers that are getting started with Bandwidth, set up their development environments and order phone numbers.';
 program
   .name('bandwidth')
-  .version('0.0.4')
+  .version('0.0.3')
   .description(description);
 
 
@@ -198,7 +198,9 @@ const orderSearchCmd = orderCmd.command('search <quantity>')
 const quickstartCmd = program.command('quickstart')
   .option('-v, --verbose', 'List out the steps that are being set.')
   .option('-c, --custom', 'Customize and specify optional details about the quickstart.')
+  .description("Create your voice and messaging applications, and order phone numbers in one command.")
   .action(actions.quickstartAction);
 
 const accountInfoCmd = program.command('accountInfo')
+  .description("Displays information regarding the enabled products and features for your account.")
   .action(actions.accountInfoAction);
