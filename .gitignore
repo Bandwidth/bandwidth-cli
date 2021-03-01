@@ -1,3 +1,6 @@
+# General macOS
+.DS_Store
+
 node_modules
 testing/playground.js
 playground.js
