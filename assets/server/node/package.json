@@ -10,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@bandwidth/numbers": "^1.5.0",
+    "@bandwidth/numbers": "^1.9.2",
     "express": "^4.17.1",
     "ngrok": "^3.2.7"
   }
